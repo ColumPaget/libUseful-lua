@@ -176,7 +176,7 @@ For keystrokes that are expressed by escape codes, this returns a key name.
 
 */
 
-char *getc() {return(TerminalTranslateKeyCode(TerminalReadChar($self->S)));}
+const char *getc() {return(TerminalTranslateKeyCode(TerminalReadChar($self->S)));}
 
 /* put a character 'Char'. Char can be a unicode value */
 void putc(int Char) {TerminalPutChar(Char, $self->S);}

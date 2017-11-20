@@ -1,6 +1,6 @@
 libUseful-lua is a collection of lua modules that provide function bindings for the libUseful library, and also for a number of standard Posix functions. The aim is to provide a framework for linux system programming in lua. libUseful-lua provides methods and objects for file access, TCP/IP networking, terminal control, hash functions, syslog logging,  mounting and unmounting filesystems, and much else. 
 
-libUseful-lua requires at least libUseful-3.1 to be installed on a system. You can get it from
+libUseful-lua requires at least libUseful-3.2 to be installed on a system. You can get it from
 
 https://github.com/ColumPaget/libUseful
 
@@ -22,3 +22,6 @@ The options to configure will need to be set as appropirate for your system. The
 
 Basic documentation for the functions and objects in libUseful-lua is currently in the .i interface files for each module. Likely manpages or other better documentation will appear in time, but I wanted to get something out there ("Release early and release often", they said).
 
+Some example programs can be found in the 'examples' directory. You need to install libUseful-lua before using these
+
+This is the initial release, so expect some bugs and maybe some changes going forwards

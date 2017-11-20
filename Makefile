@@ -2,7 +2,8 @@ CC = gcc
 CFLAGS=-g -O2 -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib
 LUA_MODULES_DIR=/usr/local/lib/lua/5.3/
 
-all: stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so strutil.so dataparser.so oauth.so rawdata.so securemem.so
+MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so strutil.so dataparser.so oauth.so rawdata.so securemem.so
+all: $(MODS)
 
 stream.so: stream_wrap.o
 	$(CC) $(CFLAGS) -shared -o stream.so stream_wrap.o -lUseful-3
@@ -124,7 +125,7 @@ securemem_wrap.c: securemem.i
 	swig -lua -o securemem_wrap.c securemem.i
 
 
-install:
+install: $(MODS)
 	cp *.so $(LUA_MODULES_DIR)
 
 clean: 

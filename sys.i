@@ -62,13 +62,15 @@ const char * sys_type();
 %rename(tmpdir) sys_tmpdir;
 const char * sys_tmpdir();
 
-
+/* return time as seconds since 1 jan 1970 */
 %rename(time) sys_time;
 unsigned long sys_time();
 
+/* return time as centiseconds since 1 jan 1970 */
 %rename(centitime) sys_centitime;
 unsigned long sys_centitime();
 
+/* return time as milliseconds since 1 jan 1970 */
 %rename(millitime) sys_millitime;
 unsigned long sys_millitime();
 
