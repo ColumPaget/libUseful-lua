@@ -38,12 +38,22 @@ typedef struct
 
 
 /* strutil.tometric(value, type)   - convert a numeric value to a metric notation string. e.g.  1200 gives 1.2k */
-%rename(tometric) ToMetric;
-const char *ToMetric(double Value, int Type);
+%rename(toMetric) ToMetric;
+const char *ToMetric(double Value, int Precision=1);
 
 /* strutil.frommetric(Str, type)   - convert a numeric value from a metric notation string. e.g.  2.6k gives 2600 */
-%rename(frommetric) FromMetric;
-double FromMetric(const char *Str, int Type);
+%rename(fromMetric) FromMetric;
+double FromMetric(const char *Str, int Precision=1);
+
+
+/* strutil.toIEC(value, type)   - convert a numeric value to a IEC notation string. e.g.  1200 gives 1.2k */
+%rename(toIEC) ToIEC;
+const char *ToIEC(double Value, int Precision=1);
+
+/* strutil.fromIEC(Str, type)   - convert a numeric value from a IEC notation string. e.g.  2.6k gives 2600 */
+%rename(fromIEC) FromIEC;
+double FromIEC(const char *Str, int Precision=1);
+
 
 /* apply HTTP style 'percent' encoding to a string */
 %newobject httpQuote;
@@ -78,12 +88,18 @@ int isnum(const char *Str);
 /* strip spaces from string */
 void stripTrailingWhitespace(char *Str);
 void stripLeadingWhitespace(char *Str);
+
+/* strip carriage-return and/or linefeed from end of string */
 void stripCRLF(char *Str);
 
 
+/* Break a string up into tokens. For my money this is easier to use than the default lua method */
 %extend TOKENIZER
 {
-TOKENIZER(const char *Str, const char *Separators="", const char *Flags="")
+
+/* Create a tokenizer, specifiying the string to be tokenized, a list of seperator strings, and optional */
+/* flags that alter tokenizer behavior */
+TOKENIZER(const char *Str, const char *Separators=" ", const char *Flags="")
 {
 TOKENIZER *Item;
 
@@ -99,6 +115,8 @@ return(Item);
 free($self);
 }
 
+/* get next token. If 'Separators' is not provided, then fall back to the separators specified at */
+/* tokenizer creation */
 %newobject next;
 char *next(const char *Separators="")
 {

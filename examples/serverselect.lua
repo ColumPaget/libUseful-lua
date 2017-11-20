@@ -20,7 +20,10 @@ if S ~= nil
 then
 	line=S:readln();
 	if (line ~= nil)  then  print(line)
-	else S:close()
+	else 
+		-- a nil read means the peer has closed the connection. We must delete it from
+		Streams:delete(S)
+		S:close()
 	end
 end
 end

@@ -22,12 +22,50 @@ line=S:readln()
 print("first line: " .. line) 
 S:close()
 
-
 You can also read from commands (and write to them, allowing read/write communications)
 
 S=stream.STREAM("cmd:ps")
 doc=S:readdoc()
 print(doc)
+
+
+Here's a list of URL types that STREAM will accept:
+
+/tmp/myfile.txt                          file
+mmap:/tmp/myfile.txt                     memory mapped file
+tty:/dev/ttyS0:38400                     open a serial device, in this case at 38400 baud
+udp:192.168.2.1:53                       udp network connection
+tcp:192.168.2.1:25                       tcp network connection
+ssl:192.168.2.1:443                      tcp network connection with encryption
+tls:192.168.2.1:443                      tcp network connection with encryption
+unix:/tmp/socket                         unix socket
+unixdgram:/tmp/socket                    unix datagram socket
+http:user:password@www.google.com        http network connection
+https:www.google.com                     https network connection
+cmd:cat /etc/hosts                       run command 'cat /etc/hosts' and read/write to/from it
+ssh:192.168.2.1:1022/cat /etc/hosts      ssh connect, running the command 'cat /etc/hosts'
+
+
+
+For 'file' streams the second argument is a list of charcters with the following meanings
+
+c     create file
+r     read only
+w     write only
+a     append 
++     make read-only, append or write-only be read-write
+E     raise an error if this file fails to open
+F     follow symlinks. Without this flag an error is raised when a symlink is opened.
+l     lock/unlock file on each read
+L     lock/unlock file on each write
+i     allow this file to be inherited across an exec (default is close-on-exec)
+t     make a unique temporary file name. the file path must be a mktemp style template, with the last six characters being 'XXXXXX'
+S     file contents are sorted
+z     compress/uncompress with gzip
+
+
+This module also supplies a POLL_IO object, which stream objects can be added to, and which can then be used to watch 
+multiple stream objects for activity
 
 */
 
@@ -198,6 +236,8 @@ POLL_IO *Item;
 
 Item=(POLL_IO *) calloc(1,sizeof(POLL_IO));
 Item->Streams=ListCreate();
+
+return(Item);
 }
 
 ~POLL_IO () {
@@ -205,11 +245,22 @@ ListDestroy($self->Streams,NULL);
 free($self);
 }
 
+/* add a stream to the POLL_IO */
 void add(STREAM *S) {
 ListAddItem($self->Streams, S);
 }
 
-STREAM *select() {
-return(STREAMSelect($self->Streams, 0));
+/* remove a stream from the POLL_IO. YOU MUST DO THIS BEFORE CLOSING THE STREAM */
+void delete(STREAM *S) {
+ListDeleteItem($self->Streams, S);
+}
+
+/* wait for activity from one of the streams, and return it once it happens */
+STREAM *select(int centisecs) {
+struct timeval tv;
+
+tv.tv_sec=centisecs / 100;
+tv.tv_usec=(centisecs - (tv.tv_sec * 100)) * 10000;
+return(STREAMSelect($self->Streams, &tv));
 }
 }

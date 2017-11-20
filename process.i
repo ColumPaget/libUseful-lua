@@ -21,10 +21,10 @@ this module implements functions related to a process.
 %}
 
 /* process.sleep(seconds)  - sleep for 'seconds' */
-int sleep(unsigned int seconds);
+int sleep(unsigned long seconds);
 
 /* process.usleep(usec)  - sleep for 'usec' milliseconds */ 
-int usleep(useconds_t usec);
+int usleep(unsigned long usec);
 
 /* process.chdir(dir)  - change process current directory */ 
 int chdir(const char *dir);
@@ -58,12 +58,16 @@ const char *getenv(const char *Name);
 %rename(setenv) xsetenv;
 int xsetenv(const char *Name, const char *Value);
 
-/* enhanced 'fork' command. */
+/* enhanced 'fork' command. Returns pid of child process, unless you are the child process, where it returns 0 */
+/* Config can be made up of options as described for process.config */
 long xfork(char *Config="");
 
+/*  process.CildExited(pid)    - Check if a child exited, return pid of any that did. */
+/* We can pass pid to get a specific child, or default is 'any child' */
 %rename(childExited) ChildExited;
 long ChildExited(long pid=-1);
 
+/* Wait for a child to exit. returns pid of any that did */
 /* have to use rename here to prevent name class with existing wait function */
 %rename(wait) Wait;
 long Wait(long pid=-1);
@@ -96,7 +100,6 @@ int WritePidFile(char *ProgName);
 int CreateLockFile(char *FilePath,int Timeout=0);
 
 /*
-
 process.configure(Config)   configure the current process. 'Config' is a space separated list of key-value pairs. Numeric values can be
 set in 'metric' format, so for example 'mem=100M' would set the memory resource limit to 100 meg.
 

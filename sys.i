@@ -6,16 +6,21 @@ This module provides functions that return various system information.
 %{
 #include "libUseful-3/GeneralFunctions.h"
 #include "libUseful-3/Errors.h"
+#include "libUseful-3/Time.h"
 
 //mapped to sys_(name) to prevent clashes e.g. with 'hostname'
 #define sys_uptime() (OSSysInfoLong(OSINFO_UPTIME))
 #define sys_totalmem() (OSSysInfoLong(OSINFO_TOTALMEM))
 #define sys_freemem() (OSSysInfoLong(OSINFO_FREEMEM))
+#define sys_buffermem() (OSSysInfoLong(OSINFO_BUFFERMEM))
 #define sys_type() (OSSysInfoString(OSINFO_TYPE))
 #define sys_hostname() (OSSysInfoString(OSINFO_HOSTNAME))
 #define sys_release() (OSSysInfoString(OSINFO_RELEASE))
 #define sys_arch() (OSSysInfoString(OSINFO_ARCH))
 #define sys_tmpdir() (OSSysInfoString(OSINFO_TMPDIR))
+#define sys_time() (GetTime(0))
+#define sys_centitime() (GetTime(TIME_CENTISECS))
+#define sys_millitime() (GetTime(TIME_MILLISECS))
 %}
 
 
@@ -27,9 +32,15 @@ unsigned long sys_uptime();
 %rename(totalmem) sys_totalmem;
 unsigned long sys_totalmem();
 
-/* sys.totalmem   - return free memory in bytes */
+/* sys.totalmem   - return free memory in bytes. Unfortunately this is rendered useless on linux as */
+/* the kernel will grab much free memory for caching, but it's still available for use by applications */
+/* even though it no longer counts as 'free' */
 %rename(freemem) sys_freemem;
 unsigned long sys_freemem();
+
+%rename(buffermem) sys_buffermem;
+unsigned long sys_buffermem();
+
 
 /* sys.arch   - returns system architecture */
 %rename(arch) sys_arch;
@@ -52,6 +63,13 @@ const char * sys_type();
 const char * sys_tmpdir();
 
 
+%rename(time) sys_time;
+unsigned long sys_time();
 
+%rename(centitime) sys_centitime;
+unsigned long sys_centitime();
+
+%rename(millitime) sys_millitime;
+unsigned long sys_millitime();
 
 
