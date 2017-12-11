@@ -21,13 +21,13 @@ OAUTH (const char *Type, const char *Name, const char *ClientID="", const char *
 return(OAuthCreate(Type, Name, ClientID, ClientSecret, Scopes, RefreshURL));
 }
 
-void set(const char *Name, const char *Value) {SetVar($self->Vars, Name, Value);}
-int load(const char *Name, const char *Path="") {return(OAuthLoad($self, Name, Path));}
+void set(const char *VarName, const char *Value) {SetVar($self->Vars, VarName, Value);}
+int load(const char *Name="", const char *Path="") {return(OAuthLoad($self, Name, Path));}
 int save(const char *Path) {return(OAuthSave($self, Path));}
 int stage1(const char *URL) {return(OAuthStage1($self, URL));}
 int finalize(const char *URL) {return(OAuthFinalize($self, URL));}
 int refresh(const char *URL) {return(OAuthRefresh($self, URL));}
-int listen(int Port, const char *URL) {return(OAuthListen($self, Port, URL, 0));}
+int listen(int Port, const char *URL) {return(OAuthListen($self, Port, URL, OAUTH_STDIN));}
 const char *name() {return($self->Name);}
 const char *access_token() {return($self->AccessToken);}
 const char *refresh_token() {return($self->RefreshToken);}

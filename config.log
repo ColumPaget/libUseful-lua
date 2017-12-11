@@ -34,8 +34,10 @@ PATH: /usr/X11R7/bin
 PATH: /bin
 PATH: /usr/games/bin
 PATH: .
+PATH: /opt/Python-2.7.13/bin
 PATH: /opt/chkrootkit-0.50/bin
 PATH: /opt/ecl-16.1.3/bin
+PATH: /opt/exploit-database/bin
 PATH: /opt/gdbm-1.12/bin
 PATH: /opt/git-2.10.2/bin
 PATH: /opt/guile-2.2.2/bin
@@ -44,7 +46,9 @@ PATH: /opt/lua-5.3.4/bin
 PATH: /opt/mujs-b005928/bin
 PATH: /opt/mujs/bin
 PATH: /opt/perl-5.24.0/bin
+PATH: /opt/perl-5.24.1/bin
 PATH: /opt/radare-1.2.1/bin
+PATH: /opt/ruby-2.4.2/bin
 PATH: /opt/tcl-8.6.4/bin
 
 

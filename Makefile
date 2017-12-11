@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS=-g -O2 -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib
 LUA_MODULES_DIR=/usr/local/lib/lua/5.3/
 
-MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so strutil.so dataparser.so oauth.so rawdata.so securemem.so
+MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so
 all: $(MODS)
 
 stream.so: stream_wrap.o
@@ -76,6 +76,15 @@ sys_wrap.o: sys_wrap.c
 
 sys_wrap.c: sys.i
 	swig -lua -o sys_wrap.c sys.i
+
+time.so: time_wrap.o
+	$(CC) $(CFLAGS) -shared -o time.so time_wrap.o -lUseful-3
+  
+time_wrap.o: time_wrap.c
+	$(CC) $(CFLAGS) -c time_wrap.c -o  time_wrap.o
+
+time_wrap.c: time.i
+	swig -lua -o time_wrap.c time.i
 
 strutil.so: strutil_wrap.o
 	$(CC) $(CFLAGS) -shared -o strutil.so strutil_wrap.o -lUseful-3

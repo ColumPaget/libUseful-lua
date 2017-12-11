@@ -12,6 +12,7 @@ This module implemements various string-based utility functions, including diffe
 #include "libUseful-3/String.h"
 #include "libUseful-3/Errors.h"
 
+#define safestrlen(Str) (StrLen(Str))
 #define httpQuote(Str) (HTTPQuote(NULL, Str))
 #define httpUnQuote(Str) (HTTPUnQuote(NULL, Str))
 #define htmlQuote(Str) (HTMLQuote(NULL, Str))
@@ -20,7 +21,17 @@ This module implemements various string-based utility functions, including diffe
 #define unQuote(Str) (UnQuoteStr(NULL, Str))
 #define stripTrailingWhitespace(Str) (StripTrailingWhitespace(Str))
 #define stripLeadingWhitespace(Str) (StripLeadingWhitespace(Str))
-#define stripCRLF(Str) (StripCRLF(Str))
+#define pad(Str, Pad, PadLen) (CopyPadStr(NULL, Str, Pad, PadLen))
+#define padto(Str, Pad, PadLen) (CopyPadStrTo(NULL, Str, Pad, PadLen))
+
+char *stripCRLF(const char *Str) 
+{
+char *Ret=NULL;
+Ret=CopyStr(Ret, Str);
+StripCRLF(Ret);
+return(Ret);
+}
+
 
 typedef struct
 {
@@ -35,6 +46,12 @@ typedef struct
 {
 //empty struct that we will extend
 } TOKENIZER;
+
+
+/* strlen that works with nil instead of throwing an error */
+%rename(strlen) safestrlen;
+int safestrlen(const char *Str);
+
 
 
 /* strutil.tometric(value, type)   - convert a numeric value to a metric notation string. e.g.  1200 gives 1.2k */
@@ -79,6 +96,16 @@ char *quoteChars(const char *Str, const char *Chars);
 %newobject unQuote;
 char *unQuote(const char *Str);
 
+
+/* pad str with len chars */
+%newobject pad;
+char *pad(const char *Str, char Pad, int Len);
+
+/* pad str to len chars */
+%newobject padto;
+char *padto(const char *Str, char Pad, int Len);
+
+
 /* returns true if a string is alphanumeric */
 int istext(const char *Str);
 
@@ -90,7 +117,8 @@ void stripTrailingWhitespace(char *Str);
 void stripLeadingWhitespace(char *Str);
 
 /* strip carriage-return and/or linefeed from end of string */
-void stripCRLF(char *Str);
+%newobject stripCRLF;
+char *stripCRLF(char *Str);
 
 
 /* Break a string up into tokens. For my money this is easier to use than the default lua method */
@@ -127,6 +155,19 @@ $self->Data=GetToken($self->Data,Separators,&Token,$self->Flags);
 if ($self->Data==NULL) return(NULL);
 return(Token);
 }
+
+%newobject peek;
+char *peek(const char *Separators="")
+{
+char *Token=NULL;
+const char *ptr;
+
+if (! StrValid(Separators)) Separators=$self->Separators;
+ptr=GetToken($self->Data,Separators,&Token,$self->Flags);
+if (ptr==NULL) return(NULL);
+return(Token);
+}
+
 
 const char *remaining()
 {

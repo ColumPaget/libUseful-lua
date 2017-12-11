@@ -63,6 +63,18 @@ t     make a unique temporary file name. the file path must be a mktemp style te
 S     file contents are sorted
 z     compress/uncompress with gzip
 
+for 'http' and 'https' streams the second argument consists first of a list of characters with the following meanints:
+
+r     GET method
+w     POST method
+
+and then the following options:
+
+content-type     content type for use with POST method
+content-length   content length for use with POST method
+oauth=<name>     use an oauth method that's been set up under 'name'
+
+
 
 This module also supplies a POLL_IO object, which stream objects can be added to, and which can then be used to watch 
 multiple stream objects for activity
@@ -106,6 +118,18 @@ return(STREAMCreate());
 %newobject readln;
 char *readln() {return(STREAMReadLine(NULL, $self));} 
 
+/* read a byte from a stream, lua will treat this as a number */
+int readbyte() {return(STREAMReadChar($self));}
+
+/* read a character from a stream, lua will treat this as a string */
+char getch() {return(STREAMReadChar($self));}
+char readch() {return(STREAMReadChar($self));}
+
+/* return a byte, but leave it in the string to be read again. Lua will treat it as a number */
+int peek() {return(STREAMPeekChar($self));}
+
+/* return a byte, but leave it in the string to be read again. Lua will treat it as a string */
+char peekch() {return(STREAMPeekChar($self));}
 
 /* read from a stream util a 'terminator' character */
 %newobject readto;
