@@ -11,18 +11,18 @@ This module implemements various string-based utility functions, including diffe
 #include "libUseful-3/Markup.h"
 #include "libUseful-3/String.h"
 #include "libUseful-3/Errors.h"
+#include "libUseful-3/PatternMatch.h"
 
 #define safestrlen(Str) (StrLen(Str))
 #define httpQuote(Str) (HTTPQuote(NULL, Str))
 #define httpUnQuote(Str) (HTTPUnQuote(NULL, Str))
 #define htmlQuote(Str) (HTMLQuote(NULL, Str))
 #define htmlUnQuote(Str) (HTMLUnQuote(NULL, Str))
-#define quoteChars(Str, Chars) (QuoteCharsInStr(NULL, Str,Chars))
+#define quoteChars(Str, Chars) (QuoteCharsInStr(NULL, Str, Chars))
 #define unQuote(Str) (UnQuoteStr(NULL, Str))
-#define stripTrailingWhitespace(Str) (StripTrailingWhitespace(Str))
-#define stripLeadingWhitespace(Str) (StripLeadingWhitespace(Str))
 #define pad(Str, Pad, PadLen) (CopyPadStr(NULL, Str, Pad, PadLen))
 #define padto(Str, Pad, PadLen) (CopyPadStrTo(NULL, Str, Pad, PadLen))
+#define pmatch_check(Pattern, String, len) (pmatch_one(Pattern, String, (len > 0 ? len: StrLen(String)), NULL, NULL, 0))
 
 char *stripCRLF(const char *Str) 
 {
@@ -31,6 +31,23 @@ Ret=CopyStr(Ret, Str);
 StripCRLF(Ret);
 return(Ret);
 }
+
+char *stripTrailingWhitespace(const char *Str) 
+{
+char *Ret=NULL;
+Ret=CopyStr(Ret, Str);
+StripTrailingWhitespace(Ret);
+return(Ret);
+}
+
+char *stripLeadingWhitespace(const char *Str) 
+{
+char *Ret=NULL;
+Ret=CopyStr(Ret, Str);
+StripLeadingWhitespace(Ret);
+return(Ret);
+}
+
 
 
 typedef struct
@@ -70,6 +87,10 @@ const char *ToIEC(double Value, int Precision=1);
 /* strutil.fromIEC(Str, type)   - convert a numeric value from a IEC notation string. e.g.  2.6k gives 2600 */
 %rename(fromIEC) FromIEC;
 double FromIEC(const char *Str, int Precision=1);
+
+/* strutil.fromIEC(Str, type)   - convert a numeric value from a IEC notation string. e.g.  2.6k gives 2600 */
+%rename(pmatch) pmatch_check;
+int pmatch_check(const char *Pattern, const char *String, int len=0);
 
 
 /* apply HTTP style 'percent' encoding to a string */
@@ -113,8 +134,11 @@ int istext(const char *Str);
 int isnum(const char *Str);
 
 /* strip spaces from string */
-void stripTrailingWhitespace(char *Str);
-void stripLeadingWhitespace(char *Str);
+%newobject stripTrailingWhitespace;
+char *stripTrailingWhitespace(char *Str);
+
+%newobject stripLEadingWhitespace;
+char *stripLeadingWhitespace(char *Str);
 
 /* strip carriage-return and/or linefeed from end of string */
 %newobject stripCRLF;

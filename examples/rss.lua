@@ -12,13 +12,17 @@ tag=P:next()
 
 while tag ~= nil
 do
-I=P:open(tag)
+I=tag:open("/")
+if I ~= nil
+then
 title=I:value("title")
 if title ~=nil then print("title: "..title) end
 guid=I:value("guid")
 if guid ~=nil then print("guid: "..guid) end
 pubDate=I:value("pubDate")
 if pubDate ~=nil then print("pubDate: "..pubDate) end
+end
+
 tag=P:next()
 end
 

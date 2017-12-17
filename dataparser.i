@@ -136,14 +136,31 @@ return("");
 }
 
 /*
-get the value of a named attribute
+return the type of the current element
 */
-const char *value(const char *Name)
+const char *type()
+{
+  if ($self->ItemType==ITEM_VALUE) return("value");
+  return("object");
+}
+
+/*
+get the value of an attribute. If an object in the parse tree is a collection, then you can access its attributes by passing their names here. If an item is a value, then passing nothing will return it's value
+*/
+const char *value(const char *Name="")
 {
 const char *ptr=NULL;
 
+if (StrEnd(Name))
+{
+  if ($self->ItemType==ITEM_VALUE) return($self->Item);
+  else return("");
+}
+else
+{
 if ($self->Side) ptr=ParserGetValue($self->Side, Name);
 if (! StrValid(ptr))  ptr=ParserGetValue($self, Name);
+}
 
 return(ptr);
 }
