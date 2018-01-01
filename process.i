@@ -5,6 +5,9 @@ this module implements functions related to a process.
 
 %module process
 %{
+
+#define LUL_VERSION "1.4"
+
 #define _GNU_SOURCE
 #include <unistd.h>
 #include <signal.h>
@@ -15,6 +18,12 @@ this module implements functions related to a process.
 #include "libUseful-3/Errors.h"
 #include "libUseful-3/LibSettings.h"
 
+
+const char *LibUsefulLuaGetValue(const char *Name)
+{
+if (strcasecmp(Name,"LibUseful-lua:Version")==0) return(LUL_VERSION);
+return(LibUsefulGetValue(Name));
+}
 
 #define ChildExited(pid) (waitpid(pid, NULL, WNOHANG))
 #define Wait(pid) (waitpid(pid, NULL, 0))
@@ -138,6 +147,8 @@ get/set a libUseful internal variable. Useful variables are:
 LibUseful:Version     version number of libUseful library
 LibUseful:BuildTime   build time of libUseful library
 
+LibUseful-lua:Version version number of libUseful-lua 
+
 You can also set some global values that effect behavior of libUseful functions
 
 HTTP:Debug            set to 'Y' to get debugging output from HTTP connections
@@ -145,12 +156,17 @@ HTTP:NoCookies        disable HTTP cookies
 HTTP:NoCompress       disable HTTP compression
 HTTP:NoRedirect       do not automatically handle HTTP redirects
 HTTP:NoCache          tell HTTP servers not to serve a cached copy of a document
- 
+HTTP:UserAgent        set HTTP User-Agent string for this process
+
+SSL:Level             set minimum SSL/TLS level. can be one of ''
+SSL:PermittedCiphers  set list of permitted SSL/TLS ciphers
+SSL:DHParams-File     if using Diffie-Helman Perfect-Forward-Secrecy then set path to the 'params' file
+
 */
 
 
-%rename(lu_get) LibUsefulGetValue;
-const char *LibUsefulGetValue(const char *Name);
+%rename(lu_get) LibUsefulLuaGetValue;
+const char *LibUsefulLuaGetValue(const char *Name);
 
 %rename(lu_set) LibUsefulSetValue;
 void LibUsefulSetValue(const char *Name, const char *Value);

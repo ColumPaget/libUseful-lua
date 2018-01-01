@@ -61,6 +61,7 @@ print(str)
 #define term_strlen(s) (TerminalStrLen(s))
 #define term_format(s) (TerminalFormatStr(NULL,s))
 #define term_stdputs(s) (TerminalPutStr(s, NULL))
+#define term_utf8(l) (TerminalSetUTF8(l))
 
 typedef struct
 {
@@ -83,6 +84,15 @@ char *term_format(const char *Str);
 %rename(puts) term_stdputs;
 void term_stdputs(const char *Str);
 
+/* 
+set UTF-8 capabilities. This applies to all terminals.  'level' can be:
+
+  0  -  no UTF-8 support
+  1  -  UTF-8 support for values < 0x800
+  2  -  UTF-8 support for values < 0x10000
+*/
+%rename(utf8) term_utf8;
+void term_utf8(int level);
 
 
 /* From here on in everything relates to a TERM object */
