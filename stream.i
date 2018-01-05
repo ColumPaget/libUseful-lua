@@ -222,6 +222,13 @@ case STREAM_TYPE_TCP: DoSSLClientNegotiation($self, 0); break;
 return(FALSE);
 }
 
+/*
+ Only currently used with HTTP PUT/POST to declare that all data has been uploaded and that the server should 
+ process it and send a reply
+*/
+int commit() {return(STREAMCommit($self));}
+
+
 /* close a stream */
 void close() 
 {
