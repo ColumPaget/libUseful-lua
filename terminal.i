@@ -162,6 +162,9 @@ return(len);
 /* Clear the screen */
 void clear() { TerminalCommand(TERM_CLEAR_SCREEN, 0, 0, $self->S); }
 
+/* reset terminal config */
+void reset() {TerminalReset($self->S);}
+
 /* Erase an entire line */
 void eraseline() {TerminalCommand(TERM_CLEAR_LINE, 0, 0, $self->S);}
 
