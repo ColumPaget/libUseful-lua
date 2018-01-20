@@ -12,6 +12,7 @@ network client functionality, which is done via the 'stream' module instead
 #include "libUseful-3/inet.h"
 #include "libUseful-3/ConnectionChain.h"
 #include "libUseful-3/Errors.h"
+#include "libUseful-3/URL.h"
 
 #define externalIP() (GetExternalIP(NULL))
 
@@ -21,9 +22,49 @@ STREAM *S;
 char *SSLCertificate;
 char *SSLKey;
 } SERVER;
+
+typedef struct
+{
+char *type;  //protocol
+char *host;  //hostname
+char *port;  
+char *path;
+char *args; //http style args (things following ? in a url)
+char *user;
+char *pass;
+} URL_INFO_STRUCT;
+
+
+URL_INFO_STRUCT *parseURL(const char *URL)
+{
+URL_INFO_STRUCT *Info;
+
+Info=(URL_INFO_STRUCT *) calloc(1, sizeof(URL_INFO_STRUCT));
+ParseURL(URL, &(Info->type), &(Info->host), &(Info->port), &(Info->user), &(Info->pass), &(Info->path), &(Info->args));
+return(Info);
+}
+
+
 %}
 
 
+
+typedef struct
+{
+char *type;  //protocol
+char *host;  //hostname
+char *port;  
+char *path;
+char *args; //http style args (things following ? in a url)
+char *user;
+char *pass;
+} URL_INFO_STRUCT;
+
+
+
+/* net.parseURL(URL)   - return a structure containing broken-down parts of a URL (see URL_INFO_STRUCT above)*/
+%newobject *parseURL;
+URL_INFO_STRUCT *parseURL(const char *URL);
 
 
 /* net.lookupIP(hostname)   - return IP address associated with hostname */

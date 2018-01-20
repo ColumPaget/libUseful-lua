@@ -6,7 +6,7 @@ this module implements functions related to a process.
 %module process
 %{
 
-#define LUL_VERSION "1.6"
+#define LUL_VERSION "1.7"
 
 #define _GNU_SOURCE
 #include <unistd.h>
