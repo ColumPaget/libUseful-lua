@@ -17,6 +17,20 @@ AC_ARG_WITH([lua-includes], [  --with-lua-includes       path to directory conta
 AC_ARG_WITH([lua-libs], [  --with-lua-libs       path to directory containing liblua libs],LUA_LIBS_DIR=$withval)
 AC_ARG_WITH([lua-modules], [  --with-lua-modules       path to directory in which to install modules files],LUA_MODULES_DIR=$withval)
 
+AC_CHECK_LIB(Useful,GetToken,,)
+cf_have_libUseful=$ac_cv_lib_Useful_GetToken
+if test "$cf_have_libUseful" != "yes"
+then
+echo "ERROR: libUseful not found"
+fi
+
+AC_CHECK_LIB(lua,luaL_openlibs,,)
+cf_have_liblua=$ac_cv_lib_lua_luaL_openlibs
+if test "$cf_have_liblua" != "yes"
+then
+echo "ERROR: liblua not found"
+fi
+
 
 if test "$LUA_INCLUDE_DIR" = ""
 then

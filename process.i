@@ -11,12 +11,13 @@ this module implements functions related to a process.
 #define _GNU_SOURCE
 #include <unistd.h>
 #include <signal.h>
-#include <wait.h>
+#include <sys/wait.h>
 #include "libUseful-3/Process.h"
 #include "libUseful-3/SpawnPrograms.h"
 #include "libUseful-3/GeneralFunctions.h"
 #include "libUseful-3/Errors.h"
 #include "libUseful-3/LibSettings.h"
+#include "libUseful-3/FileSystem.h"
 
 
 const char *LibUsefulLuaGetValue(const char *Name)

@@ -233,6 +233,7 @@ typedef struct
 %extend TERMBAR {
 TERMBAR()
 {
+return(NULL);
 }
 
 ~TERMBAR()
