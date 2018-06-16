@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS=-g -O2 -I/usr/local/Cellar/lua/5.3.4_4/include/lua5.3/ -L/usr/local/lib
+CFLAGS=-g -O2 -I/usr/local/Cellar/lua/5.3.4_4/include/lua -L/usr/local/lib
 LIBS=-llua -lUseful 
 LUA_MODULES_DIR=/usr/local/lib/lua/5.3/
 
