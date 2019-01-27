@@ -1,7 +1,7 @@
 %module oauth
 %{
-#include "libUseful-3/OAuth.h"
-#include "libUseful-3/Errors.h"
+#include "libUseful-4/OAuth.h"
+#include "libUseful-4/Errors.h"
 %}
 
 typedef struct

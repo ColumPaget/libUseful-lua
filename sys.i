@@ -4,9 +4,9 @@ This module provides functions that return various system information.
 
 %module sys
 %{
-#include "libUseful-3/GeneralFunctions.h"
-#include "libUseful-3/Errors.h"
-#include "libUseful-3/Time.h"
+#include "libUseful-4/GeneralFunctions.h"
+#include "libUseful-4/Errors.h"
+#include "libUseful-4/Time.h"
 
 //mapped to sys_(name) to prevent clashes e.g. with 'hostname'
 #define sys_uptime() (OSSysInfoLong(OSINFO_UPTIME))

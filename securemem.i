@@ -1,7 +1,7 @@
 %module securemem
 %{
-#include "libUseful-3/SecureMem.h"
-#include "libUseful-3/Errors.h"
+#include "libUseful-4/SecureMem.h"
+#include "libUseful-4/Errors.h"
 %}
 
 typedef struct

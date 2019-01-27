@@ -26,9 +26,9 @@ printf("child object name: "..Child:value("name").. " ID: ".. Child:value("ID"))
 
 %module dataparser
 %{
-#include "libUseful-3/DataParser.h"
-#include "libUseful-3/Errors.h"
-#include "libUseful-3/List.h"
+#include "libUseful-4/DataParser.h"
+#include "libUseful-4/Errors.h"
+#include "libUseful-4/List.h"
 %}
 
 
@@ -97,7 +97,7 @@ to the first child within the original PARSER object, and you can use 'name' and
 */
 PARSER *first()
 {
-$self->Side=$self;
+$self->Side=ListGetNext($self);
 return($self->Side);
 }
 

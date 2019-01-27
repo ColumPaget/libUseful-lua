@@ -5,8 +5,8 @@ This module provide a 'RAWDATA' object that can be used to handle binary data.
 
 %module rawdata
 %{
-#include "libUseful-3/GeneralFunctions.h"
-#include "libUseful-3/RawData.h"
+#include "libUseful-4/GeneralFunctions.h"
+#include "libUseful-4/RawData.h"
 %}
 
 

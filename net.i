@@ -8,11 +8,11 @@ network client functionality, which is done via the 'stream' module instead
 
 %module net
 %{
-#include "libUseful-3/Socket.h"
-#include "libUseful-3/inet.h"
-#include "libUseful-3/ConnectionChain.h"
-#include "libUseful-3/Errors.h"
-#include "libUseful-3/URL.h"
+#include "libUseful-4/Socket.h"
+#include "libUseful-4/inet.h"
+#include "libUseful-4/ConnectionChain.h"
+#include "libUseful-4/Errors.h"
+#include "libUseful-4/URL.h"
 
 #define externalIP() (GetExternalIP(NULL))
 

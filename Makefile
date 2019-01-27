@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS=-g -O2 -I/usr/local/Cellar/lua/5.3.4_4/include/lua -L/usr/local/lib
-LIBS=-llua -lUseful 
+CFLAGS=-g -O2 -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib
+LIBS=-lUseful 
 LUA_MODULES_DIR=/usr/local/lib/lua/5.3/
 
 MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so

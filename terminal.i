@@ -50,16 +50,20 @@ You can also translate a tile-formatted string to a printable string using:
 str=terminal.format("~y~RThis is yellow on red~0")
 print(str)
 
+
+The terminal class also supports 'terminal bars' which can be a bar of text or a 
+menu-in-one-line, and terminal menus which are multi-line menus.
+
 */
 
 
 %module terminal
 %{
-#include "libUseful-3/Terminal.h"
-#include "libUseful-3/Errors.h"
+#include "libUseful-4/Terminal.h"
+#include "libUseful-4/Errors.h"
 
 #define term_strlen(s) (TerminalStrLen(s))
-#define term_format(s) (TerminalFormatStr(NULL,s))
+#define term_format(s) (TerminalFormatStr(NULL,s,NULL))
 #define term_stdputs(s) (TerminalPutStr(s, NULL))
 #define term_utf8(l) (TerminalSetUTF8(l))
 
@@ -68,6 +72,7 @@ typedef struct
 int Flags;
 STREAM *S;
 } TERM;
+
 %}
 
 
@@ -165,6 +170,8 @@ void clear() { TerminalCommand(TERM_CLEAR_SCREEN, 0, 0, $self->S); }
 /* reset terminal config */
 void reset() {TerminalReset($self->S);}
 
+void close() {TerminalReset($self->S); STREAMClose($self->S);}
+
 /* Erase an entire line */
 void eraseline() {TerminalCommand(TERM_CLEAR_LINE, 0, 0, $self->S);}
 
@@ -216,9 +223,13 @@ char *readln(const char *Config="") {return(TerminalReadText(NULL, TerminalTextC
 %newobject prompt;
 char *prompt(const char *Prompt, const char *Config="") {return(TerminalReadPrompt(NULL, Prompt, TerminalTextConfig(Config), $self->S));}
 
-/* create a terminal bar */
+/* create a terminal bar for the current terminal */
 %newobject bar;
 TERMBAR *bar(const char *Text, const char *Config="") {return(TerminalBarCreate($self->S, Config, Text));}
+
+/* create a terminal menu for the current terminal */
+%newobject menu;
+TERMMENU *menu(int x, int y, int wid, int high) {return(TerminalMenuCreate($self->S, x, y, wid, high));}
 }
 
 
@@ -231,9 +242,9 @@ typedef struct
 
 
 %extend TERMBAR {
-TERMBAR()
+TERMBAR(TERM *Term, const char *Text, const char *Config="")
 {
-return(NULL);
+return(TerminalBarCreate(Term, Config, Text));
 }
 
 ~TERMBAR()
@@ -245,3 +256,112 @@ free($self);
 char *prompt(const char *Prompt) {return(TerminalBarReadText(NULL, $self, 0, Prompt));}
 }
 
+
+typedef struct
+{
+int x;
+int y;
+int wid;
+int high;
+STREAM *Term;
+ListNode *Options;
+char *MenuAttribs;
+char *MenuCursorLeft;
+char *MenuCursorRight;
+} TERMMENU;
+
+
+%extend TERMMENU {
+
+/* Create a terminal menu object */
+TERMMENU(TERM *Term, int x, int y, int wid, int high)
+{
+TERMMENU *Item;
+Item=TerminalMenuCreate(Term->S, x, y, wid, high);
+return(Item);
+}
+
+/* You would never call this, it's called automatically when the object goes out of scope */
+~TERMMENU()
+{
+ListClear($self->Options, Destroy);
+TerminalMenuDestroy($self);
+}
+
+
+/* Use this to alter the default colors by passing tilde-strings for 
+'MenuAttribs' (which sets background and foreground for the menu) and
+'SelectedAttribs' (which sets background and foreground for the selected item)
+*/
+void config(const char *MenuAttribs, const char *SelectedAttribs)
+{
+$self->MenuAttribs=CopyStr($self->MenuAttribs, MenuAttribs);
+$self->MenuCursorLeft=CopyStr($self->MenuCursorLeft, SelectedAttribs);
+}
+
+
+/* clear all items out of the menu */
+void clear() 
+{
+ListClear($self->Options, Destroy);
+$self->Options->Side=NULL;
+}
+
+
+/*
+add an item to the menu. 'str' is what will be displayed, 'id' is what will be returned 
+when an item is selected. If 'id' is null or an empty string, then 'str' will be 
+returned instead
+*/
+
+void add(const char *str, const char *id=NULL) 
+{
+if (id) ListAddNamedItem($self->Options, str, CopyStr(NULL, id));
+else ListAddNamedItem($self->Options, str, NULL);
+
+fflush(NULL);
+}
+
+
+/* Actually draw a menu. This doesn't read keypresses or anything, just draws the menu in its current state */
+void draw() {TerminalMenuDraw($self);}
+
+/* 
+Pass a keypress into the menu. Changes the selected item, if need be. Redraws the menu.
+if the keypress is 'enter' then return the selected item, else return NULL
+*/
+
+%newobject onkey;
+char* onkey(char *key) 
+{
+ListNode *Node;
+Node=TerminalMenuOnKey($self, TerminalTranslateKeyStr(key));
+if (Node)
+{
+if (Node->Item != NULL) return(CopyStr(NULL, Node->Item));
+return(CopyStr(NULL, Node->Tag));
+}
+return(NULL);
+}
+
+/*
+run a menu. Read keypresses and update menu until an item is selected or 'escape' is pressed
+*/
+
+%newobject run;
+char *run() 
+{
+ListNode *Node;
+
+Node=TerminalMenuProcess($self);
+if (Node)
+{
+if (Node->Item != NULL) return(CopyStr(NULL, Node->Item));
+return(CopyStr(NULL, Node->Tag));
+}
+
+return(NULL);
+}
+
+
+}

@@ -21,8 +21,8 @@ print("result: " .. h:finish());
 
 %module hash
 %{
-#include "libUseful-3/Hash.h"
-#include "libUseful-3/Errors.h"
+#include "libUseful-4/Hash.h"
+#include "libUseful-4/Errors.h"
 
 #define types() HashAvailableTypes(NULL);
 

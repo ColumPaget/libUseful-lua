@@ -84,11 +84,11 @@ multiple stream objects for activity
 
 %module stream
 %{
-#include "libUseful-3/Stream.h"
-#include "libUseful-3/FileSystem.h"
-#include "libUseful-3/Http.h"
-#include "libUseful-3/Expect.h"
-#include "libUseful-3/Errors.h"
+#include "libUseful-4/Stream.h"
+#include "libUseful-4/FileSystem.h"
+#include "libUseful-4/Http.h"
+#include "libUseful-4/Expect.h"
+#include "libUseful-4/Errors.h"
 #include <unistd.h>
 
 void Progressor(const char *Path, int bytes, int total){/*printf("\r %s %d %d            ",Path,bytes,total);fflush(NULL);*/}

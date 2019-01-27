@@ -6,18 +6,18 @@ this module implements functions related to a process.
 %module process
 %{
 
-#define LUL_VERSION "1.8"
+#define LUL_VERSION "2.0"
 
 #define _GNU_SOURCE
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
-#include "libUseful-3/Process.h"
-#include "libUseful-3/SpawnPrograms.h"
-#include "libUseful-3/GeneralFunctions.h"
-#include "libUseful-3/Errors.h"
-#include "libUseful-3/LibSettings.h"
-#include "libUseful-3/FileSystem.h"
+#include "libUseful-4/Process.h"
+#include "libUseful-4/SpawnPrograms.h"
+#include "libUseful-4/GeneralFunctions.h"
+#include "libUseful-4/Errors.h"
+#include "libUseful-4/LibSettings.h"
+#include "libUseful-4/FileSystem.h"
 
 
 const char *LibUsefulLuaGetValue(const char *Name)

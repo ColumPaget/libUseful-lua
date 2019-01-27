@@ -5,13 +5,13 @@ This module implemements various string-based utility functions, including diffe
 
 %module strutil
 %{
-#include "libUseful-3/GeneralFunctions.h"
-#include "libUseful-3/Tokenizer.h"
-#include "libUseful-3/Http.h"
-#include "libUseful-3/Markup.h"
-#include "libUseful-3/String.h"
-#include "libUseful-3/Errors.h"
-#include "libUseful-3/PatternMatch.h"
+#include "libUseful-4/GeneralFunctions.h"
+#include "libUseful-4/Tokenizer.h"
+#include "libUseful-4/Http.h"
+#include "libUseful-4/Markup.h"
+#include "libUseful-4/String.h"
+#include "libUseful-4/Errors.h"
+#include "libUseful-4/PatternMatch.h"
 
 #define safestrlen(Str) (StrLen(Str))
 #define httpQuote(Str) (HTTPQuote(NULL, Str))
@@ -29,6 +29,14 @@ char *stripCRLF(const char *Str)
 char *Ret=NULL;
 Ret=CopyStr(Ret, Str);
 StripCRLF(Ret);
+return(Ret);
+}
+
+char *stripQuotes(const char *Str) 
+{
+char *Ret=NULL;
+Ret=CopyStr(Ret, Str);
+StripQuotes(Ret);
 return(Ret);
 }
 
@@ -71,7 +79,7 @@ int safestrlen(const char *Str);
 
 
 
-/* strutil.tometric(value, type)   - convert a numeric value to a metric notation string. e.g.  1200 gives 1.2k */
+/* strutil.toMetric(value, type)   - convert a numeric value to a metric notation string. e.g.  1200 gives 1.2k */
 %rename(toMetric) ToMetric;
 const char *ToMetric(double Value, int Precision=1);
 
@@ -137,8 +145,11 @@ int isnum(const char *Str);
 %newobject stripTrailingWhitespace;
 char *stripTrailingWhitespace(char *Str);
 
-%newobject stripLEadingWhitespace;
+%newobject stripLeadingWhitespace;
 char *stripLeadingWhitespace(char *Str);
+
+%newobject stripQuotes;
+char *stripQuotes(char *Str);
 
 /* strip carriage-return and/or linefeed from end of string */
 %newobject stripCRLF;
@@ -151,6 +162,19 @@ char *stripCRLF(char *Str);
 
 /* Create a tokenizer, specifiying the string to be tokenized, a list of seperator strings, and optional */
 /* flags that alter tokenizer behavior */
+
+/* Flags is a string of characters:
+
+m    'multi separators', more than one separator string can be given, seperated by '|' 
+     e.g. strutil.TOKENIZER(str, "<|>", "m")   to break a string up at instances of '<' or '>'
+
+q    'honor quotes', don't tokenize substrings in quotes
+Q    'honor quotes' but also strip quotes from returned tokens
+s    include separators as tokens returned from the tokenizer
++    include separators by appending them to the preceeding token
+
+*/
+
 TOKENIZER(const char *Str, const char *Separators=" ", const char *Flags="")
 {
 TOKENIZER *Item;

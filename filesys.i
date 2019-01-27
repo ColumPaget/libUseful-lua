@@ -9,9 +9,9 @@ filesys.rename(from, to);
 
 %module filesys
 %{
-#include "libUseful-3/FileSystem.h"
-#include "libUseful-3/Hash.h"
-#include "libUseful-3/Errors.h"
+#include "libUseful-4/FileSystem.h"
+#include "libUseful-4/Hash.h"
+#include "libUseful-4/Errors.h"
 #include <glob.h>
 #include <sys/stat.h>
 
