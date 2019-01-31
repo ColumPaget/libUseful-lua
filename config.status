@@ -427,7 +427,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/metacosm89/coding-2019/libUseful-lua'
+ac_pwd='/home/colum/boinc_mgr.lua/libUseful-lua'
 srcdir='.'
 INSTALL='/bin/install -c'
 test -n "$AWK" || AWK=awk
@@ -585,7 +585,7 @@ cat >>"$ac_tmp/subs1.awk" <<\_ACAWK &&
 S["LTLIBOBJS"]=""
 S["LIBOBJS"]=""
 S["LUA_EXE_PATH"]="/opt/lua-5.3.4/bin/lua"
-S["LUA_MODULES_DIR"]="/usr/local/lib/lua/5.3/"
+S["LUA_MODULES_DIR"]="/opt/lua-5.3.4/lib/lua/5.3/"
 S["LUA_INCLUDE_DIR"]="/opt/lua-5.3.4/include"
 S["EGREP"]="/bin/grep -E"
 S["GREP"]="/bin/grep"

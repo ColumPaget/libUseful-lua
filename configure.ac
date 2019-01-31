@@ -24,13 +24,6 @@ then
 echo "ERROR: libUseful not found"
 fi
 
-AC_CHECK_LIB(lua,luaL_openlibs,,)
-cf_have_liblua=$ac_cv_lib_lua_luaL_openlibs
-if test "$cf_have_liblua" != "yes"
-then
-echo "ERROR: liblua not found"
-fi
-
 
 if test "$LUA_INCLUDE_DIR" = ""
 then

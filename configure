@@ -3315,57 +3315,6 @@ then
 echo "ERROR: libUseful not found"
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_openlibs in -llua" >&5
-$as_echo_n "checking for luaL_openlibs in -llua... " >&6; }
-if ${ac_cv_lib_lua_luaL_openlibs+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-llua  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char luaL_openlibs ();
-int
-main ()
-{
-return luaL_openlibs ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_lua_luaL_openlibs=yes
-else
-  ac_cv_lib_lua_luaL_openlibs=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_lua_luaL_openlibs" >&5
-$as_echo "$ac_cv_lib_lua_luaL_openlibs" >&6; }
-if test "x$ac_cv_lib_lua_luaL_openlibs" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBLUA 1
-_ACEOF
-
-  LIBS="-llua $LIBS"
-
-fi
-
-cf_have_liblua=$ac_cv_lib_lua_luaL_openlibs
-if test "$cf_have_liblua" != "yes"
-then
-echo "ERROR: liblua not found"
-fi
-
 
 if test "$LUA_INCLUDE_DIR" = ""
 then
