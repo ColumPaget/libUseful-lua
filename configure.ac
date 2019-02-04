@@ -8,6 +8,26 @@ AC_PROG_INSTALL
 AC_HEADER_STDC
 AC_SUBST([LUA_INCLUDE_DIR])
 AC_SUBST([LUA_MODULES_DIR])
+AC_SUBST([SHLIB_FLAGS])
+
+AC_MSG_CHECKING(whether fPIC compiler option is accepted)
+SAVED_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -fPIC -Werror"
+
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([], [return 0;])],
+    [AC_MSG_RESULT(yes)
+     cf_fpic_supported="yes"],
+    [AC_MSG_RESULT(no)
+		 cf_fpic_supported="no"])
+
+CFLAGS="$SAVED_CFLAGS"
+
+if test "$cf_fpic_supported" == "yes"
+then
+	SHLIB_FLAGS="-fPIC -shared"
+else
+	SHLIB_FLAGS="-shared"
+fi
 
 LUA_INCLUDE_DIR=""
 LUA_MODULES_DIR=""
