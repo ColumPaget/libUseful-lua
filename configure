@@ -3235,9 +3235,7 @@ CFLAGS="$SAVED_CFLAGS"
 
 if test "$cf_fpic_supported" == "yes"
 then
-	SHLIB_FLAGS="-fPIC -shared"
-else
-	SHLIB_FLAGS="-shared"
+	CFLAGS="$(CFLAGS) -fPIC"
 fi
 
 LUA_INCLUDE_DIR=""

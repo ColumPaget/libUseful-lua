@@ -181,14 +181,14 @@ configure:3207: checking whether fPIC compiler option is accepted
 configure:3223: gcc -c -g -O2 -fPIC -Werror  conftest.c >&5
 configure:3223: $? = 0
 configure:3224: result: yes
-configure:3247: checking for lua
-configure:3265: found /opt/lua-5.3.4/bin/lua
-configure:3277: result: /opt/lua-5.3.4/bin/lua
-configure:3305: checking for GetToken in -lUseful
-configure:3330: gcc -o conftest -g -O2   conftest.c -lUseful   >&5
-configure:3330: $? = 0
-configure:3339: result: yes
-configure:3542: creating ./config.status
+configure:3245: checking for lua
+configure:3263: found /opt/lua-5.3.4/bin/lua
+configure:3275: result: /opt/lua-5.3.4/bin/lua
+configure:3303: checking for GetToken in -lUseful
+configure:3328: gcc -o conftest  -fPIC   conftest.c -lUseful   >&5
+configure:3328: $? = 0
+configure:3337: result: yes
+configure:3540: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -248,7 +248,7 @@ ac_cv_prog_make_make_set=yes
 ## ----------------- ##
 
 CC='gcc'
-CFLAGS='-g -O2 -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib'
+CFLAGS=' -fPIC -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib'
 CPP='gcc -E'
 CPPFLAGS=''
 DEFS='-DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DSTDC_HEADERS=1 -DHAVE_LIBUSEFUL=1'
@@ -278,7 +278,7 @@ PACKAGE_VERSION=''
 PATH_SEPARATOR=':'
 SET_MAKE=''
 SHELL='/bin/sh'
-SHLIB_FLAGS='-fPIC -shared'
+SHLIB_FLAGS=''
 ac_ct_CC='gcc'
 bindir='${exec_prefix}/bin'
 build_alias=''
