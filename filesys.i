@@ -73,7 +73,7 @@ int FileExists(const char *);
 /*  filesys.mkdir(Path)   make a directory. DirMask is the 'mode' of the created directory, and is optional */
 int mkdir(const char *Path, int DirMask=0777) { if (mkdir(Path, DirMask)==0) return(TRUE); return(FALSE);}
 
-int rename(const char *OldPath, const char *NewPath) { if (rename(OldPath, NewPath)==0) return(TRUE); return(FALSE);}
+int rmdir(const char *Path) { if (rmdir(Path)==0) return(TRUE); return(FALSE);}
 
 /*  filesys.mkdirPath(Path)   make a directory, CREATING ALL PARENT DIRECTORIES AS NEEDED. 
 DirMask is the 'mode' of the created directory, and is optional */
@@ -105,6 +105,10 @@ int symlink(const char *oldpath, const char *newpath) { if (symlink(oldpath, new
 
 /*  filesys.link(path, linkname)     create a hard link at 'linkname' pointing to file/directory at 'path' */
 int link(const char *oldpath, const char *newpath) { if (link(oldpath, newpath)==0) return(TRUE); return(FALSE);}
+
+int unlink(const char *path { if (unlink(path)==0) return(TRUE); return(FALSE);}
+
+int rename(const char *OldPath, const char *NewPath) { if (rename(OldPath, NewPath)==0) return(TRUE); return(FALSE);}
 
 /*  filesys.mount(device, mountpoint, type, args)  mount a filesystem. 'args' is optional. 
 If the mount point doesn't exist, it will be created.
