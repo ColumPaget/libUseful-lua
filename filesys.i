@@ -30,6 +30,8 @@ size_t size;
 time_t mtime;
 } FINFO;
 
+
+#define find(File, Path) (FindFileInPath(NULL, (File), (Path)))
 %}
 
 
@@ -69,8 +71,9 @@ char *StripDirectorySlash(char *DirPath);
 int FileExists(const char *);
 
 /*  filesys.mkdir(Path)   make a directory. DirMask is the 'mode' of the created directory, and is optional */
-int mkdir(const char *Path, int DirMask=0777);
+int mkdir(const char *Path, int DirMask=0777) { if (mkdir(Path, DirMask)==0) return(TRUE); return(FALSE);}
 
+int rename(const char *OldPath, const char *NewPath) { if (rename(OldPath, NewPath)==0) return(TRUE); return(FALSE);}
 
 /*  filesys.mkdirPath(Path)   make a directory, CREATING ALL PARENT DIRECTORIES AS NEEDED. 
 DirMask is the 'mode' of the created directory, and is optional */
@@ -78,8 +81,8 @@ DirMask is the 'mode' of the created directory, and is optional */
 int MakeDirPath(const char *Path, int DirMask=0777);
 
 /*  Path=filesys.find(File */
-%rename(find) FileFileInPath;
-char *FindFileInPath(char *InBuff, const char *File, const char *Path);
+%newobject find;
+char *find(const char *File, const char *Path);
 
 /*   filesys.chown(Path, Owner)   change owner of a file. 'Owner' is the name, not the uid */
 %rename(chown) FileChOwner;
@@ -98,10 +101,10 @@ int FileCopy(const char *oldpath, const char *newpath);
 int FileChangeExtension(const char *FilePath, const char *NewExt);
 
 /*  filesys.symlink(path, symlink)   create a symbolic link at 'symlink' pointing to file/directory at 'path' */
-int symlink(const char *oldpath, const char *newpath);
+int symlink(const char *oldpath, const char *newpath) { if (symlink(oldpath, newpath)==0) return(TRUE); return(FALSE);}
 
 /*  filesys.link(path, linkname)     create a hard link at 'linkname' pointing to file/directory at 'path' */
-int link(const char *oldpath, const char *newpath);
+int link(const char *oldpath, const char *newpath) { if (link(oldpath, newpath)==0) return(TRUE); return(FALSE);}
 
 /*  filesys.mount(device, mountpoint, type, args)  mount a filesystem. 'args' is optional. 
 If the mount point doesn't exist, it will be created.
@@ -171,6 +174,15 @@ return(Item);
   globfree(&($self->Glob));
   free(self);
 }
+
+/* return path of nth object in list, set it to be the current object */
+const char *first()
+{
+if ($self->Glob.gl_pathc < 1) return(NULL);
+$self->pos=0;
+return($self->Glob.gl_pathv[$self->pos]);
+}
+
 
 /* return path of prev object in list, set it to be the current object */
 const char *prev()

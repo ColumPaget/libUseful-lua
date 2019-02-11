@@ -221,7 +221,12 @@ char *readln(const char *Config="") {return(TerminalReadText(NULL, TerminalTextC
 
 /* print a prompt and read a line of text from the terminal */
 %newobject prompt;
-char *prompt(const char *Prompt, const char *Config="") {return(TerminalReadPrompt(NULL, Prompt, TerminalTextConfig(Config), $self->S));}
+char *prompt(const char *Prompt, const char *Config="", const char *Text=NULL) 
+{
+char *Str=NULL;
+if (StrLen(Text) > 0) Str=CopyStr(Str, Text);
+return(TerminalReadPrompt(Str, Prompt, TerminalTextConfig(Config), $self->S));
+}
 
 /* create a terminal bar for the current terminal */
 %newobject bar;
@@ -253,7 +258,12 @@ free($self);
 }
 
 %newobject prompt;
-char *prompt(const char *Prompt) {return(TerminalBarReadText(NULL, $self, 0, Prompt));}
+char *prompt(const char *Prompt, const char *Text=NULL) 
+{
+  char *Str=NULL;
+  if (Text) Str=CopyStr(Str, Text);
+  return(TerminalBarReadText(Str, $self, 0, Prompt));
+}
 }
 
 
