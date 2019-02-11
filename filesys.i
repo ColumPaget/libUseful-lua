@@ -106,7 +106,7 @@ int symlink(const char *oldpath, const char *newpath) { if (symlink(oldpath, new
 /*  filesys.link(path, linkname)     create a hard link at 'linkname' pointing to file/directory at 'path' */
 int link(const char *oldpath, const char *newpath) { if (link(oldpath, newpath)==0) return(TRUE); return(FALSE);}
 
-int unlink(const char *path { if (unlink(path)==0) return(TRUE); return(FALSE);}
+int unlink(const char *path) { if (unlink(path)==0) return(TRUE); return(FALSE);}
 
 int rename(const char *OldPath, const char *NewPath) { if (rename(OldPath, NewPath)==0) return(TRUE); return(FALSE);}
 
