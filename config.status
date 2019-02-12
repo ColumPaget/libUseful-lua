@@ -427,7 +427,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/colum/libUseful-lua'
+ac_pwd='/home/colum/hplap4/libUseful-lua'
 srcdir='.'
 INSTALL='/bin/install -c'
 test -n "$AWK" || AWK=awk
@@ -600,7 +600,7 @@ S["EXEEXT"]=""
 S["ac_ct_CC"]="gcc"
 S["CPPFLAGS"]=""
 S["LDFLAGS"]=""
-S["CFLAGS"]=" -fPIC -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib"
+S["CFLAGS"]="-g -O2 -fPIC -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib"
 S["CC"]="gcc"
 S["target_alias"]=""
 S["host_alias"]=""

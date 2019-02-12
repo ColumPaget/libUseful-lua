@@ -36,6 +36,7 @@ PATH: /usr/games/bin
 PATH: .
 PATH: /opt/Csound-6.05/bin
 PATH: /opt/Python-2.7.13/bin
+PATH: /opt/Python-2.7.15/bin
 PATH: /opt/Python-3.6.2/bin
 PATH: /opt/Qt5/bin
 PATH: /opt/SDL/bin
@@ -185,7 +186,7 @@ configure:3245: checking for lua
 configure:3263: found /opt/lua-5.3.4/bin/lua
 configure:3275: result: /opt/lua-5.3.4/bin/lua
 configure:3303: checking for GetToken in -lUseful
-configure:3328: gcc -o conftest  -fPIC   conftest.c -lUseful   >&5
+configure:3328: gcc -o conftest -g -O2 -fPIC   conftest.c -lUseful   >&5
 configure:3328: $? = 0
 configure:3337: result: yes
 configure:3540: creating ./config.status
@@ -248,7 +249,7 @@ ac_cv_prog_make_make_set=yes
 ## ----------------- ##
 
 CC='gcc'
-CFLAGS=' -fPIC -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib'
+CFLAGS='-g -O2 -fPIC -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib'
 CPP='gcc -E'
 CPPFLAGS=''
 DEFS='-DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DSTDC_HEADERS=1 -DHAVE_LIBUSEFUL=1'

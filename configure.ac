@@ -22,9 +22,9 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([], [return 0;])],
 
 CFLAGS="$SAVED_CFLAGS"
 
-if test "$cf_fpic_supported" == "yes"
+if test "$cf_fpic_supported" = "yes"
 then
-	CFLAGS="$(CFLAGS) -fPIC"
+CFLAGS="$CFLAGS -fPIC"
 fi
 
 LUA_INCLUDE_DIR=""

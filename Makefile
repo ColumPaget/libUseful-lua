@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS= -fPIC -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib
+CFLAGS=-g -O2 -fPIC -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib
 LIBS=-lUseful 
 LUA_MODULES_DIR=/opt/lua-5.3.4/lib/lua/5.3/
 MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so
