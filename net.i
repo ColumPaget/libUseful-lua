@@ -45,6 +45,31 @@ return(Info);
 }
 
 
+
+char *reformatURL(const char *URL) 
+{
+char *Tempstr=NULL;
+URL_INFO_STRUCT *info;
+
+if (! StrValid(URL)) return(NULL);
+info=parseURL(URL);
+if (! info) return(NULL);
+Tempstr=MCopyStr(Tempstr, info->type,"://",NULL);
+if (StrValid(info->user)) 
+{
+  Tempstr=MCatStr(Tempstr, info->user, ":", info->pass, "@", NULL);
+}
+Tempstr=CatStr(Tempstr, info->host);
+if (StrValid(info->port)) Tempstr=MCatStr(Tempstr, ":", info->port, NULL);
+Tempstr=MCatStr(Tempstr, "/", info->path, NULL);
+
+if (StrValid(info->args)) Tempstr=MCatStr(Tempstr, "?", info->args, NULL);
+
+return(Tempstr);
+}
+
+
+
 %}
 
 
@@ -66,6 +91,9 @@ char *pass;
 %newobject *parseURL;
 URL_INFO_STRUCT *parseURL(const char *URL);
 
+
+%newobject reformatURL;
+char *reformatURL(const char *URL);
 
 /* net.lookupIP(hostname)   - return IP address associated with hostname */
 %rename(lookupIP) LookupHostIP;
@@ -94,6 +122,7 @@ char *externalIP();
 
 %rename(setProxy) SetGlobalConnectionChain;
 int SetGlobalConnectionChain(const char *Chain);
+
 
 
 /* 
