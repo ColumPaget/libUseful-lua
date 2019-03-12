@@ -130,6 +130,11 @@ TerminalReset($self->S);
 free($self);
 }
 
+void timeout(int Timeout)
+{
+STREAMSetTimeout($self->S, Timeout);
+}
+
 /* show cursor or hide it */
 void showcursor()
 {
