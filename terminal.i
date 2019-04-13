@@ -359,6 +359,20 @@ return(CopyStr(NULL, Node->Tag));
 return(NULL);
 }
 
+
+
+%newobject curr;
+char* curr() 
+{
+if ($self->Options->Side)
+{
+if ($self->Options->Side->Item != NULL) return(CopyStr(NULL, $self->Options->Side->Item));
+return(CopyStr(NULL, $self->Options->Side->Tag));
+}
+return(NULL);
+}
+
+
 /*
 run a menu. Read keypresses and update menu until an item is selected or 'escape' is pressed
 */
