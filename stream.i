@@ -114,6 +114,11 @@ if (Path && (*Path != '\0')) return(STREAMOpen(Path, Config));
 return(STREAMCreate());
 }
 
+~STREAM()
+{
+STREAMClose($self);
+}
+
 /* read a line from a stream */
 %newobject readln;
 char *readln() {return(STREAMReadLine(NULL, $self));} 
@@ -235,6 +240,9 @@ void close()
 STREAMFlush($self);
 if ($self->in_fd != $self->out_fd) close($self->in_fd);
 close($self->out_fd);
+
+$self->in_fd=-1;
+$self->out_fd=-1;
 }
 
 }
