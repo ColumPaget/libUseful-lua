@@ -14,6 +14,7 @@ filesys.rename(from, to);
 #include "libUseful-4/Errors.h"
 #include <glob.h>
 #include <sys/stat.h>
+#include <sys/statvfs.h>
 
 typedef struct
 {
@@ -32,6 +33,35 @@ time_t mtime;
 
 
 #define find(File, Path) (FindFileInPath(NULL, (File), (Path)))
+
+
+double fs_size(const char *Path) 
+{
+struct statvfs StatFS; 
+
+statvfs(Path, &StatFS); 
+return(((double) StatFS.f_blocks) * ((double) StatFS.f_frsize)); 
+}
+
+double fs_free(const char *Path) 
+{
+struct statvfs StatFS; 
+
+statvfs(Path, &StatFS); 
+return(((double) StatFS.f_bfree * StatFS.f_bsize) * ((double) StatFS.f_frsize)); 
+
+}
+
+double fs_used(const char *Path)
+{
+struct statvfs StatFS; 
+
+statvfs(Path, &StatFS);
+return( ((double) (StatFS.f_blocks - StatFS.f_bfree)) * ((double) StatFS.f_frsize)); 
+
+}
+
+
 %}
 
 
@@ -110,6 +140,11 @@ int unlink(const char *path) { if (unlink(path)==0) return(TRUE); return(FALSE);
 
 int rename(const char *OldPath, const char *NewPath) { if (rename(OldPath, NewPath)==0) return(TRUE); return(FALSE);}
 
+
+double fs_size(const char *Path); 
+double fs_used(const char *Path); 
+double fs_free(const char *Path); 
+
 /*  filesys.mount(device, mountpoint, type, args)  mount a filesystem. 'args' is optional. 
 If the mount point doesn't exist, it will be created.
 This also (linux only) supports 'bind mounts' where 'dev' becomes a directory, and 'type' is 'bind'. 
@@ -157,6 +192,7 @@ item=Glob:next()
 end
 
 */
+
 
 
 
