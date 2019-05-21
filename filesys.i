@@ -98,7 +98,7 @@ char *StripDirectorySlash(char *DirPath);
 
 /*  filesys.exists(Path)   return true if a filesystem object (file, directory, etc) exists at path 'Path', false otherwise */
 %rename(exists) FileExists;
-int FileExists(const char *);
+int FileExists(const char *Path);
 
 /*  filesys.mkdir(Path)   make a directory. DirMask is the 'mode' of the created directory, and is optional */
 int mkdir(const char *Path, int DirMask=0777) { if (mkdir(Path, DirMask)==0) return(TRUE); return(FALSE);}
