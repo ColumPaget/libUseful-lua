@@ -26,6 +26,9 @@ if (strcasecmp(Name,"LibUseful-lua:Version")==0) return(LUL_VERSION);
 return(LibUsefulGetValue(Name));
 }
 
+#define LibUsefulLua_Process_GetUser() (LookupUserName(getuid()))
+#define LibUsefulLua_Process_GetGroup() (LookupGroupName(getgid()))
+
 #define ChildExited(pid) (waitpid(pid, NULL, WNOHANG))
 #define Wait(pid) (waitpid(pid, NULL, 0))
 %}
@@ -57,9 +60,30 @@ int demonize();
 /* return current process pid */
 long getpid();
 
-
 /* return parent process pid */
 long getppid();
+
+/* return current process pid */
+%rename(pid) getpid;
+long getpid();
+
+/* return parent process pid */
+%rename(ppid) getppid;
+long getppid();
+
+/* return current process user id */
+%rename(uid) getuid;
+long getuid();
+
+/* return current process group id */
+%rename(gid) getgid;
+long getgid();
+
+%rename(user) LibUsefulLua_Process_GetUser;
+const char *LibUsefulLua_Process_GetUser();
+
+%rename(group) LibUsefulLua_Process_GetGroup;
+const char *LibUsefulLua_Process_GetGroup();
 
 /* process.getenv(Name)   -  get an environment varible */
 const char *getenv(const char *Name);
