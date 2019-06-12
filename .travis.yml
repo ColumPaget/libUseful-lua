@@ -1,0 +1,14 @@
+language: c
+
+before_install: 
+  - apt-get install swig
+  - apt-get install lua-dev
+
+script: ./configure && make
+
+os:
+  - linux
+
+compiler:
+  - clang
+  - gcc
