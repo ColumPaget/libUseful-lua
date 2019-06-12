@@ -1,8 +1,9 @@
 language: c
 
 before_install: 
-  - sudo apt-get install swig
-  - sudo apt-get install lua-dev
+  - sudo apt-get install -y swig
+  - sudo apt-get install -y lua5.3
+  - sudo apt-get install -y lua5.3-dev
 
 script: ./configure && make
 
