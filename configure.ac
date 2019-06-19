@@ -27,6 +27,7 @@ then
 CFLAGS="$CFLAGS -fPIC"
 fi
 
+
 LUA_INCLUDE_DIR=""
 LUA_MODULES_DIR=""
 AC_PATH_PROG([LUA_EXE_PATH], [lua],,)
@@ -46,14 +47,21 @@ fi
 if test "$LUA_INCLUDE_DIR" = ""
 then
 LUA_INCLUDE_DIR=`dirname $LUA_EXE_PATH | sed "s/bin$/include/"`
-echo "INC: $LUA_INCLUDE_DIR"
 fi
+
+
+if test "$LUA_INCLUDE_DIR" != ""
+then
+CPPFLAGS="$CPPFLAGS -I$LUA_INCLUDE_DIR"
+fi
+
+CPPFLAGS="$CPPFLAGS -I/usr/include/lua -I/usr/include/lua5.2 -I/usr/include/lua5.3"
+AC_CHECK_HEADER(lua.h,,,)
 
 
 if test "$LUA_LIBS_DIR" = ""
 then
 LUA_LIBS_DIR=`dirname $LUA_EXE_PATH | sed "s/bin$/lib/"`
-echo "LIB: $LUA_LIBS_DIR"
 fi
 
 
@@ -72,7 +80,8 @@ then
 	LUA_MODULES_DIR=`$LUA_EXE_PATH -e "print(package.cpath)" | cut -d ? -f 1`
 fi
 
-
+echo "INC: $LUA_INCLUDE_DIR"
+echo "LIB: $LUA_LIBS_DIR"
 echo "MODS: $LUA_MODULES_DIR"
 
 
