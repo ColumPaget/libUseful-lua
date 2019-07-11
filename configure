@@ -3506,19 +3506,6 @@ then
 echo "ERROR: libUseful not found"
 fi
 
-
-if test "$LUA_INCLUDE_DIR" = ""
-then
-LUA_INCLUDE_DIR=`dirname $LUA_EXE_PATH | sed "s/bin$/include/"`
-fi
-
-
-if test "$LUA_INCLUDE_DIR" != ""
-then
-CPPFLAGS="$CPPFLAGS -I$LUA_INCLUDE_DIR"
-fi
-
-CPPFLAGS="$CPPFLAGS -I/usr/include/lua -I/usr/include/lua5.2 -I/usr/include/lua5.3"
 # On IRIX 5.3, sys/types and inttypes.h are conflicting.
 for ac_header in sys/types.h sys/stat.h stdlib.h string.h memory.h strings.h \
 		  inttypes.h stdint.h unistd.h
@@ -3536,6 +3523,26 @@ fi
 done
 
 
+ac_fn_c_check_header_mongrel "$LINENO" "libUseful-4/SysInfo.h" "ac_cv_header_libUseful_4_SysInfo_h" "$ac_includes_default"
+if test "x$ac_cv_header_libUseful_4_SysInfo_h" = xyes; then :
+  $as_echo "#define HAVE_LIBUSEFUL_SYSINFO_H 1" >>confdefs.h
+
+fi
+
+
+
+if test "$LUA_INCLUDE_DIR" = ""
+then
+LUA_INCLUDE_DIR=`dirname $LUA_EXE_PATH | sed "s/bin$/include/"`
+fi
+
+
+if test "$LUA_INCLUDE_DIR" != ""
+then
+CPPFLAGS="$CPPFLAGS -I$LUA_INCLUDE_DIR"
+fi
+
+CPPFLAGS="$CPPFLAGS -I/usr/include/lua -I/usr/include/lua5.2 -I/usr/include/lua5.3"
 ac_fn_c_check_header_mongrel "$LINENO" "lua.h" "ac_cv_header_lua_h" "$ac_includes_default"
 if test "x$ac_cv_header_lua_h" = xyes; then :
 

@@ -43,6 +43,7 @@ then
 echo "ERROR: libUseful not found"
 fi
 
+AC_CHECK_HEADER([libUseful-4/SysInfo.h],AC_DEFINE(HAVE_LIBUSEFUL_SYSINFO_H),,)
 
 if test "$LUA_INCLUDE_DIR" = ""
 then

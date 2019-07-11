@@ -5,6 +5,9 @@ This module provides functions that return various system information.
 %module sys
 %{
 #include "libUseful-4/GeneralFunctions.h"
+#ifdef HAVE_LIBUSEFUL_SYSINFO_H
+#include "libUseful-4/SysInfo.h"
+#endif
 #include "libUseful-4/Errors.h"
 #include "libUseful-4/Time.h"
 
