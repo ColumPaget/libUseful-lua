@@ -62,9 +62,9 @@ PATH: /opt/panda3d/bin
 PATH: /opt/perl-5.24.1/bin
 PATH: /opt/php-7.1.3/bin
 PATH: /opt/pngprogs-1.6.30/bin
-PATH: /opt/qemu-3.1.0/bin
 PATH: /opt/qemu-3.1.0_SDL/bin
 PATH: /opt/ruby-2.5.2/bin
+PATH: /opt/rust-1.36.0/bin
 PATH: /opt/samba-4.8.1/bin
 PATH: /opt/squirrel-3.0/bin
 PATH: /opt/tcl-8.6.9/bin

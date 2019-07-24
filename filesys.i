@@ -62,6 +62,42 @@ return( ((double) (StatFS.f_blocks - StatFS.f_bfree)) * ((double) StatFS.f_frsiz
 }
 
 
+
+int ConvertFilePerms(const char *DirMask)
+{
+int val=0;
+const char *ptr;
+
+if (! StrValid(DirMask)) return(0700);
+if (*DirMask=='0') return((int) strtol(DirMask,NULL,8));
+
+ptr=DirMask;
+if (*ptr=='r') val |= S_IRUSR;
+if (*ptr !='\0') ptr++;
+if (*ptr=='r') val |= S_IWUSR;
+if (*ptr !='\0') ptr++;
+if (*ptr=='r') val |= S_IXUSR;
+if (*ptr !='\0') ptr++;
+
+if (*ptr=='r') val |= S_IRGRP;
+if (*ptr !='\0') ptr++;
+if (*ptr=='r') val |= S_IWGRP;
+if (*ptr !='\0') ptr++;
+if (*ptr=='r') val |= S_IXGRP;
+if (*ptr !='\0') ptr++;
+
+if (*ptr=='r') val |= S_IROTH;
+if (*ptr !='\0') ptr++;
+if (*ptr=='r') val |= S_IWOTH;
+if (*ptr !='\0') ptr++;
+if (*ptr=='r') val |= S_IXOTH;
+if (*ptr !='\0') ptr++;
+
+
+return(val);
+}
+
+
 %}
 
 
@@ -101,7 +137,7 @@ char *StripDirectorySlash(char *DirPath);
 int FileExists(const char *Path);
 
 /*  filesys.mkdir(Path)   make a directory. DirMask is the 'mode' of the created directory, and is optional */
-int mkdir(const char *Path, int DirMask=0777) { if (mkdir(Path, DirMask)==0) return(TRUE); return(FALSE);}
+int mkdir(const char *Path, const char *DirMask=0777) { if (mkdir(Path, ConvertFilePerms(DirMask))==0) return(TRUE); return(FALSE);}
 
 int rmdir(const char *Path) { if (rmdir(Path)==0) return(TRUE); return(FALSE);}
 
