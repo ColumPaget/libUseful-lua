@@ -1,9 +1,10 @@
+VERSION=2.3
 CC = @CC@
 CFLAGS=@CFLAGS@
 LIBS=@LIBS@
 LUA_MODULES_DIR=@LUA_MODULES_DIR@
 MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so
-FLAGS=$(CFLAGS) @DEFS@
+FLAGS=$(CFLAGS) @DEFS@ -DVERSION=\"$(VERSION)\"
 
 
 all: $(MODS)
