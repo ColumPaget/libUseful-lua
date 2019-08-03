@@ -22,6 +22,7 @@ glob_t Glob;
 int pos;
 } GLOB;
 
+
 typedef struct
 {
 const char *type;
@@ -61,6 +62,22 @@ return( ((double) (StatFS.f_blocks - StatFS.f_bfree)) * ((double) StatFS.f_frsiz
 
 }
 
+
+double FileMTime(const char *Path)
+{
+struct stat FStat;
+
+stat(Path, &FStat);
+return((double) FStat.st_mtime);
+}
+
+double FileSize(const char *Path)
+{
+struct stat FStat;
+
+stat(Path, &FStat);
+return((double) FStat.st_size);
+}
 
 
 int ConvertFilePerms(const char *DirMask)
@@ -135,6 +152,13 @@ char *StripDirectorySlash(char *DirPath);
 /*  filesys.exists(Path)   return true if a filesystem object (file, directory, etc) exists at path 'Path', false otherwise */
 %rename(exists) FileExists;
 int FileExists(const char *Path);
+
+%rename(mtime) FileMTime;
+int FileMTime(const char *Path);
+
+%rename(size) FileSize;
+int FileSize(const char *Path);
+
 
 /*  filesys.mkdir(Path)   make a directory. DirMask is the 'mode' of the created directory, and is optional */
 int mkdir(const char *Path, const char *DirMask=0777) { if (mkdir(Path, ConvertFilePerms(DirMask))==0) return(TRUE); return(FALSE);}
