@@ -59,7 +59,7 @@ PARSER(const char *Type, const char *Doc="")
 PARSER *Item;
 
 Item=ParserParseDocument(Type, Doc);
-if (Item) Item->Side=ListGetNext(Item);
+Item->Side=NULL;
 return(Item);
 }
 
@@ -121,6 +121,8 @@ to the first child within the original PARSER object, and you can use 'name' and
 PARSER *next()
 {
 if ($self->Side) $self->Side=ListGetNext($self->Side);
+else $self->Side=ListGetNext($self);
+
 return($self->Side);
 }
 
