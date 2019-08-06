@@ -1,4 +1,9 @@
 /*
+Copyright (c) 2019 Colum Paget <colums.projects@googlemail.com>
+* SPDX-License-Identifier: GPL-3.0
+*/
+
+/*
 
 This module implements various hash functions. Available hashing algorithms should at least include md5, sha1, sha256, sha512, whirl (whirlpool). Hash types can be concatted, so:
 

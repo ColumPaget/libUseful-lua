@@ -1,4 +1,10 @@
 /*
+Copyright (c) 2019 Colum Paget <colums.projects@googlemail.com>
+* SPDX-License-Identifier: GPL-3.0
+*/
+
+
+/*
 
 This module handles most of the file and network access via a 'STREAM' object. For example read a line from a file:
 

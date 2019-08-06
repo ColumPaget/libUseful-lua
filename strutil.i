@@ -1,4 +1,9 @@
 /*
+Copyright (c) 2019 Colum Paget <colums.projects@googlemail.com>
+* SPDX-License-Identifier: GPL-3.0
+*/
+
+/*
 This module implemements various string-based utility functions, including different forms of quoting and unquoting 
 */
 

@@ -1,4 +1,9 @@
 /*
+Copyright (c) 2019 Colum Paget <colums.projects@googlemail.com>
+* SPDX-License-Identifier: GPL-3.0
+*/
+
+/*
 This module provides various functions related to filesystem access
 
 many of these functions are called just as:

@@ -1,4 +1,9 @@
 /*
+Copyright (c) 2019 Colum Paget <colums.projects@googlemail.com>
+* SPDX-License-Identifier: GPL-3.0
+*/
+
+/*
 
 This module implements various functions related to TCP/IP networking. However, it does not provide actual
 network client functionality, which is done via the 'stream' module instead
