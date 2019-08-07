@@ -84,6 +84,10 @@ stat(Path, &FStat);
 return((double) FStat.st_size);
 }
 
+const char *FileExtn(const char *Path)
+{
+  return(strrchr(Path, '.'));
+}
 
 int ConvertFilePerms(const char *DirMask)
 {
@@ -144,6 +148,10 @@ time_t mtime;
 /*  filesys.basename(Path)   gets a filename (basename) from a path*/
 %rename(basename) GetBasename;
 const char *GetBasename(const char *Path);
+
+/*  filesys.extn(Path)   gets a file extension from a path*/
+%rename(extn) FileExtn;
+const char *FileExtn(const char *Path);
 
 /*  filesys.pathaddslash(Path)   append a '/' to a path if it doesn't already have one */
 %rename(pathaddslash) SlashTerminateDirectoryPath;
