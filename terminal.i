@@ -351,6 +351,22 @@ else ListAddNamedItem($self->Options, str, NULL);
 fflush(NULL);
 }
 
+void update(const char *str, const char *id=NULL)
+{
+ListNode *Curr;
+
+Curr=ListGetNext($self->Options);
+while (Curr)
+{
+  if ( StrValid(id) && StrValid(Curr->Item) && (strcmp(id, Curr->Item)==0) ) 
+  {
+  Curr->Tag=CopyStr(Curr->Tag, str);
+  break;
+  }
+Curr=ListGetNext(Curr);
+}
+
+}
 
 /* Actually draw a menu. This doesn't read keypresses or anything, just draws the menu in its current state */
 void draw() {TerminalMenuDraw($self);}
