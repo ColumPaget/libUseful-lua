@@ -64,7 +64,7 @@ PARSER(const char *Type, const char *Doc="")
 PARSER *Item;
 
 Item=ParserParseDocument(Type, Doc);
-Item->Side=NULL;
+if (Item) Item->Side=NULL;
 return(Item);
 }
 
