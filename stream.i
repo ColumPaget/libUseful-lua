@@ -154,6 +154,9 @@ STREAMAddProgressCallback($self, Progressor);
 return(STREAMReadDocument(NULL, $self));
 }
 
+int lock() {return(STREAMLock($self, LOCK_EX));}
+
+int unlock() {return(STREAMLock($self, LOCK_UN));}
 
 /* write a line to a stream */
 int writeln(const char *Line) {return(STREAMWriteLine(Line, $self));}

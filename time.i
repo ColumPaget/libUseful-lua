@@ -41,7 +41,7 @@ long time_tzoffset(const char *zone);
 
 /* convert date-time str 'str' to seconds using format 'fmt'. The format string is as 'strptime' and strftime' */
 %rename(tosecs) time_tosecs;
-unsigned long time_tosecs(const char *fmt, const char *str, const char *zone="");
+long time_tosecs(const char *fmt, const char *str, const char *zone="");
 
 /* format date expressed as seconds since epoch using format string format 'fmt'. The format string is as 'strptime' and strftime' */
 %rename(formatsecs) time_formatsecs;
