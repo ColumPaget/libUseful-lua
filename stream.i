@@ -154,7 +154,8 @@ STREAMAddProgressCallback($self, Progressor);
 return(STREAMReadDocument(NULL, $self));
 }
 
-int lock() {return(STREAMLock($self, LOCK_EX));}
+int lock() {return(STREAMLock($self, LOCK_EX|LOCK_NB));}
+int waitlock() {return(STREAMLock($self, LOCK_EX));}
 
 int unlock() {return(STREAMLock($self, LOCK_UN));}
 
