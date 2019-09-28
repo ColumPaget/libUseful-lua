@@ -177,6 +177,9 @@ unsigned long tell() {return((unsigned long) STREAMTell($self));}
 /* seek to 'offset' from start of file */
 long seek(long offset, int whence=SEEK_SET) {return(STREAMSeek($self, (uint64_t) offset, whence));}
 
+void truncate(long size) {STREAMTruncate(size);}
+
+
 /* change file extension of file associated with stream */
 int extn(const char *NewExtn) {return(FileChangeExtension($self->Path, NewExtn));}
 
