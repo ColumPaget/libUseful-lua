@@ -22,6 +22,14 @@ this module implements functions related to a process.
 #include "libUseful-4/FileSystem.h"
 
 
+typedef struct
+{
+  STREAM *S;
+  pid_t pid;
+  char *Command;
+} PROCESS;
+
+
 const char *LibUsefulLuaGetValue(const char *Name)
 {
 if (strcasecmp(Name,"LibUseful-lua:Version")==0) return(VERSION);
@@ -34,6 +42,10 @@ return(LibUsefulGetValue(Name));
 #define ChildExited(pid) (waitpid(pid, NULL, WNOHANG))
 #define Wait(pid) (waitpid(pid, NULL, 0))
 %}
+
+
+
+
 
 /* process.sleep(seconds)  - sleep for 'seconds' */
 int sleep(unsigned long seconds);
@@ -209,3 +221,99 @@ const char *LibUsefulLuaGetValue(const char *Name);
 void LibUsefulSetValue(const char *Name, const char *Value);
 
 
+
+
+typedef struct
+{
+} PROCESS;
+
+
+%extend PROCESS {
+PROCESS (const char *Command, const char *Config="")
+{
+PROCESS *item;
+STREAM *S;
+
+S=STREAMSpawnCommand(Command, Config);
+if (! S) return(NULL);
+
+item=(PROCESS *) calloc(1, sizeof(PROCESS));
+item->S=S;
+item->pid=atoi(STREAMGetValue(S, "PeerPid"));
+item->Command=CopyStr(NULL, Command);
+return(item);
+}
+
+~PROCESS()
+{
+STREAMClose($self->S);
+Destroy($self->Command);
+free($self);
+}
+
+double pid()
+{
+return((double) $self->pid);
+}
+
+void stop()
+{
+kill($self->pid, SIGKILL);
+}
+
+void pause()
+{
+kill($self->pid, SIGSTOP);
+}
+
+void continue()
+{
+kill($self->pid, SIGCONT);
+}
+
+void send(const char *line)
+{
+STREAMWriteBytes($self->S, line, StrLen(line));
+STREAMFlush($self->S);
+}
+
+%newobject readln;
+char *readln()
+{
+return(STREAMReadLine(NULL, $self->S));
+}
+
+
+%newobject command;
+char *command()
+{
+return(CopyStr(NULL, $self->Command));
+}
+
+
+%newobject exec_path;
+char *exec_path()
+{
+char *Path=NULL;
+
+GetToken($self->Command, "\\S", &Path, GETTOKEN_QUOTES);
+
+return(Path);
+}
+
+%newobject exec_basename;
+char *exec_basename()
+{
+char *Path=NULL, *Tempstr=NULL;
+
+GetToken($self->Command, "\\S", &Tempstr, GETTOKEN_QUOTES);
+Path=CopyStr(Path, GetBasename(Tempstr));
+
+Destroy(Tempstr);
+
+return(Path);
+}
+
+
+
+}
