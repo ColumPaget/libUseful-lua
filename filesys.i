@@ -68,28 +68,7 @@ return( ((double) (StatFS.f_blocks - StatFS.f_bfree)) * ((double) StatFS.f_frsiz
 }
 
 
-double FileMTime(const char *Path)
-{
-struct stat FStat;
-
-stat(Path, &FStat);
-return((double) FStat.st_mtime);
-}
-
-double FileSize(const char *Path)
-{
-struct stat FStat;
-
-if (stat(Path, &FStat) != 0) return(0);
-return((double) FStat.st_size);
-}
-
-const char *FileExtn(const char *Path)
-{
-  return(strrchr(Path, '.'));
-}
-
-int ConvertFilePerms(const char *DirMask)
+int LUL_ConvertFilePerms(const char *DirMask)
 {
 int val=0;
 const char *ptr;
@@ -124,6 +103,34 @@ return(val);
 }
 
 
+double LUL_FileMTime(const char *Path)
+{
+struct stat FStat;
+
+stat(Path, &FStat);
+return((double) FStat.st_mtime);
+}
+
+double LUL_FileSize(const char *Path)
+{
+struct stat FStat;
+
+if (stat(Path, &FStat) != 0) return(0);
+return((double) FStat.st_size);
+}
+
+const char *LUL_FileExtn(const char *Path)
+{
+  return(strrchr(Path, '.'));
+}
+
+
+int LUL_MkDir(const char *Path, const char *DirMask) 
+{ 
+if (mkdir(Path, LUL_ConvertFilePerms(DirMask))==0) return(TRUE); 
+return(FALSE);
+}
+
 %}
 
 
@@ -149,10 +156,6 @@ time_t mtime;
 %rename(basename) GetBasename;
 const char *GetBasename(const char *Path);
 
-/*  filesys.extn(Path)   gets a file extension from a path*/
-%rename(extn) FileExtn;
-const char *FileExtn(const char *Path);
-
 /*  filesys.pathaddslash(Path)   append a '/' to a path if it doesn't already have one */
 %rename(pathaddslash) SlashTerminateDirectoryPath;
 char *SlashTerminateDirectoryPath(char *DirPath);
@@ -166,22 +169,32 @@ char *StripDirectorySlash(char *DirPath);
 %rename(exists) FileExists;
 int FileExists(const char *Path);
 
-%rename(mtime) FileMTime;
-int FileMTime(const char *Path);
 
-%rename(size) FileSize;
-int FileSize(const char *Path);
+/*  filesys.extn(Path)   gets a file extension from a path*/
+%rename(extn) LUL_FileExtn;
+const char *LUL_FileExtn(const char *Path);
+
+/* filesys.mtime(Path)   get modification time of a file */
+%rename(mtime) LUL_FileMTime;
+int LUL_FileMTime(const char *Path);
+
+/* filesys.size(Path)   get size of a file */
+%rename(size) LUL_FileSize;
+int LUL_FileSize(const char *Path);
 
 
 /*  filesys.mkdir(Path)   make a directory. DirMask is the 'mode' of the created directory, and is optional */
-int mkdir(const char *Path, const char *DirMask=0777) { if (mkdir(Path, ConvertFilePerms(DirMask))==0) return(TRUE); return(FALSE);}
-
-int rmdir(const char *Path) { if (rmdir(Path)==0) return(TRUE); return(FALSE);}
+%rename(mkdir) LUL_MkDir;
+int LUL_MkDir(const char *Path, const char *DirMask="0777");
 
 /*  filesys.mkdirPath(Path)   make a directory, CREATING ALL PARENT DIRECTORIES AS NEEDED. 
 DirMask is the 'mode' of the created directory, and is optional */
 %rename(mkdirPath) MakeDirPath;
 int MakeDirPath(const char *Path, int DirMask=0777);
+
+/* filesys.rmdir(path)    remove directory. Directory must be empty */
+int rmdir(const char *Path) { if (rmdir(Path)==0) return(TRUE); return(FALSE);}
+
 
 /*  Path=filesys.find(File */
 %newobject find;
@@ -199,6 +212,9 @@ int FileChGroup(const char *Path, const char *Group);
 %rename(copy) FileCopy;
 int FileCopy(const char *oldpath, const char *newpath);
 
+%rename(touch) FileTouch;
+int FileTouch(const char *path);
+
 /*  filesys.newExtn(Path, NewExtn)   change the ms-dos style extension of a file. Adds one to files that have no extension */
 %rename(newExtn) FileChangeExtension;
 int FileChangeExtension(const char *FilePath, const char *NewExt);
@@ -212,6 +228,7 @@ int link(const char *oldpath, const char *newpath) { if (link(oldpath, newpath)=
 int unlink(const char *path) { if (unlink(path)==0) return(TRUE); return(FALSE);}
 
 int rename(const char *OldPath, const char *NewPath) { if (rename(OldPath, NewPath)==0) return(TRUE); return(FALSE);}
+
 
 
 double fs_size(const char *Path); 

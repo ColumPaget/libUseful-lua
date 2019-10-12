@@ -268,7 +268,7 @@ typedef struct
 %extend TERMBAR {
 TERMBAR(TERM *Term, const char *Text, const char *Config="")
 {
-return(TerminalBarCreate(Term, Config, Text));
+return(TerminalBarCreate(Term->S, Config, Text));
 }
 
 ~TERMBAR()
