@@ -118,14 +118,18 @@ prio       - set scheduler priority of current process
 priority   - set scheduler priority of current process 
 nice       - set 'nice' value of current process (another way of expressing priority)
 
-daemon     - daemonize current process (will result in a change in the process ID)
-demon      - daemonize current process (will result in a change in the process ID)
+daemon     - daemonize current process (will result in a change in the process ID to be different from the one returned by xfork etc)
+demon      - daemonize current process (will result in a change in the process ID to be different from the one returned by xfork etc)
 
 mem        - set memory resource limit of current process
 fsize      - set file size resource limit of current process
 files      - set max number of files resource limit
 coredumps  - set max coredump size in bytes
 procs      - set max processes FOR THE CURRENT PROCESSES USER
+
+outnull    - send stdout to /dev/null (usually used with programs launched via process.spawn or managed processes using the process.PROCESS object)
+innull     - join stdin to /dev/null (usually used with programs launched via process.spawn or managed processes using the process.PROCESS object)
+pty        - create a psuedo-terminal, so the process thinks it's interacting with a user at a real terminal. For use with programs managed via the process.PROCESS object)
 
 chroot     - chroot. If just 'chroot=dir' is passed then process will chdir to 'dir' and then chroot, if just 'chroot' it will chroot in current directory
 
@@ -222,12 +226,21 @@ void LibUsefulSetValue(const char *Name, const char *Value);
 
 
 
+/* PROCESS object. This allows you to launch a program and talk to it using the PROCESS:send() method. 'Config' takes the same values as for Spawn or xfork, described above.
+
+e.g.
+
+proc=process.PROCESS("ssh myhost", "pty")
+proc:send("halt\r\n")
+
+*/
 
 typedef struct
 {
 } PROCESS;
 
 
+/* create a new  process object */
 %extend PROCESS {
 PROCESS (const char *Command, const char *Config="")
 {
@@ -244,6 +257,9 @@ item->Command=CopyStr(NULL, Command);
 return(item);
 }
 
+
+
+/* destroy  process object */
 ~PROCESS()
 {
 STREAMClose($self->S);
@@ -251,32 +267,44 @@ Destroy($self->Command);
 free($self);
 }
 
+
+
+/* return pid of managed process */
 double pid()
 {
 return((double) $self->pid);
 }
 
+
+
+/* kill managed process */
 void stop()
 {
 kill($self->pid, SIGKILL);
 }
 
+
+/* pause managed process */
 void pause()
 {
 kill($self->pid, SIGSTOP);
 }
 
+
+/* unpause managed process */
 void continue()
 {
 kill($self->pid, SIGCONT);
 }
 
+/*send a string to the managed process on it's stdin */
 void send(const char *line)
 {
 STREAMWriteBytes($self->S, line, StrLen(line));
 STREAMFlush($self->S);
 }
 
+/* read a line (Ending in '\n') from the managed process on its stdout */
 %newobject readln;
 char *readln()
 {
@@ -284,6 +312,7 @@ return(STREAMReadLine(NULL, $self->S));
 }
 
 
+/* return the command-line of the managed process */
 %newobject command;
 char *command()
 {
@@ -291,6 +320,7 @@ return(CopyStr(NULL, $self->Command));
 }
 
 
+/* return the path to the executable of the managed process */
 %newobject exec_path;
 char *exec_path()
 {
@@ -301,6 +331,7 @@ GetToken($self->Command, "\\S", &Path, GETTOKEN_QUOTES);
 return(Path);
 }
 
+/* return the basename (program name) of the executable of the managed process */
 %newobject exec_basename;
 char *exec_basename()
 {
