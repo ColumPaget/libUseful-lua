@@ -61,6 +61,14 @@ StripLeadingWhitespace(Ret);
 return(Ret);
 }
 
+char *trim(const char *Str)
+{
+char *Ret=NULL;
+Ret=CopyStr(Ret, Str);
+StripTrailingWhitespace(Ret);
+StripLeadingWhitespace(Ret);
+return(Ret);
+}
 
 
 typedef struct
@@ -159,6 +167,13 @@ char *stripQuotes(char *Str);
 /* strip carriage-return and/or linefeed from end of string */
 %newobject stripCRLF;
 char *stripCRLF(char *Str);
+
+
+/* strip leading and trailing whitespace */
+%newobject trim;
+char *trim(char *Str);
+
+
 
 
 /* Break a string up into tokens. For my money this is easier to use than the default lua method */

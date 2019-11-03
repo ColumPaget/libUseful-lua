@@ -20,6 +20,9 @@ This module provides functions that return various system information.
 #define time_formatsecs(fmt, secs, zone) (GetDateStrFromSecs(fmt, secs, zone))
 #define time_format(fmt, zone) (GetDateStrFromSecs(fmt, GetTime(0), zone))
 #define time_tzoffset(zone) (TimezoneOffset(zone))
+#define time_sleep(secs) (sleep(secs))
+#define time_msleep(msecs) (usleep(msecs * 1000))
+#define time_usleep(usecs) (usleep(usecs))
 %}
 
 /* return time as seconds since 1 jan 1970 */
@@ -54,5 +57,17 @@ const char *time_format(const char *fmt, const char *zone="");
 /* return time as seconds since 1 jan 1970 */
 %rename(secs) time_time;
 unsigned long time_time();
+
+/* sleep for secs seconds*/
+%rename(sleep) time_sleep;
+void time_sleep(int secs);
+
+/* sleep for msecs milliseconds */
+%rename(msleep) time_msleep;
+void time_msleep(long msecs);
+
+/* sleep for umsecs nanoseconds */
+%rename(msleep) time_usleep;
+void time_usleep(long usecs);
 
 
