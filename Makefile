@@ -1,8 +1,8 @@
-VERSION=2.6
+VERSION=2.7
 CC = gcc
 CFLAGS=-g -O2 -fPIC -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib
 LIBS=-lUseful 
-LUA_MODULES_DIR=/opt/lua-5.3.4/lib/lua/5.3/
+LUA_MODULES_DIR=/usr/local/lib/lua/5.3/
 MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so
 FLAGS=$(CFLAGS) -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DSTDC_HEADERS=1 -DHAVE_LIBUSEFUL=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_LIBUSEFUL_SYSINFO_H=1 -DVERSION=\"$(VERSION)\"
 

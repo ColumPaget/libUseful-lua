@@ -36,6 +36,40 @@ if (strcasecmp(Name,"LibUseful-lua:Version")==0) return(VERSION);
 return(LibUsefulGetValue(Name));
 }
 
+uint8_t *Signals=NULL;
+
+
+void LUL_HandleSignal(int sig)
+{
+int result;
+
+#ifndef _NSIG
+#define _NSIG 64
+#endif
+
+if (! Signals) Signals=(uint8_t *) calloc(_NSIG, sizeof(uint8_t));
+
+Signals[sig]=1;
+signal(sig, LUL_HandleSignal);
+}
+
+void WatchSignal(int sig)
+{
+signal(sig, LUL_HandleSignal);
+}
+
+int CheckSignal(int sig)
+{
+int result;
+
+if (! Signals) return(0);
+LUL_HandleSignal(0);
+result=Signals[sig];
+Signals[sig]=0;
+
+return(result);
+}
+
 #define LibUsefulLua_Process_GetUser() (LookupUserName(getuid()))
 #define LibUsefulLua_Process_GetGroup() (LookupGroupName(getgid()))
 
@@ -224,6 +258,11 @@ const char *LibUsefulLuaGetValue(const char *Name);
 %rename(lu_set) LibUsefulSetValue;
 void LibUsefulSetValue(const char *Name, const char *Value);
 
+%rename(sigcheck) CheckSignal;
+int CheckSignal(int sig=0);
+
+%rename(sigwatch) WatchSignal;
+void WatchSignal(int sig=0);
 
 
 /* PROCESS object. This allows you to launch a program and talk to it using the PROCESS:send() method. 'Config' takes the same values as for Spawn or xfork, described above.
