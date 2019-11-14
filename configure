@@ -3531,25 +3531,39 @@ fi
 
 
 
-if test "$LUA_INCLUDE_DIR" = ""
-then
-LUA_INCLUDE_DIR=`dirname $LUA_EXE_PATH | sed "s/bin$/include/"`
-fi
 
+if test "$LUA_INCLUDE_DIR" == ""
+then
+LUA_INCLUDE_CANDIDATE=`dirname $LUA_EXE_PATH | sed "s/bin$/include/"`
+for INC in $LUA_INCLUDE_CANDIDATE /usr/include/lua /usr/include/lua5.2 /usr/include/lua5.3
+do
+as_ac_File=`$as_echo "ac_cv_file_$INC/lua.h" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $INC/lua.h" >&5
+$as_echo_n "checking for $INC/lua.h... " >&6; }
+if eval \${$as_ac_File+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "$INC/lua.h"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+  LUA_INCLUDE_DIR=$INC
+fi
 
 if test "$LUA_INCLUDE_DIR" != ""
 then
-CPPFLAGS="$CPPFLAGS -I$LUA_INCLUDE_DIR"
+break
 fi
-
-CPPFLAGS="$CPPFLAGS -I/usr/include/lua -I/usr/include/lua5.2 -I/usr/include/lua5.3"
-ac_fn_c_check_header_mongrel "$LINENO" "lua.h" "ac_cv_header_lua_h" "$ac_includes_default"
-if test "x$ac_cv_header_lua_h" = xyes; then :
-
+done
 fi
-
-
-
 
 if test "$LUA_LIBS_DIR" = ""
 then

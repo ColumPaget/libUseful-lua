@@ -45,20 +45,19 @@ fi
 
 AC_CHECK_HEADER([libUseful-4/SysInfo.h],AC_DEFINE(HAVE_LIBUSEFUL_SYSINFO_H),,)
 
-if test "$LUA_INCLUDE_DIR" = ""
+
+if test "$LUA_INCLUDE_DIR" == ""
 then
-LUA_INCLUDE_DIR=`dirname $LUA_EXE_PATH | sed "s/bin$/include/"`
-fi
-
-
+LUA_INCLUDE_CANDIDATE=`dirname $LUA_EXE_PATH | sed "s/bin$/include/"`
+for INC in $LUA_INCLUDE_CANDIDATE /usr/include/lua /usr/include/lua5.2 /usr/include/lua5.3
+do
+AC_CHECK_FILE([$INC/lua.h], [LUA_INCLUDE_DIR=$INC])
 if test "$LUA_INCLUDE_DIR" != ""
-then
-CPPFLAGS="$CPPFLAGS -I$LUA_INCLUDE_DIR"
+then 
+break 
 fi
-
-CPPFLAGS="$CPPFLAGS -I/usr/include/lua -I/usr/include/lua5.2 -I/usr/include/lua5.3"
-AC_CHECK_HEADER(lua.h,,,)
-
+done
+fi
 
 if test "$LUA_LIBS_DIR" = ""
 then
