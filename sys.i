@@ -29,6 +29,68 @@ This module provides functions that return various system information.
 #define sys_time() (GetTime(0))
 #define sys_centitime() (GetTime(TIME_CENTISECS))
 #define sys_millitime() (GetTime(TIME_MILLISECS))
+#define sys_interfaces() (OSSysInfoString(OSINFO_INTERFACES))
+
+char *sys_ifinfo(const char *Interface)
+{
+char *Tempstr=NULL;
+
+Tempstr=GetInterfaceDetails(Tempstr, Interface);
+return(Tempstr);
+}
+
+
+char *sys_if_ip4address(const char *Interface)
+{
+char *Tempstr=NULL, *RetStr=NULL;
+
+Tempstr=GetInterfaceDetails(Tempstr, Interface);
+RetStr=GetNameValue(RetStr, Tempstr, "\\S", "=", "ip4address");
+
+Destroy(Tempstr);
+return(RetStr);
+}
+
+
+char *sys_if_ip4netmask(const char *Interface)
+{
+char *Tempstr=NULL, *RetStr=NULL;
+
+Tempstr=GetInterfaceDetails(Tempstr, Interface);
+RetStr=GetNameValue(RetStr, Tempstr, "\\S", "=", "ip4netmask");
+
+Destroy(Tempstr);
+return(RetStr);
+}
+
+char *sys_if_ip4broadcast(const char *Interface)
+{
+char *Tempstr=NULL, *RetStr=NULL;
+
+Tempstr=GetInterfaceDetails(Tempstr, Interface);
+RetStr=GetNameValue(RetStr, Tempstr, "\\S", "=", "ip4broadcast");
+
+Destroy(Tempstr);
+return(RetStr);
+}
+
+int sys_if_ip4mtu(const char *Interface)
+{
+char *Tempstr=NULL, *RetStr=NULL;
+int val;
+
+Tempstr=GetInterfaceDetails(Tempstr, Interface);
+RetStr=GetNameValue(RetStr, Tempstr, "\\S", "=", "ip4broadcast");
+
+Destroy(Tempstr);
+Destroy(RetStr);
+
+return(val);
+}
+
+
+
+
 %}
 
 
@@ -69,6 +131,26 @@ const char * sys_type();
 /* sys.tmpdir   - returns system temporary directory */
 %rename(tmpdir) sys_tmpdir;
 const char * sys_tmpdir();
+
+/* sys.intefaces   - returns system network interfaces as a space-seperated list of names */
+%rename(interfaces) sys_interfaces;
+const char * sys_interfaces();
+
+%newobject sys_if_ip4address;
+%rename(ip4address) sys_if_ip4address;
+char *sys_if_ip4address(const char *Interface);
+
+%newobject sys_if_ip4netmask;
+%rename(ip4netmask) sys_if_ip4netmask;
+char *sys_if_ip4netmask(const char *Interface);
+
+%newobject sys_if_ip4broadcast;
+%rename(ip4broadcast) sys_if_ip4broadcast;
+char *sys_if_ip4broadcast(const char *Interface);
+
+%rename(ip4mtu) sys_if_ip4mtu;
+char *sys_if_ip4mtu(const char *Interface);
+
 
 /* return time as seconds since 1 jan 1970 */
 %rename(time) sys_time;
