@@ -200,6 +200,11 @@ void restore() {TerminalCommand(TERM_CURSOR_SAVE, 0, 0, $self->S);}
 /* scroll the terminal by 'i' lines up or down. Positive values scroll up, negative scroll down */
 void scroll(int i=1) {TerminalCommand(TERM_SCROLL, 1, 0, $self->S);}
 
+
+/* move the cursor to x, y */
+void scrollingregion(int x, int y) {TerminalCommand(TERM_SCROLL_REGION, x, y, $self->S);}
+
+
 /* 
 get a character or keystroke. For standard characters this returns a string containing that single character.
 For keystrokes that are expressed by escape codes, this returns a key name.
