@@ -95,6 +95,7 @@ multiple stream objects for activity
 #include "libUseful-4/Http.h"
 #include "libUseful-4/Expect.h"
 #include "libUseful-4/Errors.h"
+#include "libUseful-4/Pty.h"
 #include <unistd.h>
 
 void Progressor(const char *Path, int bytes, int total){/*printf("\r %s %d %d            ",Path,bytes,total);fflush(NULL);*/}
@@ -246,6 +247,7 @@ return(FALSE);
 */
 int commit() {return(STREAMCommit($self));}
 
+void ptysize(int wid, int len) { PTYSetGeometry($self->in_fd, wid, len);}
 
 /* close a stream */
 void close() 
