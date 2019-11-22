@@ -58,16 +58,17 @@ void WatchSignal(int sig)
 signal(sig, LUL_HandleSignal);
 }
 
-int CheckSignal(int sig)
+bool CheckSignal(int sig)
 {
 int result;
 
-if (! Signals) return(0);
-LUL_HandleSignal(0);
+if (! Signals) return(FALSE);
+LUL_HandleSignal(FALSE);
 result=Signals[sig];
 Signals[sig]=0;
 
-return(result);
+if (result) return(TRUE);
+return(FALSE);
 }
 
 #define LibUsefulLua_Process_GetUser() (LookupUserName(getuid()))
@@ -88,13 +89,13 @@ int sleep(unsigned long seconds);
 int usleep(unsigned long usec);
 
 /* process.chdir(dir)  - change process current directory */ 
-int chdir(const char *dir);
+bool chdir(const char *dir);
 
 /* process.chroot(dir)  - chroot (jail) process, dir is optional, current directory is the default */ 
-int chroot(const char *dir=".");
+bool chroot(const char *dir=".");
 
 /* send a signal to another process. Default signal is SIGTERM. Default process is self */
-int kill(int pid=0, int sig=SIGTERM);
+bool kill(int pid=0, int sig=SIGTERM);
 
 /* exit with exitcode 'val' */
 void exit(int val=0);
@@ -103,7 +104,7 @@ void exit(int val=0);
 void abort();
 
 /* create a daemon process. This is a 'server' process that has no terminal but is visible running in 'ps ax'. */
-int demonize();
+bool demonize();
 
 /* return current process pid */
 long getpid();
@@ -138,7 +139,7 @@ const char *getenv(const char *Name);
 
 /* process.setenv(Name, Value)   - set an environment varible */
 %rename(setenv) xsetenv;
-int xsetenv(const char *Name, const char *Value);
+bool xsetenv(const char *Name, const char *Value);
 
 
 
@@ -208,21 +209,21 @@ char *GetCurrUserHomeDir();
 /*  process.switchUser(UserName)  - switch user the current process is running as. You'll probably need to be root to do this */
 /*  if wanting to switch both user and group, then do process.switchGroup first */
 %rename(switchUser) SwitchUser;
-int SwitchUser(const char *User);
+bool SwitchUser(const char *User);
 
 /*  process.switchGroup(GroupName)  - switch group the current process is running as. You'll probably need to be root to do this */
 %rename(switchGroup) SwitchGroup;
-int SwitchGroup(const char *Group);
+bool SwitchGroup(const char *Group);
 
 /*  process.pidfile(FileName)  - write pid file. if 'FileName' is a full path, then that path will be used, else file will appear in /var/run. */
 %rename(pidfile) WritePidFile;
-int WritePidFile(char *ProgName);
+bool WritePidFile(char *ProgName);
 
 /* createLockFile(Path, timeout)  - create a lockfile. 
 'timeout' is optional, it's the time to wait to get access to a lockfile if some other process has it locked. Default is '0' meaning 'forever'
 */
 %rename(createLockFile) CreateLockFile;
-int CreateLockFile(char *FilePath,int Timeout=0);
+bool CreateLockFile(char *FilePath,int Timeout=0);
 
 /* 
 
@@ -259,7 +260,7 @@ const char *LibUsefulLuaGetValue(const char *Name);
 void LibUsefulSetValue(const char *Name, const char *Value);
 
 %rename(sigcheck) CheckSignal;
-int CheckSignal(int sig=0);
+bool CheckSignal(int sig=0);
 
 %rename(sigwatch) WatchSignal;
 void WatchSignal(int sig=0);

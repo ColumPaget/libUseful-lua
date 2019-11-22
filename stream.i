@@ -155,10 +155,10 @@ STREAMAddProgressCallback($self, Progressor);
 return(STREAMReadDocument(NULL, $self));
 }
 
-int lock() {return(STREAMLock($self, LOCK_EX|LOCK_NB));}
-int waitlock() {return(STREAMLock($self, LOCK_EX));}
+bool lock() {return(STREAMLock($self, LOCK_EX|LOCK_NB));}
+bool waitlock() {return(STREAMLock($self, LOCK_EX));}
 
-int unlock() {return(STREAMLock($self, LOCK_UN));}
+bool unlock() {return(STREAMLock($self, LOCK_UN));}
 
 /* write a line to a stream */
 int writeln(const char *Line) {return(STREAMWriteLine(Line, $self));}
@@ -182,16 +182,16 @@ void truncate(long size=0) {STREAMTruncate($self, size);}
 
 
 /* change file extension of file associated with stream */
-int extn(const char *NewExtn) {return(FileChangeExtension($self->Path, NewExtn));}
+bool extn(const char *NewExtn) {return(FileChangeExtension($self->Path, NewExtn));}
 
 /* rename file associated with stream */
-int rename(const char *NewPath) {return(rename($self->Path, NewPath));}
+bool rename(const char *NewPath) {return(rename($self->Path, NewPath));}
 
 /* change owner of file associated with stream */
-int chown(const char *NewOwner) {return(FileChOwner($self->Path, NewOwner));}
+bool chown(const char *NewOwner) {return(FileChOwner($self->Path, NewOwner));}
 
 /* change group of file associated with stream */
-int chgrp(const char *NewGroup) {return(FileChGroup($self->Path, NewGroup));}
+bool chgrp(const char *NewGroup) {return(FileChGroup($self->Path, NewGroup));}
 
 /* read all data from the current stream and copy it to file 'Dest' */
 int copy(const char *Dest) { return(STREAMCopy($self, Dest)); }
@@ -212,7 +212,7 @@ size_t bytesRead() {return($self->BytesRead);}
 size_t bytesWritten() {return($self->BytesWritten);}
 
 /* returns true if stream is associated with a tty */
-int isatty() {return(isatty($self->in_fd));}
+bool isatty() {return(isatty($self->in_fd));}
 
 /* get a value that's set on the current stream */
 const char *getvalue(const char *ValName) {return(STREAMGetValue($self,ValName));}
@@ -228,14 +228,14 @@ int silence(int wait=0) {return(STREAMExpectSilence($self, wait)); }
 
 
 /* startTLS. This will start SSL/TLS communications on a stream */
-int startTLS()
+bool startTLS()
 {
 switch ($self->Type)
 {
 case STREAM_TYPE_UNIX_ACCEPT: return(DoSSLServerNegotiation($self, 0)); break;
 case STREAM_TYPE_TCP_ACCEPT: return(DoSSLServerNegotiation($self, 0)); break;
-case STREAM_TYPE_UNIX: DoSSLClientNegotiation($self, 0); break;
-case STREAM_TYPE_TCP: DoSSLClientNegotiation($self, 0); break;
+case STREAM_TYPE_UNIX: return(DoSSLClientNegotiation($self, 0)); break;
+case STREAM_TYPE_TCP: return(DoSSLClientNegotiation($self, 0)); break;
 }
 
 return(FALSE);
@@ -245,7 +245,7 @@ return(FALSE);
  Only currently used with HTTP PUT/POST to declare that all data has been uploaded and that the server should 
  process it and send a reply
 */
-int commit() {return(STREAMCommit($self));}
+bool commit() {return(STREAMCommit($self));}
 
 void ptysize(int wid, int len) { PTYSetGeometry($self->in_fd, wid, len);}
 

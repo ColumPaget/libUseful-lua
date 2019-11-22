@@ -125,7 +125,7 @@ const char *LUL_FileExtn(const char *Path)
 }
 
 
-int LUL_MkDir(const char *Path, const char *DirMask) 
+bool LUL_MkDir(const char *Path, const char *DirMask) 
 { 
 if (mkdir(Path, LUL_ConvertFilePerms(DirMask))==0) return(TRUE); 
 return(FALSE);
@@ -167,7 +167,7 @@ char *StripDirectorySlash(char *DirPath);
 
 /*  filesys.exists(Path)   return true if a filesystem object (file, directory, etc) exists at path 'Path', false otherwise */
 %rename(exists) FileExists;
-int FileExists(const char *Path);
+bool FileExists(const char *Path);
 
 
 /*  filesys.extn(Path)   gets a file extension from a path*/
@@ -185,15 +185,15 @@ int LUL_FileSize(const char *Path);
 
 /*  filesys.mkdir(Path)   make a directory. DirMask is the 'mode' of the created directory, and is optional */
 %rename(mkdir) LUL_MkDir;
-int LUL_MkDir(const char *Path, const char *DirMask="0777");
+bool LUL_MkDir(const char *Path, const char *DirMask="0777");
 
 /*  filesys.mkdirPath(Path)   make a directory, CREATING ALL PARENT DIRECTORIES AS NEEDED. 
 DirMask is the 'mode' of the created directory, and is optional */
 %rename(mkdirPath) MakeDirPath;
-int MakeDirPath(const char *Path, int DirMask=0777);
+bool MakeDirPath(const char *Path, int DirMask=0777);
 
 /* filesys.rmdir(path)    remove directory. Directory must be empty */
-int rmdir(const char *Path) { if (rmdir(Path)==0) return(TRUE); return(FALSE);}
+bool rmdir(const char *Path) { if (rmdir(Path)==0) return(TRUE); return(FALSE);}
 
 
 /*  Path=filesys.find(File */
@@ -202,32 +202,32 @@ char *find(const char *File, const char *Path);
 
 /*   filesys.chown(Path, Owner)   change owner of a file. 'Owner' is the name, not the uid */
 %rename(chown) FileChOwner;
-int FileChOwner(const char *Path, const char *Owner);
+bool FileChOwner(const char *Path, const char *Owner);
 
 /*   filesys.chgrp(Path, Group)   change group of a file. 'Group' is the group name, not the gid */
 %rename(chgrp) FileChGroup;
-int FileChGroup(const char *Path, const char *Group);
+bool FileChGroup(const char *Path, const char *Group);
 
 /*  filesys.copy(src, dest)     make a copy of a file */
 %rename(copy) FileCopy;
-int FileCopy(const char *oldpath, const char *newpath);
+bool FileCopy(const char *oldpath, const char *newpath);
 
 %rename(touch) FileTouch;
-int FileTouch(const char *path);
+bool FileTouch(const char *path);
 
 /*  filesys.newExtn(Path, NewExtn)   change the ms-dos style extension of a file. Adds one to files that have no extension */
 %rename(newExtn) FileChangeExtension;
-int FileChangeExtension(const char *FilePath, const char *NewExt);
+bool FileChangeExtension(const char *FilePath, const char *NewExt);
 
 /*  filesys.symlink(path, symlink)   create a symbolic link at 'symlink' pointing to file/directory at 'path' */
-int symlink(const char *oldpath, const char *newpath) { if (symlink(oldpath, newpath)==0) return(TRUE); return(FALSE);}
+bool symlink(const char *oldpath, const char *newpath) { if (symlink(oldpath, newpath)==0) return(TRUE); return(FALSE);}
 
 /*  filesys.link(path, linkname)     create a hard link at 'linkname' pointing to file/directory at 'path' */
-int link(const char *oldpath, const char *newpath) { if (link(oldpath, newpath)==0) return(TRUE); return(FALSE);}
+bool link(const char *oldpath, const char *newpath) { if (link(oldpath, newpath)==0) return(TRUE); return(FALSE);}
 
-int unlink(const char *path) { if (unlink(path)==0) return(TRUE); return(FALSE);}
+bool unlink(const char *path) { if (unlink(path)==0) return(TRUE); return(FALSE);}
 
-int rename(const char *OldPath, const char *NewPath) { if (rename(OldPath, NewPath)==0) return(TRUE); return(FALSE);}
+bool rename(const char *OldPath, const char *NewPath) { if (rename(OldPath, NewPath)==0) return(TRUE); return(FALSE);}
 
 
 
@@ -254,7 +254,7 @@ remount  - remount if already mounted
 perms    - permissions for mount-point if it has to be created
 */ 
 %rename(mount) FileSystemMount;
-int FileSystemMount(const char *Dev, const char *MountPoint, const char *Type, const char *Args="");
+bool FileSystemMount(const char *Dev, const char *MountPoint, const char *Type, const char *Args="");
 
 /*  filesys.unmount(mountpoint, args)  Unmount a filesystem. 'args' is optional and can be a space seperated list of
 
@@ -264,7 +264,7 @@ recurse  - umount any mounts under the mount point as well as the mount point. W
 rmdir    - remove mountpoint directory after unmounting
 */
 %rename(unmount) FileSystemUnMount;
-int FileSystemUnMount(const char *MountPoint, const char *Args="");
+bool FileSystemUnMount(const char *MountPoint, const char *Args="");
 
 /*
 Object for implementing file system globbing. Works like:

@@ -109,13 +109,13 @@ char *LookupHostIP(const char *Host);
 char *IPStrToHostName(const char *);
 
 /* net.IsIP4Address(string)   - returns 'true' if string is a valid IP4 address */
-int IsIP4Address(const char *Str);
+bool IsIP4Address(const char *Str);
 
 /* net.IsIP6Address(string)   - returns 'true' if string is a valid IP6 address */
-int IsIP6Address(const char *Str);
+bool IsIP6Address(const char *Str);
 
 /* net.IsIPAddress(string)   - returns 'true' if string is a either an IP4 or IP6 address */
-int IsIPAddress(const char *);
+bool IsIPAddress(const char *);
 
 /* net.interfaceIP("eth0")   - returns primary IP address of a network interface (in this case eth0) */
 %rename(interfaceIP) GetInterfaceIP;
@@ -126,7 +126,7 @@ char *GetInterfaceIP(const char *Interface);
 char *externalIP();
 
 %rename(setProxy) SetGlobalConnectionChain;
-int SetGlobalConnectionChain(const char *Chain);
+bool SetGlobalConnectionChain(const char *Chain);
 
 
 
@@ -159,7 +159,7 @@ if ($self->S) STREAMClose($self->S);
 free($self);
 }
 
-int setupTLS(const char *Certificate, const char *Key)
+bool setupTLS(const char *Certificate, const char *Key)
 {
 if (! SSLAvailable()) return(FALSE);
 if (! StrValid(Certificate)) return(FALSE);

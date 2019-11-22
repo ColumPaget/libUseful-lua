@@ -149,10 +149,10 @@ char *padto(const char *Str, char Pad, int Len);
 
 
 /* returns true if a string is alphanumeric */
-int istext(const char *Str);
+bool istext(const char *Str);
 
 /* returns true if a string is numeric */
-int isnum(const char *Str);
+bool isnum(const char *Str);
 
 /* strip spaces from string */
 %newobject stripTrailingWhitespace;

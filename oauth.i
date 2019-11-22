@@ -27,12 +27,12 @@ return(OAuthCreate(Type, Name, ClientID, ClientSecret, Scopes, RefreshURL));
 }
 
 void set(const char *VarName, const char *Value) {SetVar($self->Vars, VarName, Value);}
-int load(const char *Name="", const char *Path="") {return(OAuthLoad($self, Name, Path));}
-int save(const char *Path) {return(OAuthSave($self, Path));}
-int stage1(const char *URL) {return(OAuthStage1($self, URL));}
-int finalize(const char *URL) {return(OAuthFinalize($self, URL));}
-int refresh(const char *URL) {return(OAuthRefresh($self, URL));}
-int listen(int Port, const char *URL) {return(OAuthListen($self, Port, URL, OAUTH_STDIN));}
+bool load(const char *Name="", const char *Path="") {return(OAuthLoad($self, Name, Path));}
+bool save(const char *Path) {return(OAuthSave($self, Path));}
+bool stage1(const char *URL) {return(OAuthStage1($self, URL));}
+bool finalize(const char *URL) {return(OAuthFinalize($self, URL));}
+bool refresh(const char *URL) {return(OAuthRefresh($self, URL));}
+bool listen(int Port, const char *URL) {return(OAuthListen($self, Port, URL, OAUTH_STDIN));}
 const char *name() {return($self->Name);}
 const char *access_token() {return($self->AccessToken);}
 const char *refresh_token() {return($self->RefreshToken);}
