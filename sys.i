@@ -21,6 +21,8 @@ This module provides functions that return various system information.
 #define sys_totalmem() (OSSysInfoLong(OSINFO_TOTALMEM))
 #define sys_freemem() (OSSysInfoLong(OSINFO_FREEMEM))
 #define sys_buffermem() (OSSysInfoLong(OSINFO_BUFFERMEM))
+#define sys_totalswap() (OSSysInfoLong(OSINFO_TOTALSWAP))
+#define sys_freeswap() (OSSysInfoLong(OSINFO_FREESWAP))
 #define sys_type() (OSSysInfoString(OSINFO_TYPE))
 #define sys_hostname() (OSSysInfoString(OSINFO_HOSTNAME))
 #define sys_release() (OSSysInfoString(OSINFO_RELEASE))
@@ -96,20 +98,28 @@ return(val);
 
 /* sys.uptime   - return uptime in seconds as a number */
 %rename(uptime) sys_uptime;
-unsigned long sys_uptime();
+size_t sys_uptime();
 
 /* sys.totalmem   - return total system memory in bytes */
 %rename(totalmem) sys_totalmem;
-unsigned long sys_totalmem();
+size_t sys_totalmem();
 
-/* sys.totalmem   - return free memory in bytes. Unfortunately this is rendered useless on linux as */
+/* sys.freemem   - return free memory in bytes. Unfortunately this is rendered useless on linux as */
 /* the kernel will grab much free memory for caching, but it's still available for use by applications */
 /* even though it no longer counts as 'free' */
 %rename(freemem) sys_freemem;
-unsigned long sys_freemem();
+size_t sys_freemem();
 
 %rename(buffermem) sys_buffermem;
-unsigned long sys_buffermem();
+size_t sys_buffermem();
+
+/* sys.totalswap   - return total swapspace in bytes */
+%rename(totalswap) sys_totalswap;
+size_t sys_totalswap();
+
+/* sys.freeswap   - return free swapspace in bytes. */
+%rename(freeswap) sys_freeswap;
+size_t sys_freeswap();
 
 
 /* sys.arch   - returns system architecture */
