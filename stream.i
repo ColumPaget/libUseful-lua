@@ -226,6 +226,7 @@ int expect(const char *String, const char *Reply="") {return(STREAMExpectAndRepl
 /* wait for silence on a stream */
 int silence(int wait=0) {return(STREAMExpectSilence($self, wait)); }
 
+void timeout(int csecs) {STREAMSetTimeout($self, csecs);}
 
 /* startTLS. This will start SSL/TLS communications on a stream */
 bool startTLS()
