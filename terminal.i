@@ -174,6 +174,14 @@ TerminalGeometry($self->S, &wid, &len);
 return(len);
 }
 
+int height()
+{
+int wid, len;
+
+TerminalGeometry($self->S, &wid, &len);
+return(len);
+}
+
 /* Clear the screen */
 void clear() { TerminalCommand(TERM_CLEAR_SCREEN, 0, 0, $self->S); }
 
@@ -428,4 +436,9 @@ return(NULL);
 }
 
 
+int xpos() {return($self->x);}
+int ypos() {return($self->y);}
+int width() {return($self->wid);}
+int height() {return($self->high);}
+int length() {return($self->high);}
 }
