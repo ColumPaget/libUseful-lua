@@ -32,6 +32,11 @@ LUA_INCLUDE_DIR=""
 LUA_MODULES_DIR=""
 AC_PATH_PROG([LUA_EXE_PATH], [lua],,)
 
+if test "$LUA_EXE_PATH" = ""
+then
+	AC_PATH_PROG([LUA_EXE_PATH], [lua5.3],,)
+fi
+
 AC_ARG_WITH([lua-includes], [  --with-lua-includes       path to directory containing liblua .h headers],LUA_INCLUDE_DIR=$withval)
 AC_ARG_WITH([lua-libs], [  --with-lua-libs       path to directory containing liblua libs],LUA_LIBS_DIR=$withval)
 AC_ARG_WITH([lua-modules], [  --with-lua-modules       path to directory in which to install modules files],LUA_MODULES_DIR=$withval)
