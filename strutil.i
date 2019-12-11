@@ -17,6 +17,7 @@ This module implemements various string-based utility functions, including diffe
 #include "libUseful-4/String.h"
 #include "libUseful-4/Errors.h"
 #include "libUseful-4/PatternMatch.h"
+#include "libUseful-4/Encodings.h"
 
 #define safestrlen(Str) (StrLen(Str))
 #define httpQuote(Str) (HTTPQuote(NULL, Str))
@@ -28,6 +29,7 @@ This module implemements various string-based utility functions, including diffe
 #define pad(Str, Pad, PadLen) (CopyPadStr(NULL, Str, Pad, PadLen))
 #define padto(Str, Pad, PadLen) (CopyPadStrTo(NULL, Str, Pad, PadLen))
 #define pmatch_check(Pattern, String, len) (pmatch_one(Pattern, String, (len > 0 ? len: StrLen(String)), NULL, NULL, 0))
+#define decode(Data, Encoding) (DecodeToText(NULL, Data, EncodingParse(Encoding)))
 
 char *stripCRLF(const char *Str) 
 {
@@ -173,6 +175,9 @@ char *stripCRLF(char *Str);
 %newobject trim;
 char *trim(char *Str);
 
+/* Decode from base64 etc, to text */
+%newobject decode;
+char *decode(const char *Data, const char *Encoding);
 
 
 
