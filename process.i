@@ -71,6 +71,12 @@ if (result) return(TRUE);
 return(FALSE);
 }
 
+
+STREAM *sfork(const char *Config) 
+{ 
+return(STREAMSpawnFunction(NULL, NULL, Config));
+}
+
 #define LibUsefulLua_Process_GetUser() (LookupUserName(getuid()))
 #define LibUsefulLua_Process_GetGroup() (LookupGroupName(getgid()))
 
@@ -179,7 +185,10 @@ void ProcessApplyConfig(const char *Config);
 
 /* enhanced 'fork' command. Returns pid of child process, unless you are the child process, where it returns 0 */
 /* Config can be made up of options as described for process.configure */
-long xfork(char *Config="");
+long xfork(const char *Config="");
+
+/* like 'xfork' but returns a stream so we can talk to the forked process */
+STREAM *sfork(const char *Config="");
 
 /* spawn is like os.exec, but the process is spawned in the background, and runs independantly */
 /* it will continue to run even if our process exits */
@@ -308,6 +317,11 @@ free($self);
 }
 
 
+/* return underlying stream object so we can do file/stream operations on it*/
+STREAM* get_stream()
+{
+return($self->S);
+}
 
 /* return pid of managed process */
 double pid()
@@ -341,6 +355,18 @@ kill($self->pid, SIGCONT);
 void send(const char *line)
 {
 STREAMWriteBytes($self->S, line, StrLen(line));
+STREAMFlush($self->S);
+}
+
+
+/* write bytes */
+void write(const char *bytes, int len)
+{
+STREAMWriteBytes($self->S, bytes, len);
+}
+
+void flush()
+{
 STREAMFlush($self->S);
 }
 

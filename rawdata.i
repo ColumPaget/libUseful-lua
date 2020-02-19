@@ -38,7 +38,8 @@ RAWDATADestroy($self);
 }
 
 /* read from stream into a RAWDATA object. RAWDATA object will be automatically resized if needed */
-int read(STREAM *S, size_t len, size_t offset=0) {return(RAWDATARead($self, S, len));}
+int read(STREAM *S, size_t len) {return(RAWDATARead($self, S, len));}
+int readat(STREAM *S, size_t offset, size_t len) {return(RAWDATAReadAt($self, S, offset, len));}
 
 /* write bytes from a rawdata object to a stream. offset and len can be used to write a subblock of the data */
 int write(STREAM *S, size_t len=0, size_t offset=0) {return(RAWDATAWrite($self, S, offset, len));}

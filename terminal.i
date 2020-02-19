@@ -135,6 +135,13 @@ TerminalReset($self->S);
 free($self);
 }
 
+/* return underlying stream object so we can do file/stream operations on it*/
+STREAM* get_stream()
+{
+return($self->S);
+}
+
+/*set read timeout for this terminal object */
 void timeout(int Timeout)
 {
 STREAMSetTimeout($self->S, Timeout);
@@ -153,11 +160,14 @@ void hidecursor()
   TerminalInit($self->S, $self->Flags);
 }
 
-void cork()
-{
-STREAMSetFlushType($self->S, FLUSH_FULL, 0, 0);
-}
+/* prevent flushing output to screen */
+void cork() { STREAMSetFlushType($self->S, FLUSH_FULL, 0, 0); }
 
+/* flush any bytes held in internal buffers (uncork) */
+void flush() {STREAMFlush($self->S);}
+
+
+/* return terminal width */
 int width()
 {
 int wid, len;
@@ -166,6 +176,7 @@ TerminalGeometry($self->S, &wid, &len);
 return(wid);
 }
 
+/* return terminal length/height */
 int length()
 {
 int wid, len;
@@ -174,6 +185,7 @@ TerminalGeometry($self->S, &wid, &len);
 return(len);
 }
 
+/* return terminal length/height */
 int height()
 {
 int wid, len;
@@ -235,9 +247,6 @@ void putc(int Char) {TerminalPutChar(Char, $self->S);}
 
 /* put a string. This method supports 'tilde' format strings (see above) */
 void puts(const char *Str) {TerminalPutStr(Str, $self->S);}
-
-/* flush any bytes held in internal buffers */
-void flush() {STREAMFlush($self->S);}
 
 /* read a line of text from the terminal 
 

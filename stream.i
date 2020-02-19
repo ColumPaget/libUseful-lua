@@ -96,6 +96,7 @@ multiple stream objects for activity
 #include "libUseful-4/Expect.h"
 #include "libUseful-4/Errors.h"
 #include "libUseful-4/Pty.h"
+#include "libUseful-4/RawData.h"
 #include <unistd.h>
 
 void Progressor(const char *Path, int bytes, int total){/*printf("\r %s %d %d            ",Path,bytes,total);fflush(NULL);*/}
@@ -228,6 +229,14 @@ int silence(int wait=0) {return(STREAMExpectSilence($self, wait)); }
 
 void timeout(int csecs) {STREAMSetTimeout($self, csecs);}
 
+size_t bufsize(size_t size=0) {if (size) STREAMResizeBuffer($self, size); return($self->BuffSize);}
+
+void fillto(int size) {$self->StartPoint=size;}
+
+size_t out_queued() {return($self->OutEnd);}
+size_t out_space() {return($self->BuffSize - $self->OutEnd);}
+
+
 /* startTLS. This will start SSL/TLS communications on a stream */
 bool startTLS()
 {
@@ -248,7 +257,10 @@ return(FALSE);
 */
 bool commit() {return(STREAMCommit($self));}
 
+void nonblock() {STREAMSetFlags($self, SF_NONBLOCK, 0);}
+
 void ptysize(int wid, int len) { PTYSetGeometry($self->in_fd, wid, len);}
+
 
 /* close a stream */
 void close() 
