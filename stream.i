@@ -156,9 +156,13 @@ STREAMAddProgressCallback($self, Progressor);
 return(STREAMReadDocument(NULL, $self));
 }
 
+/* lock a file, fail if someone else has it locked */
 bool lock() {return(STREAMLock($self, LOCK_EX|LOCK_NB));}
+
+/* lock a file, wait to get lock */
 bool waitlock() {return(STREAMLock($self, LOCK_EX));}
 
+/* unlock file */
 bool unlock() {return(STREAMLock($self, LOCK_UN));}
 
 /* write a line to a stream */
@@ -179,6 +183,7 @@ unsigned long tell() {return((unsigned long) STREAMTell($self));}
 /* seek to 'offset' from start of file */
 long seek(long offset, int whence=SEEK_SET) {return(STREAMSeek($self, (uint64_t) offset, whence));}
 
+/* truncate a file */
 void truncate(long size=0) {STREAMTruncate($self, size);}
 
 
@@ -227,13 +232,26 @@ int expect(const char *String, const char *Reply="") {return(STREAMExpectAndRepl
 /* wait for silence on a stream */
 int silence(int wait=0) {return(STREAMExpectSilence($self, wait)); }
 
+/* set timeout for read and write operations. on a nonblocking stream you generally want to set this to '0' */
 void timeout(int csecs) {STREAMSetTimeout($self, csecs);}
 
+/* set a stream to 'nonblocking' mode, reads and writes will not complete, they will just read and write as much as they can at that moment. */
+/* Thus you'll need to pay attention to space left  in a stream's buffers using 'out_space' if you're writing */
+/* You probably want to set 'S:timeout(0)' to make totally sure that the stream doesn't wait at all for a read or write to complete */
+void nonblock() {STREAMSetFlags($self, SF_NONBLOCK, 0);}
+
+
+/* set size of a streams input and output buffers. Also returns the size they are set to. To just query the size pass a size of '0', using */
+/* S:bufsize(0) or S:bufsize() */
 size_t bufsize(size_t size=0) {if (size) STREAMResizeBuffer($self, size); return($self->BuffSize);}
 
+/* fill stream's output buffer to 'size' before starting to actually write it. mostly used for caching when pushing data to media players */
 void fillto(int size) {$self->StartPoint=size;}
 
+/* return bytes queued in the streams output buffer */
 size_t out_queued() {return($self->OutEnd);}
+
+/* return space left in the streams output buffer */
 size_t out_space() {return($self->BuffSize - $self->OutEnd);}
 
 
@@ -256,8 +274,6 @@ return(FALSE);
  process it and send a reply
 */
 bool commit() {return(STREAMCommit($self));}
-
-void nonblock() {STREAMSetFlags($self, SF_NONBLOCK, 0);}
 
 void ptysize(int wid, int len) { PTYSetGeometry($self->in_fd, wid, len);}
 
