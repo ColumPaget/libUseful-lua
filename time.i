@@ -67,7 +67,7 @@ void time_sleep(int secs);
 void time_msleep(long msecs);
 
 /* sleep for umsecs nanoseconds */
-%rename(msleep) time_usleep;
+%rename(usleep) time_usleep;
 void time_usleep(long usecs);
 
 
