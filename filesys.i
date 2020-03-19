@@ -119,10 +119,25 @@ if (stat(Path, &FStat) != 0) return(0);
 return((double) FStat.st_size);
 }
 
-const char *LUL_FileExtn(const char *Path)
+char *LUL_FileExtn(const char *Path)
 {
-  return(strrchr(Path, '.'));
+const char *ptr;
+char *str=NULL;
+
+ptr=strrchr(Path, '.');
+str=CopyStr(str, ptr);
+return(str);
 }
+
+char *LUL_FileDir(const char *Path)
+{
+char *str=NULL;
+
+str=CopyStr(str, Path);
+StrRTruncChar(str, '/');
+return(str);
+}
+
 
 
 bool LUL_MkDir(const char *Path, const char *DirMask) 
@@ -172,7 +187,15 @@ bool FileExists(const char *Path);
 
 /*  filesys.extn(Path)   gets a file extension from a path*/
 %rename(extn) LUL_FileExtn;
-const char *LUL_FileExtn(const char *Path);
+%newobject extn;
+char *LUL_FileExtn(const char *Path);
+
+
+/*  filesys.dirname(Path)   gets a directory part of a path, clipping off the last part that should be the filename */
+%rename(dirname) LUL_FileDir;
+%newobject dirname;
+char *LUL_FileDir(const char *Path);
+
 
 /* filesys.mtime(Path)   get modification time of a file */
 %rename(mtime) LUL_FileMTime;
