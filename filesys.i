@@ -235,6 +235,10 @@ bool FileChGroup(const char *Path, const char *Group);
 %rename(copy) FileCopy;
 bool FileCopy(const char *oldpath, const char *newpath);
 
+/*  filesys.copydir(src, dest)     make a recursive copy of a directory */
+%rename(copydir) FileSystemCopyDir;
+bool FileSystemCopyDir(const char *oldpath, const char *newpath);
+
 %rename(touch) FileTouch;
 bool FileTouch(const char *path);
 
