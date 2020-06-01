@@ -65,6 +65,9 @@ menu-in-one-line, and terminal menus which are multi-line menus.
 %module terminal
 %{
 #include "libUseful-4/Terminal.h"
+#include "libUseful-4/TerminalMenu.h"
+#include "libUseful-4/TerminalChoice.h"
+#include "libUseful-4/TerminalBar.h"
 #include "libUseful-4/Errors.h"
 
 #define term_strlen(s) (TerminalStrLen(s))
@@ -276,6 +279,10 @@ TERMBAR *bar(const char *Text, const char *Config="") {return(TerminalBarCreate(
 /* create a terminal menu for the current terminal */
 %newobject menu;
 TERMMENU *menu(int x, int y, int wid, int high) {return(TerminalMenuCreate($self->S, x, y, wid, high));}
+
+/* create a horizontal terminal menu (or 'choice') for the current terminal */
+%newobject choice;
+TERMCHOICE *choice(const char *Config) {return(TerminalChoiceCreate($self->S, Config));}
 }
 
 
@@ -308,6 +315,12 @@ char *prompt(const char *Prompt, const char *Text=NULL)
 }
 
 
+/*
+
+The following functions relate to vertical 'menus' operated with the arrow keys 'up' 'down' and 'enter'.
+
+*/
+
 typedef struct
 {
 int x;
@@ -319,6 +332,10 @@ ListNode *Options;
 char *MenuAttribs;
 char *MenuCursorLeft;
 char *MenuCursorRight;
+char *MenuPadLeft;
+char *MenuPadRight;
+int Flags;
+char *Text;
 } TERMMENU;
 
 
@@ -450,4 +467,99 @@ int ypos() {return($self->y);}
 int width() {return($self->wid);}
 int height() {return($self->high);}
 int length() {return($self->high);}
+}
+
+
+
+
+
+/*
+    These functions relate to simple 'one line' menus that look like 
+
+    enter choice: <yes> no
+
+    The simples way to use these are with 'terminal.choice'.
+
+    The 'Config' argument of the constructor function, and of 'terminal.choice', contains the following key/value configs
+
+    
+ *  prompt=        A text or prompt that preceeds the menu 
+ *  options=       A comma-separated list of menu options
+ *  choices=       Equivalent to 'options='
+ *  x=             Position the menu at terminal column 'x'. Without x and/or y the menu will be on the current line
+ *  y=             Position the menu at terminal row 'y'. Without x and/or y the menu will be on the current line
+ *  select-left=   Text to the left of a currently selected item. Defaults to '<'
+ *  select-right=  Text to the right of a currently selected item. Defaults to '>'
+ *  pad-left=      Text to the left of an unselected item. Defaults to ' '
+ *  pad-right=     Text to the right of an unselected item. Defaults to ' '
+ *
+
+  So, for example:
+
+    terminal.choice("prompt='choose: ' options='life,a job,a career,a family,something else');
+*/
+
+typedef struct
+{
+int x;
+int y;
+int wid;
+int high;
+STREAM *Term;
+ListNode *Options;
+char *MenuAttribs;
+char *MenuCursorLeft;
+char *MenuCursorRight;
+char *MenuPadLeft;
+char *MenuPadRight;
+int Flags;
+char *Text;
+} TERMCHOICE;
+
+
+%extend TERMCHOICE {
+
+/* Create a terminal menu object */
+TERMCHOICE(TERM *Term, const char *Config)
+{
+TERMCHOICE *Item;
+Item=TerminalChoiceCreate(Term->S, Config);
+return(Item);
+}
+
+/* You would never call this, it's called automatically when the object goes out of scope */
+~TERMCHOICE()
+{
+TerminalChoiceDestroy($self);
+}
+
+
+/* Actually draw a menu. This doesn't read keypresses or anything, just draws the menu in its current state */
+void draw() {TerminalChoiceDraw($self);}
+
+/* 
+Pass a keypress into the menu. Changes the selected item, if need be. Redraws the menu.
+if the keypress is 'enter' then return the selected item. If the user presses 'escape' return null
+else return ""
+*/
+
+%newobject onkey;
+char* onkey(char *key) 
+{
+return(TerminalChoiceOnKey(NULL, $self, TerminalTranslateKeyStr(key)));
+}
+
+
+
+/*
+run a menu. Read keypresses and update menu until an item is selected or 'escape' is pressed
+*/
+
+%newobject run;
+char *run() 
+{
+return(TerminalChoiceProcess(NULL, $self));
+}
+
+
 }
