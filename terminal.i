@@ -429,7 +429,9 @@ return(NULL);
 }
 
 
-
+/*
+  get the currently focused item. This is useful with 'setpos' 
+*/
 %newobject curr;
 char* curr() 
 {
@@ -441,6 +443,38 @@ return(CopyStr(NULL, $self->Options->Side->Tag));
 return(NULL);
 }
 
+/*
+  setpos sets the curr item. This is useful so that a menu that's been redrawn, or even been destroyed and recreated
+  can be set back to the position it was at. This can be used to update a menu like this:
+
+  Out:cork()
+  Menu:clear()
+  Menu:add("this") 
+  Menu:add("that") 
+  Menu:add("the other") 
+  Menu:setpos("that")
+  Out:flush()
+
+  corking and flushing the terminal prevents the menu from 'flashing' as it's updated. This use of setpos allows 
+  having menus that remember their position even if they're completely rebuilt.
+*/
+int setpos(const char *id)
+{
+ListNode *Curr;
+
+Curr=ListGetNext($self->Options);
+while (Curr)
+{
+  if (Curr->Item && (strcmp(id, Curr->Item)==0)) 
+  {
+    $self->Options->Side=Curr ;
+    return(TRUE);
+  }
+  Curr=ListGetNext(Curr);
+}
+
+return(FALSE);
+}
 
 /*
 run a menu. Read keypresses and update menu until an item is selected or 'escape' is pressed
