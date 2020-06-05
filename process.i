@@ -55,8 +55,14 @@ signal(sig, LUL_HandleSignal);
 
 void WatchSignal(int sig)
 {
-signal(sig, LUL_HandleSignal);
+struct sigaction sa;
+
+memset(&sa, 0, sizeof(struct sigaction));
+sa.sa_handler=LUL_HandleSignal;
+
+sigaction(sig, &sa, NULL);
 }
+
 
 bool CheckSignal(int sig)
 {
@@ -84,6 +90,36 @@ return(STREAMSpawnFunction(NULL, NULL, Config));
 #define Wait(pid) (waitpid(pid, NULL, 0))
 %}
 
+/* define POSIX signal names */
+%constant float  SIGHUP=1; /* Hangup.  */
+%constant float  SIGINT=2; /* Interactive attention signal.  */
+%constant float  SIGQUIT=3; /* Quit.  */
+%constant float  SIGILL=4; /* Illegal instruction.  */
+%constant float  SIGTRAP=5; /* Trace/breakpoint trap.  */
+%constant float  SIGABRT=6; /* Abnormal termination.  */
+%constant float  SIGFPE=8; /* Erroneous arithmetic operation.  */
+%constant float  SIGKILL=9; /* Killed.  */
+%constant float  SIGBUS=10; /* Bus error.  */
+%constant float  SIGSEGV=11; /* Invalid access to storage.  */
+%constant float  SIGSYS=12; /* Bad system call.  */
+%constant float  SIGPIPE=13; /* Broken pipe.  */
+%constant float  SIGALRM=14; /* Alarm clock.  */
+%constant float  SIGTERM=15; /* Termination request.  */
+%constant float  SIGURG=16; /* Urgent data is available at a socket.  */
+%constant float  SIGSTOP=17; /* Stop, unblockable.  */
+%constant float  SIGTSTP=18; /* Keyboard stop.  */
+%constant float  SIGCONT=19; /* Continue.  */
+%constant float  SIGCHLD=20; /* Child terminated or stopped.  */
+%constant float  SIGTTIN=21; /* Background read from control terminal.  */
+%constant float  SIGTTOU=22; /* Background write to control terminal.  */
+%constant float  SIGPOLL=23; /* Pollable event occurred (System V).  */
+%constant float  SIGXCPU=24; /* CPU time limit exceeded.  */
+%constant float  SIGXFSZ=25; /* File size limit exceeded.  */
+%constant float  SIGVTALRM=26; /* Virtual timer expired.  */
+%constant float  SIGPROF=27; /* Profiling timer expired.  */
+%constant float  SIGWINCH=28; /* Window size change (4.3 BSD, Sun).  */
+%constant float  SIGUSR1=30; /* User-defined signal 1.  */
+%constant float  SIGUSR2=31; /* User-defined signal 2.  */
 
 
 
@@ -228,7 +264,7 @@ bool SwitchGroup(const char *Group);
 %rename(pidfile) WritePidFile;
 bool WritePidFile(char *ProgName);
 
-/* createLockFile(Path, timeout)  - create a lockfile. 
+/* process.createLockFile(Path, timeout)  - create a lockfile. 
 'timeout' is optional, it's the time to wait to get access to a lockfile if some other process has it locked. Default is '0' meaning 'forever'
 */
 %rename(createLockFile) CreateLockFile;
@@ -268,11 +304,23 @@ const char *LibUsefulLuaGetValue(const char *Name);
 %rename(lu_set) LibUsefulSetValue;
 void LibUsefulSetValue(const char *Name, const char *Value);
 
-%rename(sigcheck) CheckSignal;
-bool CheckSignal(int sig=0);
+/*
+ process.sigwatch(sig) 
+ watch a signal, this means it will interrupt system calls, and we will catch it and update the list of
+ recieved signals which we can query with 'sigcheck'
+*/
 
 %rename(sigwatch) WatchSignal;
 void WatchSignal(int sig=0);
+
+
+/*
+ process.sigcheck(sig) 
+ check if we received a signal
+*/
+%rename(sigcheck) CheckSignal;
+bool CheckSignal(int sig=0);
+
 
 
 /* PROCESS object. This allows you to launch a program and talk to it using the PROCESS:send() method. 'Config' takes the same values as for Spawn or xfork, described above.
