@@ -1,4 +1,4 @@
-VERSION=2.18
+VERSION=2.19
 CC = gcc
 CFLAGS=-g -O2 -fPIC -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib
 LIBS=-lUseful 

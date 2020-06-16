@@ -225,7 +225,12 @@ char *Token=NULL;
 
 if (! StrValid(Separators)) Separators=$self->Separators;
 $self->Data=GetToken($self->Data,Separators,&Token,$self->Flags);
-if ($self->Data==NULL) return(NULL);
+if ($self->Data==NULL) 
+{
+  /*if you don't do this, you get a memory leak */
+  Destroy(Token);
+  return(NULL);
+}
 return(Token);
 }
 
@@ -237,7 +242,12 @@ const char *ptr;
 
 if (! StrValid(Separators)) Separators=$self->Separators;
 ptr=GetToken($self->Data,Separators,&Token,$self->Flags);
-if (ptr==NULL) return(NULL);
+if (ptr==NULL)
+{
+  /*if you don't do this, you get a memory leak */
+  Destroy(Token);
+  return(NULL);
+}
 return(Token);
 }
 
