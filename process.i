@@ -86,8 +86,38 @@ return(STREAMSpawnFunction(NULL, NULL, Config));
 #define LibUsefulLua_Process_GetUser() (LookupUserName(getuid()))
 #define LibUsefulLua_Process_GetGroup() (LookupGroupName(getgid()))
 
-#define ChildExited(pid) (waitpid(pid, NULL, WNOHANG))
 #define Wait(pid) (waitpid(pid, NULL, 0))
+
+bool ChildExited(long pid)
+{
+if (pid==-1) return(FALSE); 
+if (waitpid((pid_t) pid, NULL, WNOHANG)==pid) return(TRUE);
+return(FALSE);
+}
+
+
+char *ChildStatus(long pid, int flags)
+{
+char *RetStr=NULL;
+int Status;
+
+if (pid < 1) RetStr=CopyStr(RetStr, "no such pid"); 
+else
+{
+  pid=waitpid((pid_t) pid, &Status, flags);
+  if (pid==-1) RetStr=CopyStr(RetStr, "no such pid");
+  else if (pid==0) RetStr=CopyStr(RetStr, "running");
+  else if (WIFEXITED(Status)) RetStr=FormatStr(RetStr, "exit:%d", WEXITSTATUS(Status));
+  else if (WIFSIGNALED(Status)) RetStr=FormatStr(RetStr, "signal:%d", WTERMSIG(Status));
+  else RetStr=CopyStr(RetStr, "exit:unknown");
+}
+
+return(RetStr);
+}
+
+#define ChildStatusNoWait(pid) (ChildStatus((pid), (WNOHANG)))
+#define ChildStatusWait(pid) (ChildStatus((pid), (0)))
+
 %}
 
 /* define POSIX signal names */
@@ -236,7 +266,30 @@ long Spawn(const char *Command, const char *Config="");
 /*  process.ChildExited(pid)    - Check if a child exited, return pid of any that did. */
 /* We can pass pid to get a specific child, or default is 'any child' */
 %rename(childExited) ChildExited;
-long ChildExited(long pid=-1);
+bool ChildExited(long pid=-1);
+
+
+/* 
+The following two functions return a string that describes the exit status of
+the child process. This string can be:
+
+'no such pid'      - no child with that pid exists
+'running'          - child is still running and hasn't exited
+'exit:<status>'    - exit status of a process that exited normally by calling 'exit'
+'signal:<signal>'  - process was killed with signal  
+'exit:unknown'     - something weird happened. Process exited but we don't know why.
+*/
+
+/* get exit status of a child process, but don't wait if it hasn't exited */
+%rename(childStatus) ChildStatusNoWait;
+%newobject childStatus;
+char *ChildStatusNoWait(long pid);
+
+/* wait for child to exit and return it's status */
+%rename(waitStatus) ChildStatusWait;
+%newobject waitStatus;
+char *ChildStatusWait(long pid);
+
 
 /* Wait for a child to exit. returns pid of any that did */
 /* have to use rename here to prevent name class with existing wait function */

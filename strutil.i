@@ -113,7 +113,7 @@ double FromIEC(const char *Str, int Precision=1);
 
 /* strutil.fromIEC(Str, type)   - convert a numeric value from a IEC notation string. e.g.  2.6k gives 2600 */
 %rename(pmatch) pmatch_check;
-int pmatch_check(const char *Pattern, const char *String, int len=0);
+bool pmatch_check(const char *Pattern, const char *String, int len=0);
 
 
 /* apply HTTP style 'percent' encoding to a string */
