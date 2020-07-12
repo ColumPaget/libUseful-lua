@@ -50,7 +50,9 @@ http:user:password@www.google.com        http network connection
 https:www.google.com                     https network connection
 cmd:cat /etc/hosts                       run command 'cat /etc/hosts' and read/write to/from it
 ssh:192.168.2.1:1022/cat /etc/hosts      ssh connect, running the command 'cat /etc/hosts'
-
+stdin:                                   standard in
+stdout:                                  standard out
+stdio:                                   both standard in and standard out
 
 
 For 'file' streams the second argument is a list of charcters with the following meanings
