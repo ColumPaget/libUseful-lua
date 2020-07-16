@@ -97,12 +97,14 @@ char *term_format(const char *Str);
 %rename(puts) term_stdputs;
 void term_stdputs(const char *Str);
 
+
 /* 
 set UTF-8 capabilities. This applies to all terminals.  'level' can be:
 
   0  -  no UTF-8 support
   1  -  UTF-8 support for values < 0x800
   2  -  UTF-8 support for values < 0x10000
+  3  -  UTF-8 support for values < 0x10FFFF
 */
 %rename(utf8) term_utf8;
 void term_utf8(int level);
@@ -283,6 +285,48 @@ TERMMENU *menu(int x, int y, int wid, int high) {return(TerminalMenuCreate($self
 /* create a horizontal terminal menu (or 'choice') for the current terminal */
 %newobject choice;
 TERMCHOICE *choice(const char *Config) {return(TerminalChoiceCreate($self->S, Config));}
+
+
+/* Send escape sequence to raise an xterm-compatible terminal in the window stack */
+#ifdef XtermRaise
+void xterm_raise() {return(XtermRaise($self->S));}
+#endif
+
+/* Send escape sequence to lower an xterm-compatible terminal in the window stack */
+#ifdef XtermLower
+void xterm_lower() {return(XtermLower($self->S));}
+#endif
+
+/* Send escape sequence to iconify an xterm-compatible terminal */
+#ifdef XtermIconify
+void xterm_iconify() {return(XtermIconify($self->S));}
+#endif
+
+/* Send escape sequence to un-iconify an xterm-compatible terminal */
+#ifdef XtermUnIconify
+void xterm_uniconify() {return(XtermUnIconify($self->S));}
+#endif
+
+/* Send escape sequence to set an xterm-compatible terminal to fullscreen*/
+#ifdef XtermFullscreen
+void xterm_fullscreen() {return(XtermFullscreen($self->S));}
+#endif
+
+/* Send escape sequence to unset an xterm-compatible terminal to fullscreen*/
+#ifdef XtermUnFullscreen
+void xterm_unfullscreen() {return(XtermUnFullscreen($self->S));}
+#endif
+
+
+/* Send escape sequence to set the title of an xterm-compatible terminal*/
+#ifdef XtermSetTitle
+void xterm_title(const char *Title) {return(XtermSetTitle($self->S, Title));}
+#endif
+
+/* Send escape sequence to set the icon-name (title when iconified) of an xterm-compatible terminal*/
+#ifdef XtermSetIconName
+void xterm_icon_name(const char *Title) {return(XtermSetIconName($self->S, Title));}
+#endif
 }
 
 
