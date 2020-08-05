@@ -229,6 +229,9 @@ prio       - set scheduler priority of current process
 priority   - set scheduler priority of current process 
 nice       - set 'nice' value of current process (another way of expressing priority)
 
+newpgroup  - start a new process group with this processes pid as the process group id
+setsid     - start a new session with this processes pid as the session id
+
 daemon     - daemonize current process (will result in a change in the process ID to be different from the one returned by xfork etc)
 demon      - daemonize current process (will result in a change in the process ID to be different from the one returned by xfork etc)
 
@@ -448,7 +451,8 @@ void stop()
 kill($self->pid, SIGKILL);
 }
 
-/* kill managed process group owned by this process  */
+/* kill managed process group owned by this process. This works for processes created
+by calling PROCESS with the 'newpgroup' option */
 void stop_pgroup()
 {
 kill(0 - ($self->pid), SIGKILL);
@@ -513,6 +517,7 @@ GetToken($self->Command, "\\S", &Path, GETTOKEN_QUOTES);
 
 return(Path);
 }
+
 
 /* return the basename (program name) of the executable of the managed process */
 %newobject exec_basename;
