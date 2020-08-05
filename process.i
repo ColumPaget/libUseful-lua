@@ -95,6 +95,10 @@ if (waitpid((pid_t) pid, NULL, WNOHANG)==pid) return(TRUE);
 return(FALSE);
 }
 
+long ChildCollect(long pid)
+{
+return(waitpid((pid_t) pid, NULL, WNOHANG));
+}
 
 char *ChildStatus(long pid, int flags)
 {
@@ -263,10 +267,14 @@ STREAM *sfork(const char *Config="");
 long Spawn(const char *Command, const char *Config="");
 
 
-/*  process.ChildExited(pid)    - Check if a child exited, return pid of any that did. */
-/* We can pass pid to get a specific child, or default is 'any child' */
+/*  process.childExited(pid)    - Check if a SPECIFIC child exited. */
 %rename(childExited) ChildExited;
-bool ChildExited(long pid=-1);
+bool ChildExited(long pid);
+
+/* process.collect(pid) - Check if a child exited, return pid of any that did. */
+/* We can pass pid to get a specific child, or default is 'any child' (-1) */
+%rename(collect) ChildCollect;
+long ChildCollect(long pid=-1);
 
 
 /* 
@@ -397,7 +405,9 @@ PROCESS (const char *Command, const char *Config="")
 PROCESS *item;
 STREAM *S;
 
-S=STREAMSpawnCommand(Command, Config);
+if (StrValid(Command)) S=STREAMSpawnCommand(Command, Config);
+else S=STREAMSpawnFunction(NULL, NULL, Config);
+
 if (! S) return(NULL);
 
 item=(PROCESS *) calloc(1, sizeof(PROCESS));
@@ -436,6 +446,12 @@ return((double) $self->pid);
 void stop()
 {
 kill($self->pid, SIGKILL);
+}
+
+/* kill managed process group owned by this process  */
+void stop_pgroup()
+{
+kill(0 - ($self->pid), SIGKILL);
 }
 
 
