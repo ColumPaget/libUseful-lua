@@ -50,23 +50,32 @@ fi
 
 AC_CHECK_HEADER([libUseful-4/SysInfo.h],AC_DEFINE(HAVE_LIBUSEFUL_SYSINFO_H),,)
 
+AC_CHECK_LIB(Useful,STREAMShutdown,,)
+cf_have_STREAMShutdown=$ac_cv_lib_Useful_STREAMShutdown
+if test "$cf_have_STREAMShutdown" == "yes"
+then
+AC_DEFINE(HAVE_STREAM_SHUTDOWN)
+else
+echo "WARNING: libUseful lacks STREAMShutdown, there may be issues with programs leaking sshtunnel processes if that feature is used"
+fi
+
 
 if test "$LUA_INCLUDE_DIR" == ""
 then
 LUA_INCLUDE_CANDIDATE=`dirname $LUA_EXE_PATH | sed "s/bin$/include/"`
 for INC in $LUA_INCLUDE_CANDIDATE /usr/include/lua /usr/include/lua5.2 /usr/include/lua5.3
 do
-AC_CHECK_FILE([$INC/lua.h], [LUA_INCLUDE_DIR=$INC])
-if test "$LUA_INCLUDE_DIR" != ""
-then 
-break 
-fi
+	AC_CHECK_FILE([$INC/lua.h], [LUA_INCLUDE_DIR=$INC])
+	if test "$LUA_INCLUDE_DIR" != ""
+	then 
+		break 
+	fi
 done
 fi
 
 if test "$LUA_LIBS_DIR" = ""
 then
-LUA_LIBS_DIR=`dirname $LUA_EXE_PATH | sed "s/bin$/lib/"`
+	LUA_LIBS_DIR=`dirname $LUA_EXE_PATH | sed "s/bin$/lib/"`
 fi
 
 

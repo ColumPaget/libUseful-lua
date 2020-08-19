@@ -657,7 +657,6 @@ infodir
 docdir
 oldincludedir
 includedir
-runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -731,7 +730,6 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
-runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE}'
@@ -984,15 +982,6 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
-  -runstatedir | --runstatedir | --runstatedi | --runstated \
-  | --runstate | --runstat | --runsta | --runst | --runs \
-  | --run | --ru | --r)
-    ac_prev=runstatedir ;;
-  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
-  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
-  | --run=* | --ru=* | --r=*)
-    runstatedir=$ac_optarg ;;
-
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1130,7 +1119,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir runstatedir
+		libdir localedir mandir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1283,7 +1272,6 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
-  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -3587,13 +3575,67 @@ fi
 
 
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for STREAMShutdown in -lUseful" >&5
+$as_echo_n "checking for STREAMShutdown in -lUseful... " >&6; }
+if ${ac_cv_lib_Useful_STREAMShutdown+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lUseful  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char STREAMShutdown ();
+int
+main ()
+{
+return STREAMShutdown ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_Useful_STREAMShutdown=yes
+else
+  ac_cv_lib_Useful_STREAMShutdown=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_Useful_STREAMShutdown" >&5
+$as_echo "$ac_cv_lib_Useful_STREAMShutdown" >&6; }
+if test "x$ac_cv_lib_Useful_STREAMShutdown" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+@%:@define HAVE_LIBUSEFUL 1
+_ACEOF
+
+  LIBS="-lUseful $LIBS"
+
+fi
+
+cf_have_STREAMShutdown=$ac_cv_lib_Useful_STREAMShutdown
+if test "$cf_have_STREAMShutdown" == "yes"
+then
+$as_echo "@%:@define HAVE_STREAM_SHUTDOWN 1" >>confdefs.h
+
+else
+echo "WARNING: libUseful lacks STREAMShutdown, there may be issues with programs leaking sshtunnel processes if that feature is used"
+fi
+
 
 if test "$LUA_INCLUDE_DIR" == ""
 then
 LUA_INCLUDE_CANDIDATE=`dirname $LUA_EXE_PATH | sed "s/bin$/include/"`
 for INC in $LUA_INCLUDE_CANDIDATE /usr/include/lua /usr/include/lua5.2 /usr/include/lua5.3
 do
-as_ac_File=`$as_echo "ac_cv_file_$INC/lua.h" | $as_tr_sh`
+	as_ac_File=`$as_echo "ac_cv_file_$INC/lua.h" | $as_tr_sh`
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $INC/lua.h" >&5
 $as_echo_n "checking for $INC/lua.h... " >&6; }
 if eval \${$as_ac_File+:} false; then :
@@ -3614,16 +3656,16 @@ if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
   LUA_INCLUDE_DIR=$INC
 fi
 
-if test "$LUA_INCLUDE_DIR" != ""
-then 
-break 
-fi
+	if test "$LUA_INCLUDE_DIR" != ""
+	then 
+		break 
+	fi
 done
 fi
 
 if test "$LUA_LIBS_DIR" = ""
 then
-LUA_LIBS_DIR=`dirname $LUA_EXE_PATH | sed "s/bin$/lib/"`
+	LUA_LIBS_DIR=`dirname $LUA_EXE_PATH | sed "s/bin$/lib/"`
 fi
 
 

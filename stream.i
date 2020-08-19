@@ -283,13 +283,19 @@ void ptysize(int wid, int len) { PTYSetGeometry($self->in_fd, wid, len);}
 /* close a stream */
 void close() 
 {
+#ifdef HAVE_STREAM_SHUTDOWN
+STREAMShutdown($self);
+#else
 STREAMFlush($self);
 if ($self->in_fd != $self->out_fd) close($self->in_fd);
 close($self->out_fd);
 
 $self->in_fd=-1;
 $self->out_fd=-1;
+#endif
 }
+
+
 
 }
 
