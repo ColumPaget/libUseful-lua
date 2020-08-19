@@ -125,6 +125,23 @@ char *GetInterfaceIP(const char *Interface);
 %newobject *externalIP;
 char *externalIP();
 
+/* net.setProxy(string)  - set a proxy chain to be used for all connections by this process. A proxy chain is a 
+list of proxy urls separated by '|'. Proxy urls have the form <protocol>://<user>:<password>@<host>:<port>. 
+<user> and <password> are optional when using open proxies, in which case the url is <protocol>://@<host>:<port>.
+The '//' syntax can also be ommited if desired.
+
+proxy protocols are:
+
+https
+socks4
+socks5
+ssh        - use ssh -w method to connect to remote host/port
+sshtunnel  - use ssh -L method to connect to remote host/port
+sshproxy   - use ssh -D method to connect to remote host/port
+
+e.g.   net.setProxy("sshtunnel://localhost|socks5:27.88.101.50:1080")  - setup ssh tunnel through localhost, and then through that use a socks5 proxy to finally access the destination
+
+*/
 %rename(setProxy) SetGlobalConnectionChain;
 bool SetGlobalConnectionChain(const char *Chain);
 
