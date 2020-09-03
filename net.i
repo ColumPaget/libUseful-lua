@@ -203,4 +203,9 @@ DoSSLServerNegotiation(S, 0);
 return(S);
 }
 
+STREAM *get_stream()
+{
+return($self->S);
+}
+
 }
