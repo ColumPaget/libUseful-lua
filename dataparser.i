@@ -74,8 +74,8 @@ Destroy a parser object. The programmer would never normally call this as it's c
 */
 ~PARSER()
 {
-//if (! ($self->Flags & PARSER_SUBITEMS) )ParserItemsDestroy($self);
-free($self);
+if ($self->ItemType==ITEM_ROOT) ParserItemsDestroy($self);
+//free($self);
 }
 
 
