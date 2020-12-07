@@ -120,7 +120,7 @@ STREAM *S;
 %extend TERM {
 
 /* Create a terminal object */
-TERM(STREAM *S=NULL)
+TERM(STREAM *S=NULL, const char *Config=NULL)
 {
 TERM *Item;
 
@@ -128,8 +128,12 @@ Item=(TERM *) calloc(1,sizeof(TERM));
 if (S) Item->S=S;
 else Item->S=STREAMFromDualFD(0,1);
 STREAMSetTimeout(Item->S,0);
-Item->Flags=TERM_RAWKEYS;
-TerminalInit(Item->S, Item->Flags | TERM_SAVEATTRIBS);
+if (StrValid(Config)) TerminalSetup(Item->S, Config);
+else
+{
+  Item->Flags=TERM_RAWKEYS;
+  TerminalInit(Item->S, Item->Flags | TERM_SAVEATTRIBS);
+}
 return(Item);
 }
 
