@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS=-g -O2 -fPIC -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib
 LIBS=-lUseful -lUseful 
 LUA_MODULES_DIR=/opt/lua-5.3.4/lib/lua/5.3/
-MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so
+MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so xml.so
 DEFS=-DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DSTDC_HEADERS=1 -DHAVE_LIBUSEFUL=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_LIBUSEFUL_SYSINFO_H=1 -DHAVE_LIBUSEFUL=1 -DHAVE_STREAM_SHUTDOWN=1
 FLAGS=$(CFLAGS) $(DEFS) -DVERSION=\"$(VERSION)\"
 
@@ -137,6 +137,16 @@ securemem_wrap.o: securemem_wrap.c
 
 securemem_wrap.c: securemem.i
 	swig $(DEFS) -lua -o securemem_wrap.c securemem.i
+
+xml.so: xml_wrap.o
+	$(CC) $(FLAGS) -shared -o xml.so xml_wrap.o $(LIBS)
+  
+xml_wrap.o: xml_wrap.c
+	$(CC) $(FLAGS) -c xml_wrap.c -o  xml_wrap.o
+
+xml_wrap.c: xml.i
+	swig $(DEFS) -lua -o xml_wrap.c xml.i
+
 
 
 install: $(MODS)

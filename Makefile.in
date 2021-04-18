@@ -3,7 +3,7 @@ CC = @CC@
 CFLAGS=@CFLAGS@
 LIBS=@LIBS@
 LUA_MODULES_DIR=@LUA_MODULES_DIR@
-MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so
+MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so xml.so
 DEFS=@DEFS@
 FLAGS=$(CFLAGS) $(DEFS) -DVERSION=\"$(VERSION)\"
 
@@ -137,6 +137,16 @@ securemem_wrap.o: securemem_wrap.c
 
 securemem_wrap.c: securemem.i
 	swig $(DEFS) -lua -o securemem_wrap.c securemem.i
+
+xml.so: xml_wrap.o
+	$(CC) $(FLAGS) -shared -o xml.so xml_wrap.o $(LIBS)
+  
+xml_wrap.o: xml_wrap.c
+	$(CC) $(FLAGS) -c xml_wrap.c -o  xml_wrap.o
+
+xml_wrap.c: xml.i
+	swig $(DEFS) -lua -o xml_wrap.c xml.i
+
 
 
 install: $(MODS)
