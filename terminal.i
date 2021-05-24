@@ -71,8 +71,9 @@ menu-in-one-line, and terminal menus which are multi-line menus.
 #include "libUseful-4/Errors.h"
 
 #define term_strlen(s) (TerminalStrLen(s))
-#define term_format(s) (TerminalFormatStr(NULL,s,NULL))
-#define term_stdputs(s) (TerminalPutStr(s, NULL))
+#define term_strtrunc(s, len) (TerminalStrTrunc(CopyStr(NULL, (s)), (len)))
+#define term_format(s) (TerminalFormatStr(NULL,(s),NULL))
+#define term_stdputs(s) (TerminalPutStr((s), NULL))
 #define term_utf8(l) (TerminalSetUTF8(l))
 
 typedef struct
@@ -84,9 +85,14 @@ STREAM *S;
 %}
 
 
-/* returns a strlen after all tilde formatting has been done */
+/* returns a strlen after all tilde/unicode/quoted formatting has been done */
 %rename(strlen) term_strlen;
 int term_strlen(const char *Str);
+
+%newobject strtrunc;
+%rename(strtrunc) term_strtrunc;
+char *term_strtrunc(const char *Str, int Len);
+
 
 /* formats a tilde-markup string to a printable string */
 %newobject format;
@@ -96,6 +102,9 @@ char *term_format(const char *Str);
 /* writes a tilde formatted string to stdout, without bothering with a 'TERM' object */
 %rename(puts) term_stdputs;
 void term_stdputs(const char *Str);
+
+
+
 
 
 /* 
@@ -289,6 +298,7 @@ TERMMENU *menu(int x, int y, int wid, int high) {return(TerminalMenuCreate($self
 /* create a horizontal terminal menu (or 'choice') for the current terminal */
 %newobject choice;
 TERMCHOICE *choice(const char *Config) {return(TerminalChoiceCreate($self->S, Config));}
+
 
 
 /* Send escape sequence to raise an xterm-compatible terminal in the window stack */
