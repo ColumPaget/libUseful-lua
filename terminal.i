@@ -415,6 +415,11 @@ $self->MenuAttribs=CopyStr($self->MenuAttribs, MenuAttribs);
 $self->MenuCursorLeft=CopyStr($self->MenuCursorLeft, SelectedAttribs);
 }
 
+void resize(int wide, int high)
+{
+$self->wid=wide;
+$self->high=high;
+}
 
 /* clear all items out of the menu */
 void clear() 
