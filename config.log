@@ -35,7 +35,6 @@ PATH: /bin
 PATH: /usr/games/bin
 PATH: .
 PATH: /opt/Drawing/bin
-PATH: /opt/GTK/bin
 PATH: /opt/LibreCAD/bin
 PATH: /opt/Paint3D/bin
 PATH: /opt/Python-3.7.1/bin

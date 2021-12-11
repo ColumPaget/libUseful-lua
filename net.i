@@ -176,6 +176,13 @@ if ($self->S) STREAMClose($self->S);
 free($self);
 }
 
+
+
+/* 
+  setup TLS/SSL. 'Certificate' and 'Key' are paths to the Certificate and Key file respectively 
+  you call this before 'accept', and when connections are accepted, TLS is activated on the new 
+  connection
+*/
 bool setupTLS(const char *Certificate, const char *Key)
 {
 if (! SSLAvailable()) return(FALSE);
@@ -203,9 +210,25 @@ DoSSLServerNegotiation(S, 0);
 return(S);
 }
 
+
+
+
+/* return port server is bound to. If you bind tls::0 then use this to figure out assigned port */
+int port()
+{
+int Port=-1;
+
+if (! $self->S) return(-1);
+GetSockDetails($self->S->in_fd, NULL, &Port, NULL, NULL);
+return(Port);
+}
+
+
+
 STREAM *get_stream()
 {
 return($self->S);
 }
+
 
 }
