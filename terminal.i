@@ -126,6 +126,13 @@ STREAM *S;
 } TERM;
 
 
+typedef struct
+{
+int button;
+int x;
+int y;
+} TMouseEvent;
+
 %extend TERM {
 
 /* Create a terminal object */
@@ -285,6 +292,21 @@ char *prompt(const char *Prompt, const char *Config="", const char *Text=NULL)
 char *Str=NULL;
 if (StrLen(Text) > 0) Str=CopyStr(Str, Text);
 return(TerminalReadPrompt(Str, Prompt, TerminalTextConfig(Config), $self->S));
+}
+
+%newobject mouse;
+TMouseEvent *mouse()
+{
+TMouseEvent *Ev, *New;
+
+Ev=TerminalGetMouse($self->S);
+if (Ev==NULL) return(NULL);
+New=(TMouseEvent *) calloc(1, sizeof(TMouseEvent));
+New->button=Ev->button;
+New->x=Ev->x;
+New->y=Ev->y;
+
+return(New);
 }
 
 /* create a terminal bar for the current terminal */
