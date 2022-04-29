@@ -1,9 +1,9 @@
-VERSION=2.26
+VERSION=2.27
 CC = @CC@
 CFLAGS=@CFLAGS@
 LIBS=@LIBS@
 LUA_MODULES_DIR=@LUA_MODULES_DIR@
-MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so xml.so
+MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so xml.so libuseful_errors.so
 DEFS=@DEFS@
 FLAGS=$(CFLAGS) $(DEFS) -DVERSION=\"$(VERSION)\"
 
@@ -146,6 +146,15 @@ xml_wrap.o: xml_wrap.c
 
 xml_wrap.c: xml.i
 	swig $(DEFS) -lua -o xml_wrap.c xml.i
+
+libuseful_errors.so: libuseful_errors_wrap.o
+	$(CC) $(FLAGS) -shared -o libuseful_errors.so libuseful_errors_wrap.o $(LIBS)
+  
+libuseful_errors_wrap.o: libuseful_errors_wrap.c
+	$(CC) $(FLAGS) -c libuseful_errors_wrap.c -o  libuseful_errors_wrap.o
+
+libuseful_errors_wrap.c: libuseful_errors.i
+	swig $(DEFS) -lua -o libuseful_errors_wrap.c libuseful_errors.i
 
 
 
