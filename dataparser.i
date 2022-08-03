@@ -147,7 +147,7 @@ return the type of the current element
 */
 const char *type()
 {
-  if ($self->ItemType==ITEM_VALUE) return("value");
+  if (ParserItemIsValue($self)) return("value");
   return("object");
 }
 
@@ -160,8 +160,8 @@ const char *ptr=NULL;
 
 if (StrEnd(Name))
 {
-  if ($self->ItemType==ITEM_VALUE) return($self->Item);
-  else return("");
+  if (ParserItemIsValue($self)) return($self->Item);
+  return("");
 }
 else
 {
@@ -179,6 +179,15 @@ Number of immediate children of a PARSER object
 int size()
 {
 return(ListSize($self));
+}
+
+/*
+export parser tree in 'Format' (json, yaml, ini)
+e.g. json=P:export("json");
+*/
+char *export(const char *Format)
+{
+return(ParserExport(NULL, Format, $self));
 }
 
 }
