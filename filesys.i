@@ -67,40 +67,17 @@ return( ((double) (StatFS.f_blocks - StatFS.f_bfree)) * ((double) StatFS.f_frsiz
 
 }
 
-
-int LUL_ConvertFilePerms(const char *DirMask)
+#ifndef FileChMod
+bool FileChMod(const char *Path, const char *Mode)
 {
-int val=0;
-const char *ptr;
+int perms;
 
-if (! StrValid(DirMask)) return(0700);
-if (*DirMask=='0') return((int) strtol(DirMask,NULL,8));
-
-ptr=DirMask;
-if (*ptr=='r') val |= S_IRUSR;
-if (*ptr !='\0') ptr++;
-if (*ptr=='r') val |= S_IWUSR;
-if (*ptr !='\0') ptr++;
-if (*ptr=='r') val |= S_IXUSR;
-if (*ptr !='\0') ptr++;
-
-if (*ptr=='r') val |= S_IRGRP;
-if (*ptr !='\0') ptr++;
-if (*ptr=='r') val |= S_IWGRP;
-if (*ptr !='\0') ptr++;
-if (*ptr=='r') val |= S_IXGRP;
-if (*ptr !='\0') ptr++;
-
-if (*ptr=='r') val |= S_IROTH;
-if (*ptr !='\0') ptr++;
-if (*ptr=='r') val |= S_IWOTH;
-if (*ptr !='\0') ptr++;
-if (*ptr=='r') val |= S_IXOTH;
-if (*ptr !='\0') ptr++;
-
-
-return(val);
+perms=FileSystemParsePermissions(Mode);
+if (chmod (Path, perms) ==0) return(TRUE);
+return(FALSE);
 }
+#endif
+
 
 
 double LUL_FileMTime(const char *Path)
@@ -142,7 +119,7 @@ return(str);
 
 bool LUL_MkDir(const char *Path, const char *DirMask) 
 { 
-if (mkdir(Path, LUL_ConvertFilePerms(DirMask))==0) return(TRUE); 
+if (mkdir(Path, FileSystemParsePermissions(DirMask))==0) return(TRUE); 
 return(FALSE);
 }
 
@@ -231,6 +208,10 @@ bool FileChOwner(const char *Path, const char *Owner);
 %rename(chgrp) FileChGroup;
 bool FileChGroup(const char *Path, const char *Group);
 
+/*   filesys.chmod(Path, Mode)   change mode/permissions of a file. Perms can be a numeric value like '0666' or rwx string like 'rw-rw-rw' */
+%rename(chmod) FileChMod;
+
+
 /*  filesys.copy(src, dest)     make a copy of a file */
 %rename(copy) FileCopy;
 bool FileCopy(const char *oldpath, const char *newpath);
@@ -255,7 +236,6 @@ bool link(const char *oldpath, const char *newpath) { if (link(oldpath, newpath)
 bool unlink(const char *path) { if (unlink(path)==0) return(TRUE); return(FALSE);}
 
 bool rename(const char *OldPath, const char *NewPath) { if (rename(OldPath, NewPath)==0) return(TRUE); return(FALSE);}
-
 
 
 double fs_size(const char *Path); 

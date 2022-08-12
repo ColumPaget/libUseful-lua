@@ -164,11 +164,11 @@ char *SSLKey;
 } SERVER;
 
 %extend SERVER {
-SERVER (const char *URL) {
+SERVER (const char *URL, const char *Args="") {
 SERVER *Item;
 
 Item=(SERVER *) calloc(1,sizeof(SERVER));
-Item->S=STREAMServerInit(URL);
+Item->S=STREAMServerNew(URL, Args);
 return(Item);
 }
 
