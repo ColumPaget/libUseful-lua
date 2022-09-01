@@ -210,6 +210,7 @@ bool FileChGroup(const char *Path, const char *Group);
 
 /*   filesys.chmod(Path, Mode)   change mode/permissions of a file. Perms can be a numeric value like '0666' or rwx string like 'rw-rw-rw' */
 %rename(chmod) FileChMod;
+bool FileChMod(const char *Path, const char *Mode);
 
 
 /*  filesys.copy(src, dest)     make a copy of a file */
