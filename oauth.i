@@ -9,6 +9,22 @@ Copyright (c) 2019 Colum Paget <colums.projects@googlemail.com>
 #include "libUseful-4/Errors.h"
 %}
 
+typedef struct
+{
+    int Flags;
+    char *Name;
+    char *Stage1;
+    char *Stage2;
+    char *VerifyTemplate;
+    char *AccessToken;
+    char *RefreshToken;
+    char *RefreshURL;
+    char *VerifyURL;
+    char *VerifyCode;
+    char *Creds;
+    char *SavePath;
+    ListNode *Vars;
+} OAUTH;
 
 
 %extend OAUTH {
