@@ -78,6 +78,35 @@ return(FALSE);
 }
 #endif
 
+#ifndef LUL_MakeDirPath
+bool LUL_MakeDirPath(const char *Path, const char *Mode)
+{
+int perms;
+
+perms=FileSystemParsePermissions(Mode);
+return(MakeDirPath(Path, perms)); 
+}
+#endif
+
+
+
+char *LUL_PathAddSlash(const char *Str)
+{
+char *Ret=NULL;
+Ret=CopyStr(Ret, Str);
+Ret=SlashTerminateDirectoryPath(Ret);
+return(Ret);
+}
+
+/*  filesys.pathaddslash(Path)   remove a '/' from end of a path */
+char *LUL_PathDelSlash(const char *Str)
+{
+char *Ret=NULL;
+Ret=CopyStr(Ret, Str);
+Ret=StripDirectorySlash(Ret);
+return(Ret);
+}
+
 
 
 double LUL_FileMTime(const char *Path)
@@ -149,13 +178,15 @@ time_t mtime;
 const char *GetBasename(const char *Path);
 
 /*  filesys.pathaddslash(Path)   append a '/' to a path if it doesn't already have one */
-%rename(pathaddslash) SlashTerminateDirectoryPath;
-char *SlashTerminateDirectoryPath(char *DirPath);
+%rename(pathaddslash) LUL_PathAddSlash;
+%newobject pathaddslash;
+char *LUL_PathAddSlash(const char *Str);
 
+/*  filesys.pathdelslash(Path)   remove a '/' from end of a path */
+%rename(pathdelslash) LUL_PathDelSlash;
+%newobject pathdelslash;
+char *LUL_PathDelSlash(const char *Str);
 
-/*  filesys.pathdelslash(Path)   remove the final a '/' from a path, if it ends with one */
-%rename(pathdelslash) StripDirectorySlash;
-char *StripDirectorySlash(char *DirPath);
 
 /*  filesys.exists(Path)   return true if a filesystem object (file, directory, etc) exists at path 'Path', false otherwise */
 %rename(exists) FileExists;
@@ -185,12 +216,12 @@ int LUL_FileSize(const char *Path);
 
 /*  filesys.mkdir(Path)   make a directory. DirMask is the 'mode' of the created directory, and is optional */
 %rename(mkdir) LUL_MkDir;
-bool LUL_MkDir(const char *Path, const char *DirMask="0777");
+bool LUL_MkDir(const char *Path, const char *DirMask="0744");
 
 /*  filesys.mkdirPath(Path)   make a directory, CREATING ALL PARENT DIRECTORIES AS NEEDED. 
 DirMask is the 'mode' of the created directory, and is optional */
-%rename(mkdirPath) MakeDirPath;
-bool MakeDirPath(const char *Path, int DirMask=0777);
+%rename(mkdirPath) LUL_MakeDirPath;
+bool LUL_MakeDirPath(const char *Path, const char *DirMask="0744");
 
 /* filesys.rmdir(path)    remove directory. Directory must be empty */
 bool rmdir(const char *Path) { if (rmdir(Path)==0) return(TRUE); return(FALSE);}
