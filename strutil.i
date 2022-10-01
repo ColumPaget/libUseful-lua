@@ -75,8 +75,9 @@ return(Ret);
 
 typedef struct
 {
-const char *Data;
-const char *Separators;
+char *Data;
+char *Separators;
+const char *Next;
 int Flags;
 } TOKENIZER;
 %}
@@ -205,14 +206,21 @@ TOKENIZER(const char *Str, const char *Separators=" ", const char *Flags="")
 TOKENIZER *Item;
 
 Item=(TOKENIZER *) calloc(1,sizeof(TOKENIZER));
-Item->Data=Str;
-Item->Separators=Separators;
+
+// Take copies of supplied strings, so that if the lua strings themselves go out of scope before the tokenizer
+// object does, we don't wind up pointing to nothing and crash
+
+Item->Data=CopyStr(NULL, Str);
+Item->Separators=CopyStr(NULL, Separators);
 Item->Flags=GetTokenParseConfig(Flags);
+Item->Next=Item->Data;
 return(Item);
 }
 
 ~TOKENIZER()
 {
+Destroy($self->Data);
+Destroy($self->Separators);
 free($self);
 }
 
@@ -224,8 +232,8 @@ char *next(const char *Separators="")
 char *Token=NULL;
 
 if (! StrValid(Separators)) Separators=$self->Separators;
-$self->Data=GetToken($self->Data,Separators,&Token,$self->Flags);
-if ($self->Data==NULL) 
+$self->Next=GetToken($self->Next,Separators,&Token,$self->Flags);
+if ($self->Next==NULL) 
 {
   /*if you don't do this, you get a memory leak */
   Destroy(Token);
@@ -241,7 +249,7 @@ char *Token=NULL;
 const char *ptr;
 
 if (! StrValid(Separators)) Separators=$self->Separators;
-ptr=GetToken($self->Data,Separators,&Token,$self->Flags);
+ptr=GetToken($self->Next,Separators,&Token,$self->Flags);
 if (ptr==NULL)
 {
   /*if you don't do this, you get a memory leak */
@@ -254,7 +262,7 @@ return(Token);
 
 const char *remaining()
 {
-return($self->Data);
+return($self->Next);
 }
 
 }
