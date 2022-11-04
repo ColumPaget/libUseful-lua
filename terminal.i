@@ -76,6 +76,12 @@ menu-in-one-line, and terminal menus which are multi-line menus.
 #define term_stdputs(s) (TerminalPutStr((s), NULL))
 #define term_utf8(l) (TerminalSetUTF8(l))
 
+char *LUL_term_strip_ctrl(char *Input)
+{
+return(TerminalStripControlSequences(NULL, Input));
+}
+
+
 typedef struct
 {
 int Flags;
@@ -104,7 +110,9 @@ char *term_format(const char *Str);
 void term_stdputs(const char *Str);
 
 
-
+%newobject stripctrl;
+%rename(stripctrl) LUL_term_strip_ctrl;
+char *LUL_term_strip_ctrl(char *Input);
 
 
 /* 
