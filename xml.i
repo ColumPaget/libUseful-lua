@@ -22,7 +22,8 @@ This module implemements various string-based utility functions, including diffe
 
 typedef struct
 {
-const char *Data;
+char *Data;
+const char *Curr;
 } XML;
 
 
@@ -86,12 +87,14 @@ XML(const char *Str)
 XML *Item;
 
 Item=(XML *) calloc(1,sizeof(XML));
-Item->Data=Str;
+Item->Data=CopyStr(NULL, Str);
+Item->Curr=Item->Data;
 return(Item);
 }
 
 ~XML()
 {
+Destroy($self->Data);
 free($self);
 }
 
@@ -105,7 +108,7 @@ char *Token=NULL;
 const char *ptr, *tptr;
 XML_TAG *Tag=NULL;
 
-ptr=$self->Data;
+ptr=$self->Curr;
 
 if (ptr)
 {
@@ -123,7 +126,7 @@ if (*ptr=='<')
 else ptr=GetToken(ptr, "<|>", &(Tag->data), GETTOKEN_MULTI_SEP | GETTOKEN_INCLUDE_SEP);
 }
 
-$self->Data=ptr;
+$self->Curr=ptr;
 Destroy(Token);
 
 return(Tag);
