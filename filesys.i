@@ -125,6 +125,17 @@ if (stat(Path, &FStat) != 0) return(0);
 return((double) FStat.st_size);
 }
 
+char *LUL_FileName(const char *Path)
+{
+const char *ptr;
+char *str=NULL;
+
+str=CopyStr(str, GetBasename(Path));
+StrRTruncChar(str, '.');
+return(str);
+}
+
+
 char *LUL_FileExtn(const char *Path)
 {
 const char *ptr;
@@ -196,6 +207,12 @@ bool FileExists(const char *Path);
 /*  filesys.extn(Path)   gets a file extension from a path*/
 %rename(extn) LUL_FileExtn;
 %newobject extn;
+char *LUL_FileExtn(const char *Path);
+
+
+/*  filesys.filename(Path)   gets a file name from a path, this is name without extension, so distinct from basename*/
+%rename(filename) LUL_FileName;
+%newobject filename;
 char *LUL_FileExtn(const char *Path);
 
 
