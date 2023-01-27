@@ -213,7 +213,7 @@ char *LUL_FileExtn(const char *Path);
 /*  filesys.filename(Path)   gets a file name from a path, this is name without extension, so distinct from basename*/
 %rename(filename) LUL_FileName;
 %newobject filename;
-char *LUL_FileExtn(const char *Path);
+char *LUL_FileName(const char *Path);
 
 
 /*  filesys.dirname(Path)   gets a directory part of a path, clipping off the last part that should be the filename */
