@@ -27,6 +27,7 @@ typedef struct
   STREAM *S;
   pid_t pid;
   char *Command;
+  STREAM *PtyS;
 } PROCESS;
 
 
@@ -387,12 +388,45 @@ bool CheckSignal(int sig=0);
 
 
 
-/* PROCESS object. This allows you to launch a program and talk to it using the PROCESS:send() method. 'Config' takes the same values as for Spawn or xfork, described above.
+/* PROCESS object. This allows you to launch a program and talk to it using the PROCESS:send() method. 'Config' takes the same values as for Spawn or xfork, described above, plus a couple of extras discussed below.
 
 e.g.
 
 proc=process.PROCESS("ssh myhost", "pty")
 proc:send("halt\r\n")
+
+
+the process object comes with a 'get_stream' function that allows you to get the stream to talk to the process, and then you can use standard stream functions to talk to it instead of 'proc:send()'
+
+e.g.
+
+S=proc.get_stream()
+S:readln("hello\n");
+str=S:readln()
+
+it's also possible to launch a process with a seperate stream thats the 'tty' or the process. This is used with commands that ask for passwords on their controlling tty. This can be distinct from their stdin/stdout. For instance:
+
+cat file.encrypted | openssl enc -d -aes-256-cbc > file.txt
+
+will ask for a password, but not on it's stdout, as that is being written to file.txt. Instead if will connect to it's controlling terminal. 
+
+The command:
+
+proc=process.PROCESS("open ssl enc -a", "ptystream")
+
+will produce a proc object that has a seperate stream for the controlling tty, allowing us to talk to it like so:
+
+PtyS=proc:get_pty()
+PtyS:readto(':')  -- read password request
+PtyS:writeln(password.."\n")
+
+S=proc:get_stream()
+S:writeln("data to encrypt")
+S:commit()
+encrypted=S:readdoc()
+
+
+Finally the proc:pid() method returns the pid of the process, the proc:pause() method pauses execution, proc:continue() restarts it, and proc:stop() kills the process.
 
 */
 
@@ -405,18 +439,40 @@ typedef struct
 %extend PROCESS {
 PROCESS (const char *Command, const char *Config="")
 {
-PROCESS *item;
-STREAM *S;
+PROCESS *item=NULL;
+STREAM *S, *PtyS;
+int SeperatePty=FALSE;
+char *Tempstr=NULL, *Token=NULL;
+const char *ptr;
 
-if (StrValid(Command)) S=STREAMSpawnCommand(Command, Config);
+ptr=GetToken(Config, "\\S", &Token, GETTOKEN_QUOTES);
+while (ptr)
+{
+if (strcasecmp(Token, "ptystream")==0) SeperatePty=TRUE;
+else Tempstr=MCatStr(Tempstr, Token, " ", NULL);
+ptr=GetToken(ptr, "\\S", &Token, GETTOKEN_QUOTES);
+}
+
+
+if (StrValid(Command)) 
+{
+  if (SeperatePty) STREAMSpawnCommandAndPty(Command, Tempstr, &S, &PtyS);
+  else S=STREAMSpawnCommand(Command, Config);
+}
 else S=STREAMSpawnFunction(NULL, NULL, Config);
 
-if (! S) return(NULL);
-
+if (S)
+{
 item=(PROCESS *) calloc(1, sizeof(PROCESS));
 item->S=S;
+item->PtyS=PtyS;
 item->pid=atoi(STREAMGetValue(S, "PeerPid"));
 item->Command=CopyStr(NULL, Command);
+}
+
+Destroy(Tempstr);
+Destroy(Token);
+
 return(item);
 }
 
@@ -435,6 +491,11 @@ free($self);
 STREAM* get_stream()
 {
 return($self->S);
+}
+
+STREAM* get_pty()
+{
+return($self->PtyS);
 }
 
 /* return pid of managed process */
