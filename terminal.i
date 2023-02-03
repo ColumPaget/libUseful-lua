@@ -355,8 +355,8 @@ void xterm_title(const char *Title) {return(XtermSetTitle($self->S, Title));}
 /* Send escape sequence to set the icon-name (title when iconified) of an xterm-compatible terminal*/
 void xterm_icon_name(const char *Title) {return(XtermSetIconName($self->S, Title));}
 
-/* Send escape sequence to set the icon-name (title when iconified) of an xterm-compatible terminal*/
-void xterm_set_clipboard(const char *Data) {return(XtermSetClipboard($self->S, Data));}
+/* Send escape sequence to set the system clipboard from an xterm-compatible terminal*/
+void xterm_set_clipboard(const char *Data) {XtermSetClipboard($self->S, Data);}
 }
 
 

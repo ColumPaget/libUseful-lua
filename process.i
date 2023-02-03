@@ -125,36 +125,37 @@ return(RetStr);
 
 %}
 
-/* define POSIX signal names */
-%constant float  SIGHUP=1; /* Hangup.  */
-%constant float  SIGINT=2; /* Interactive attention signal.  */
-%constant float  SIGQUIT=3; /* Quit.  */
-%constant float  SIGILL=4; /* Illegal instruction.  */
-%constant float  SIGTRAP=5; /* Trace/breakpoint trap.  */
-%constant float  SIGABRT=6; /* Abnormal termination.  */
-%constant float  SIGFPE=8; /* Erroneous arithmetic operation.  */
-%constant float  SIGKILL=9; /* Killed.  */
-%constant float  SIGBUS=10; /* Bus error.  */
-%constant float  SIGSEGV=11; /* Invalid access to storage.  */
-%constant float  SIGSYS=12; /* Bad system call.  */
-%constant float  SIGPIPE=13; /* Broken pipe.  */
-%constant float  SIGALRM=14; /* Alarm clock.  */
-%constant float  SIGTERM=15; /* Termination request.  */
-%constant float  SIGURG=16; /* Urgent data is available at a socket.  */
-%constant float  SIGSTOP=17; /* Stop, unblockable.  */
-%constant float  SIGTSTP=18; /* Keyboard stop.  */
-%constant float  SIGCONT=19; /* Continue.  */
-%constant float  SIGCHLD=20; /* Child terminated or stopped.  */
-%constant float  SIGTTIN=21; /* Background read from control terminal.  */
-%constant float  SIGTTOU=22; /* Background write to control terminal.  */
-%constant float  SIGPOLL=23; /* Pollable event occurred (System V).  */
-%constant float  SIGXCPU=24; /* CPU time limit exceeded.  */
-%constant float  SIGXFSZ=25; /* File size limit exceeded.  */
-%constant float  SIGVTALRM=26; /* Virtual timer expired.  */
-%constant float  SIGPROF=27; /* Profiling timer expired.  */
-%constant float  SIGWINCH=28; /* Window size change (4.3 BSD, Sun).  */
-%constant float  SIGUSR1=30; /* User-defined signal 1.  */
-%constant float  SIGUSR2=31; /* User-defined signal 2.  */
+/* define POSIX signal names. This looks strange, but it's mapping process.SIGHUP in the lua world, to SIGHUP in C */
+/* note that these must be used as process.SIGHUP rather than just SIGHUP in lua */
+%constant float  SIGHUP=SIGHUP; /* Hangup.  */
+%constant float  SIGINT=SIGINT; /* Interactive attention signal.  */
+%constant float  SIGQUIT=SIGQUIT; /* Quit.  */
+%constant float  SIGILL=SIGILL; /* Illegal instruction.  */
+%constant float  SIGTRAP=SIGTRAP; /* Trace/breakpoint trap.  */
+%constant float  SIGABRT=SIGABRT; /* Abnormal termination.  */
+%constant float  SIGFPE=SIGFPE; /* Erroneous arithmetic operation.  */
+%constant float  SIGKILL=SIGKILL; /* Killed.  */
+%constant float  SIGBUS=SIGBUS; /* Bus error.  */
+%constant float  SIGSEGV=SIGSEGV; /* Invalid access to storage.  */
+%constant float  SIGSYS=SIGSYS; /* Bad system call.  */
+%constant float  SIGPIPE=SIGPIPE; /* Broken pipe.  */
+%constant float  SIGALRM=SIGALRM; /* Alarm clock.  */
+%constant float  SIGTERM=SIGTERM; /* Termination request.  */
+%constant float  SIGURG=SIGURG; /* Urgent data is available at a socket.  */
+%constant float  SIGSTOP=SIGSTOP; /* Stop, unblockable.  */
+%constant float  SIGTSTP=SIGTSTP; /* Keyboard stop.  */
+%constant float  SIGCONT=SIGCONT; /* Continue.  */
+%constant float  SIGCHLD=SIGCHLD; /* Child terminated or stopped.  */
+%constant float  SIGTTIN=SIGTTIN; /* Background read from control terminal.  */
+%constant float  SIGTTOU=SIGTTOU; /* Background write to control terminal.  */
+%constant float  SIGPOLL=SIGPOLL; /* Pollable event occurred (System V).  */
+%constant float  SIGXCPU=SIGXCPU; /* CPU time limit exceeded.  */
+%constant float  SIGXFSZ=SIGXFSZ; /* File size limit exceeded.  */
+%constant float  SIGVTALRM=SIGVTALRM; /* Virtual timer expired.  */
+%constant float  SIGPROF=SIGPROF; /* Profiling timer expired.  */
+%constant float  SIGWINCH=SIGWINCH; /* Window size change (4.3 BSD, Sun).  */
+%constant float  SIGUSR1=SIGUSR1; /* User-defined signal 1.  */
+%constant float  SIGUSR2=SIGUSR2; /* User-defined signal 2.  */
 
 
 
