@@ -12,7 +12,19 @@ This module provide a 'RAWDATA' object that can be used to handle binary data.
 %{
 #include "libUseful-4/GeneralFunctions.h"
 #include "libUseful-4/RawData.h"
+#include "libUseful-4/LibSettings.h"
 %}
+
+
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
 
 
 typedef struct

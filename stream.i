@@ -99,6 +99,7 @@ multiple stream objects for activity
 #include "libUseful-4/Errors.h"
 #include "libUseful-4/Pty.h"
 #include "libUseful-4/RawData.h"
+#include "libUseful-4/LibSettings.h"
 #include <unistd.h>
 
 void Progressor(const char *Path, int bytes, int total){/*printf("\r %s %d %d            ",Path,bytes,total);fflush(NULL);*/}
@@ -108,6 +109,17 @@ typedef struct
 ListNode *Streams;
 } POLL_IO;
 %}
+
+
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
 
 
 

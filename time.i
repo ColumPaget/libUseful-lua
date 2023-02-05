@@ -10,6 +10,7 @@ This module provides functions that return various system information.
 %module time
 %{
 #include "libUseful-4/GeneralFunctions.h"
+#include "libUseful-4/LibSettings.h"
 #include "libUseful-4/Errors.h"
 #include "libUseful-4/Time.h"
 
@@ -24,6 +25,19 @@ This module provides functions that return various system information.
 #define time_msleep(msecs) (usleep(msecs * 1000))
 #define time_usleep(usecs) (usleep(usecs))
 %}
+
+
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
+
+
 
 /* return time as seconds since 1 jan 1970 */
 %rename(secs) time_time;

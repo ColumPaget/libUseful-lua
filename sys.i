@@ -14,6 +14,7 @@ This module provides functions that return various system information.
 #include "libUseful-4/SysInfo.h"
 #endif
 #include "libUseful-4/Errors.h"
+#include "libUseful-4/LibSettings.h"
 #include "libUseful-4/Time.h"
 
 //mapped to sys_(name) to prevent clashes e.g. with 'hostname'
@@ -94,6 +95,18 @@ return(val);
 
 
 %}
+
+
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
+
 
 
 /* sys.uptime   - return uptime in seconds as a number */

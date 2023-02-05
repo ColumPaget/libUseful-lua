@@ -68,6 +68,7 @@ menu-in-one-line, and terminal menus which are multi-line menus.
 #include "libUseful-4/TerminalMenu.h"
 #include "libUseful-4/TerminalChoice.h"
 #include "libUseful-4/TerminalBar.h"
+#include "libUseful-4/LibSettings.h"
 #include "libUseful-4/Errors.h"
 
 #define term_strlen(s) (TerminalStrLen(s))
@@ -89,6 +90,15 @@ STREAM *S;
 } TERM;
 
 %}
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
 
 
 /* returns a strlen after all tilde/unicode/quoted formatting has been done */

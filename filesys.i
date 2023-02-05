@@ -17,6 +17,7 @@ filesys.rename(from, to);
 #include "libUseful-4/FileSystem.h"
 #include "libUseful-4/Hash.h"
 #include "libUseful-4/Errors.h"
+#include "libUseful-4/LibSettings.h"
 #include <glob.h>
 #include <sys/stat.h>
 #include <sys/statvfs.h>
@@ -163,6 +164,15 @@ if (mkdir(Path, FileSystemParsePermissions(DirMask))==0) return(TRUE);
 return(FALSE);
 }
 
+%}
+
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
 %}
 
 

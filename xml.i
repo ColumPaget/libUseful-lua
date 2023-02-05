@@ -12,6 +12,7 @@ This module implemements various string-based utility functions, including diffe
 %{
 #include "libUseful-4/GeneralFunctions.h"
 #include "libUseful-4/Tokenizer.h"
+#include "libUseful-4/LibSettings.h"
 #include "libUseful-4/Markup.h"
 #include "libUseful-4/String.h"
 #include "libUseful-4/Errors.h"
@@ -35,6 +36,19 @@ char *data;
 
 
 %}
+
+
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
+
+
 
 
 /* apply HTML style quoting to a string */

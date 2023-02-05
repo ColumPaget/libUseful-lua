@@ -18,6 +18,7 @@ network client functionality, which is done via the 'stream' module instead
 #include "libUseful-4/inet.h"
 #include "libUseful-4/ConnectionChain.h"
 #include "libUseful-4/Errors.h"
+#include "libUseful-4/LibSettings.h"
 #include "libUseful-4/URL.h"
 
 #define externalIP() (GetExternalIP(NULL))
@@ -77,6 +78,17 @@ return(Tempstr);
 
 
 %}
+
+
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
 
 
 

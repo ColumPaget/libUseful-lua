@@ -125,6 +125,20 @@ return(RetStr);
 
 %}
 
+
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
+
+
+
+
 /* define POSIX signal names. This looks strange, but it's mapping process.SIGHUP in the lua world, to SIGHUP in C */
 /* note that these must be used as process.SIGHUP rather than just SIGHUP in lua */
 %constant float  SIGHUP=SIGHUP; /* Hangup.  */

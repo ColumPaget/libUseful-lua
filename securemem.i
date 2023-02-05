@@ -7,7 +7,20 @@ Copyright (c) 2019 Colum Paget <colums.projects@googlemail.com>
 %{
 #include "libUseful-4/SecureMem.h"
 #include "libUseful-4/Errors.h"
+#include "libUseful-4/LibSettings.h"
 %}
+
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
+
+
 
 typedef struct
 {

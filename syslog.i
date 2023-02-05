@@ -17,6 +17,7 @@ other than 'warn' the log-levels 'emerg', 'alert', 'crit', 'error', 'notice', 'i
 %module syslog
 %{
 #include <syslog.h>
+#include "libUseful-4/LibSettings.h"
 
 #define emerg(fmt, ...) (syslog(LOG_EMERG,fmt, __VA_ARGS__))
 #define alert(fmt, ...) (syslog(LOG_ALERT,fmt, __VA_ARGS__))
@@ -27,6 +28,18 @@ other than 'warn' the log-levels 'emerg', 'alert', 'crit', 'error', 'notice', 'i
 #define info(fmt, ...) (syslog(LOG_INFO,fmt, __VA_ARGS__))
 #define debug(fmt, ...) (syslog(LOG_DEBUG,fmt, __VA_ARGS__))
 %}
+
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
+
+
 
 %varargs(10,char *arg = NULL) emerg;
 void emerg(const char *format, ...);

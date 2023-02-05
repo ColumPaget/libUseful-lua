@@ -34,7 +34,17 @@ printf("child object name: "..Child:value("name").. " ID: ".. Child:value("ID"))
 #include "libUseful-4/DataParser.h"
 #include "libUseful-4/Errors.h"
 #include "libUseful-4/List.h"
+#include "libUseful-4/LibSettings.h"
 %}
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
 
 
 typedef struct 

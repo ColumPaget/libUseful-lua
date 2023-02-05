@@ -18,6 +18,7 @@ This module implemements various string-based utility functions, including diffe
 #include "libUseful-4/Errors.h"
 #include "libUseful-4/PatternMatch.h"
 #include "libUseful-4/Encodings.h"
+#include "libUseful-4/LibSettings.h"
 
 #define safestrlen(Str) (StrLen(Str))
 #define httpQuote(Str) (HTTPQuote(NULL, Str))
@@ -81,6 +82,18 @@ const char *Next;
 int Flags;
 } TOKENIZER;
 %}
+
+
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
+
 
 
 typedef struct

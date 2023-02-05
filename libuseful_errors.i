@@ -24,12 +24,23 @@ end
 %module libuseful_errors
 %{
 #include "libUseful-4/Errors.h"
+#include "libUseful-4/LibSettings.h"
 
 typedef struct
 {
 ListNode *Items;
 } ERRORS;
 %}
+
+
+
+%init
+%{
+/* As lua uses garbage collection, and strings passed out of libUseful may not be*/
+/* freed within libuseful before reuse, so we cannot use StrLen caching*/
+LibUsefulSetValue("StrLenCache", "n");
+%}
+
 
 
 typedef struct
