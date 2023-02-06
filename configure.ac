@@ -1,11 +1,19 @@
 
-AC_INIT()
+AC_INIT
 
 AC_PROG_CC
-AC_LANG_C
+AC_LANG([C])
 AC_PROG_MAKE_SET
 AC_PROG_INSTALL
-AC_HEADER_STDC
+m4_warn([obsolete],
+[The preprocessor macro `STDC_HEADERS' is obsolete.
+  Except in unusual embedded environments, you can safely include all
+  ISO C90 headers unconditionally.])dnl
+# Autoupdate added the next two lines to ensure that your configure
+# script's behavior did not change.  They are probably safe to remove.
+AC_CHECK_INCLUDES_DEFAULT
+AC_PROG_EGREP
+
 AC_SUBST([LUA_INCLUDE_DIR])
 AC_SUBST([LUA_MODULES_DIR])
 AC_SUBST([SHLIB_FLAGS])
@@ -34,7 +42,7 @@ AC_PATH_PROG([LUA_EXE_PATH], [lua],,)
 
 if test "$LUA_EXE_PATH" = ""
 then
-	AC_PATH_PROG([LUA_EXE_PATH], [lua5.3],,)
+	AC_PATH_PROGS([LUA_EXE_PATH], [lua5.2 lua5.3 lua5.4 lua5.5],,)
 fi
 
 AC_ARG_WITH([lua-includes], [  --with-lua-includes       path to directory containing liblua .h headers],LUA_INCLUDE_DIR=$withval)
@@ -63,7 +71,7 @@ fi
 if test "$LUA_INCLUDE_DIR" == ""
 then
 LUA_INCLUDE_CANDIDATE=`dirname $LUA_EXE_PATH | sed "s/bin$/include/"`
-for INC in $LUA_INCLUDE_CANDIDATE /usr/include/lua /usr/include/lua5.2 /usr/include/lua5.3
+for INC in $LUA_INCLUDE_CANDIDATE /usr/include/lua /usr/include/lua5.2 /usr/include/lua5.3 /usr/include/lua5.4 /usr/include/lua5.5
 do
 	AC_CHECK_FILE([$INC/lua.h], [LUA_INCLUDE_DIR=$INC])
 	if test "$LUA_INCLUDE_DIR" != ""
@@ -99,4 +107,5 @@ echo "LIB: $LUA_LIBS_DIR"
 echo "MODS: $LUA_MODULES_DIR"
 
 
-AC_OUTPUT(Makefile)
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
