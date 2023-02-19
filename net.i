@@ -106,7 +106,7 @@ char *pass;
 
 
 /* net.parseURL(URL)   - return a structure containing broken-down parts of a URL (see URL_INFO_STRUCT above)*/
-%newobject *parseURL;
+%newobject parseURL;
 URL_INFO_STRUCT *parseURL(const char *URL);
 
 
@@ -135,7 +135,7 @@ bool IsIPAddress(const char *);
 char *GetInterfaceIP(const char *Interface);
 
 /* net.externalIP()   - returns external IP address of the system by conversing with various external servers */
-%newobject *externalIP;
+%newobject externalIP;
 char *externalIP();
 
 /* net.setProxy(string)  - set a proxy chain to be used for all connections by this process. A proxy chain is a 

@@ -1,9 +1,9 @@
-VERSION=2.33
+VERSION=2.40
 CC = gcc
 CFLAGS=-g -O2 -fPIC -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib
 LIBS=-lUseful -lUseful 
 LUA_MODULES_DIR=/opt/lua-5.3.4/lib/lua/5.3/
-MODS=stream.so terminal.so filesys.so process.so net.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so xml.so libuseful_errors.so
+MODS=stream.so terminal.so filesys.so process.so net.so entropy.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so xml.so libuseful_errors.so
 DEFS=-DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DHAVE_STDIO_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_STRINGS_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_UNISTD_H=1 -DSTDC_HEADERS=1 -DHAVE_LIBUSEFUL=1 -DHAVE_LIBUSEFUL_SYSINFO_H=1 -DHAVE_LIBUSEFUL=1 -DHAVE_STREAM_SHUTDOWN=1
 FLAGS=$(CFLAGS) $(DEFS) -DVERSION=\"$(VERSION)\"
 
@@ -54,6 +54,15 @@ net_wrap.o: net_wrap.c
 
 net_wrap.c: net.i
 	swig $(DEFS) -lua -o net_wrap.c net.i
+
+entropy.so: entropy_wrap.o
+	$(CC) $(FLAGS) -shared -o entropy.so entropy_wrap.o $(LIBS)
+
+entropy_wrap.o: entropy_wrap.c
+	$(CC) $(FLAGS) -c entropy_wrap.c -o  entropy_wrap.o
+
+entropy_wrap.c: entropy.i
+	swig $(DEFS) -lua -o entropy_wrap.c entropy.i
 
 syslog.so: syslog_wrap.o
 	$(CC) $(FLAGS) -shared -o syslog.so syslog_wrap.o $(LIBS)

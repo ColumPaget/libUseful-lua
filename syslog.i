@@ -19,6 +19,7 @@ other than 'warn' the log-levels 'emerg', 'alert', 'crit', 'error', 'notice', 'i
 #include <syslog.h>
 #include "libUseful-4/LibSettings.h"
 
+#define open(name) (openlog((name), (LOG_PID), (LOG_USER)))
 #define emerg(fmt, ...) (syslog(LOG_EMERG,fmt, __VA_ARGS__))
 #define alert(fmt, ...) (syslog(LOG_ALERT,fmt, __VA_ARGS__))
 #define crit(fmt, ...) (syslog(LOG_CRIT,fmt, __VA_ARGS__))
@@ -39,7 +40,7 @@ LibUsefulSetValue("StrLenCache", "n");
 %}
 
 
-
+void open(const char *arg);
 
 %varargs(10,char *arg = NULL) emerg;
 void emerg(const char *format, ...);

@@ -416,10 +416,6 @@ ListNode *Options;
 char *MenuAttribs;
 char *MenuCursorLeft;
 char *MenuCursorRight;
-char *MenuPadLeft;
-char *MenuPadRight;
-int Flags;
-char *Text;
 } TERMMENU;
 
 
@@ -633,10 +629,6 @@ ListNode *Options;
 char *MenuAttribs;
 char *MenuCursorLeft;
 char *MenuCursorRight;
-char *MenuPadLeft;
-char *MenuPadRight;
-int Flags;
-char *Text;
 } TERMCHOICE;
 
 
