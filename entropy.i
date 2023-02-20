@@ -34,7 +34,7 @@ char *hex(int len)
 {
 char *Str=NULL;
 
-GetRandomHexStr(&Str, len);
+Str=GetRandomHexStr(Str, len);
 return(Str);
 }
 
@@ -42,7 +42,7 @@ char *alphanum(int len)
 {
 char *Str=NULL;
 
-GetRandomAlphabetStr(&Str, len);
+Str=GetRandomAlphabetStr(Str, len);
 return(Str);
 }
 
