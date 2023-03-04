@@ -26,9 +26,11 @@ print("result: " .. h:finish());
 
 %module hash
 %{
-#include "libUseful-4/Hash.h"
-#include "libUseful-4/Errors.h"
-#include "libUseful-4/LibSettings.h"
+#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
+#include "libUseful-5/libUseful.h"
+#else
+#include "libUseful-4/libUseful.h"
+#endif
 
 #define types() HashAvailableTypes(NULL);
 
@@ -66,7 +68,6 @@ LibUsefulSetValue("StrLenCache", "n");
 typedef struct
 {
 int Encoding;
-HASH_UPDATE Update;
 } HASH;
 
 %extend HASH {
@@ -87,7 +88,7 @@ HashDestroy($self);
 
 void update(const char *Bytes)
 {
-$self->Update($self, Bytes, StrLen(Bytes));
+HashUpdate($self, Bytes, StrLen(Bytes));
 }
 
 %newobject finish;

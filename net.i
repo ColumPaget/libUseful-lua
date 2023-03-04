@@ -13,13 +13,11 @@ network client functionality, which is done via the 'stream' module instead
 
 %module net
 %{
-#include "libUseful-4/Socket.h"
-#include "libUseful-4/IPAddress.h"
-#include "libUseful-4/inet.h"
-#include "libUseful-4/ConnectionChain.h"
-#include "libUseful-4/Errors.h"
-#include "libUseful-4/LibSettings.h"
-#include "libUseful-4/URL.h"
+#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
+#include "libUseful-5/libUseful.h"
+#else
+#include "libUseful-4/libUseful.h"
+#endif
 
 #define externalIP() (GetExternalIP(NULL))
 

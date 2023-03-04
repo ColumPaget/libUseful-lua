@@ -64,12 +64,12 @@ menu-in-one-line, and terminal menus which are multi-line menus.
 
 %module terminal
 %{
-#include "libUseful-4/Terminal.h"
-#include "libUseful-4/TerminalMenu.h"
-#include "libUseful-4/TerminalChoice.h"
-#include "libUseful-4/TerminalBar.h"
-#include "libUseful-4/LibSettings.h"
-#include "libUseful-4/Errors.h"
+
+#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
+#include "libUseful-5/libUseful.h"
+#else
+#include "libUseful-4/libUseful.h"
+#endif
 
 #define term_strlen(s) (TerminalStrLen(s))
 #define term_strtrunc(s, len) (TerminalStrTrunc(CopyStr(NULL, (s)), (len)))
@@ -413,9 +413,6 @@ int wid;
 int high;
 STREAM *Term;
 ListNode *Options;
-char *MenuAttribs;
-char *MenuCursorLeft;
-char *MenuCursorRight;
 } TERMMENU;
 
 
@@ -443,8 +440,10 @@ TerminalMenuDestroy($self);
 */
 void config(const char *MenuAttribs, const char *SelectedAttribs)
 {
-$self->MenuAttribs=CopyStr($self->MenuAttribs, MenuAttribs);
-$self->MenuCursorLeft=CopyStr($self->MenuCursorLeft, SelectedAttribs);
+/*
+$self->Attribs=CopyStr($self->Attribs, MenuAttribs);
+$self->CursorLeft=CopyStr($self->CursorLeft, SelectedAttribs);
+*/
 }
 
 void resize(int wide, int high)
@@ -626,9 +625,6 @@ int wid;
 int high;
 STREAM *Term;
 ListNode *Options;
-char *MenuAttribs;
-char *MenuCursorLeft;
-char *MenuCursorRight;
 } TERMCHOICE;
 
 

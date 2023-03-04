@@ -5,9 +5,11 @@ Copyright (c) 2019 Colum Paget <colums.projects@googlemail.com>
 
 %module oauth
 %{
-#include "libUseful-4/OAuth.h"
-#include "libUseful-4/Errors.h"
-#include "libUseful-4/LibSettings.h"
+#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
+#include "libUseful-5/libUseful.h"
+#else
+#include "libUseful-4/libUseful.h"
+#endif
 %}
 
 

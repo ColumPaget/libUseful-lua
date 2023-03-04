@@ -13,9 +13,11 @@ This module provides some wrapper functions around libUseful's "GetRandom" funct
 
 %module entropy
 %{
-#include "libUseful-4/GeneralFunctions.h"
-#include "libUseful-4/Encodings.h"
-
+#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
+#include "libUseful-5/libUseful.h"
+#else
+#include "libUseful-4/libUseful.h"
+#endif
 
 char *get(int len, const char *Encoding)
 {

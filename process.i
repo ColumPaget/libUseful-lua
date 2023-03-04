@@ -14,13 +14,13 @@ this module implements functions related to a process.
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
-#include "libUseful-4/Process.h"
-#include "libUseful-4/SpawnPrograms.h"
-#include "libUseful-4/GeneralFunctions.h"
-#include "libUseful-4/Errors.h"
-#include "libUseful-4/LibSettings.h"
-#include "libUseful-4/FileSystem.h"
 
+
+#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
+#include "libUseful-5/libUseful.h"
+#else
+#include "libUseful-4/libUseful.h"
+#endif
 
 typedef struct
 {
@@ -610,5 +610,13 @@ return(Path);
 }
 
 
+int wait_exit()
+{
+int status;
 
+if ($self->S) status=STREAMSpawnWaitExit($self->S);
+else waitpid($self->pid, &status, 0);
+}
+
+return(status);
 }

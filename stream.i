@@ -92,22 +92,39 @@ multiple stream objects for activity
 
 %module stream
 %{
-#include "libUseful-4/Stream.h"
-#include "libUseful-4/FileSystem.h"
-#include "libUseful-4/Http.h"
-#include "libUseful-4/Expect.h"
-#include "libUseful-4/Errors.h"
-#include "libUseful-4/Pty.h"
-#include "libUseful-4/RawData.h"
-#include "libUseful-4/LibSettings.h"
+
+#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
+#include "libUseful-5/libUseful.h"
+#else
+#include "libUseful-4/libUseful.h"
+#endif
+
 #include <unistd.h>
 
 void Progressor(const char *Path, int bytes, int total){/*printf("\r %s %d %d            ",Path,bytes,total);fflush(NULL);*/}
+
+char *GetURL(const char *url, const char *Options)
+{
+STREAM *S;
+char *RetStr=NULL;
+
+S=STREAMOpen(url, Options);
+if (S !=NULL)
+{
+   RetStr=STREAMReadDocument(RetStr, S);
+   STREAMClose(S);
+}
+StripTrailingWhitespace(RetStr);
+return(RetStr);
+}
+
 
 typedef struct
 {
 ListNode *Streams;
 } POLL_IO;
+
+
 %}
 
 
@@ -120,6 +137,11 @@ ListNode *Streams;
 LibUsefulSetValue("StrLenCache", "n");
 %}
 
+
+
+%newobject GetURL;
+%rename(get) GetURL;
+char *GetURL(const char *url, const char *Options="r");
 
 
 

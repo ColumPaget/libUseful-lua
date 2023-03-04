@@ -5,14 +5,6 @@ AC_PROG_CC
 AC_LANG([C])
 AC_PROG_MAKE_SET
 AC_PROG_INSTALL
-m4_warn([obsolete],
-[The preprocessor macro `STDC_HEADERS' is obsolete.
-  Except in unusual embedded environments, you can safely include all
-  ISO C90 headers unconditionally.])dnl
-# Autoupdate added the next two lines to ensure that your configure
-# script's behavior did not change.  They are probably safe to remove.
-AC_CHECK_INCLUDES_DEFAULT
-AC_PROG_EGREP
 
 AC_SUBST([LUA_INCLUDE_DIR])
 AC_SUBST([LUA_MODULES_DIR])
@@ -56,7 +48,7 @@ then
 echo "ERROR: libUseful not found"
 fi
 
-AC_CHECK_HEADER([libUseful-4/SysInfo.h],AC_DEFINE(HAVE_LIBUSEFUL_SYSINFO_H),,)
+AC_CHECK_HEADERS([libUseful-5/libUseful.h libUseful-4/libUseful.h])
 
 AC_CHECK_LIB(Useful,STREAMShutdown,,)
 cf_have_STREAMShutdown=$ac_cv_lib_Useful_STREAMShutdown

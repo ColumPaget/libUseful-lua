@@ -23,8 +23,11 @@ end
 
 %module libuseful_errors
 %{
-#include "libUseful-4/Errors.h"
-#include "libUseful-4/LibSettings.h"
+#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
+#include "libUseful-5/libUseful.h"
+#else
+#include "libUseful-4/libUseful.h"
+#endif
 
 typedef struct
 {

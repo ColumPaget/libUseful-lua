@@ -9,10 +9,12 @@ This module provides functions that return various system information.
 
 %module time
 %{
-#include "libUseful-4/GeneralFunctions.h"
-#include "libUseful-4/LibSettings.h"
-#include "libUseful-4/Errors.h"
-#include "libUseful-4/Time.h"
+
+#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
+#include "libUseful-5/libUseful.h"
+#else
+#include "libUseful-4/libUseful.h"
+#endif
 
 #define time_time() (GetTime(0))
 #define time_centitime() (GetTime(TIME_CENTISECS))

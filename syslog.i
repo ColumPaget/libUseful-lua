@@ -17,7 +17,12 @@ other than 'warn' the log-levels 'emerg', 'alert', 'crit', 'error', 'notice', 'i
 %module syslog
 %{
 #include <syslog.h>
-#include "libUseful-4/LibSettings.h"
+
+#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
+#include "libUseful-5/libUseful.h"
+#else
+#include "libUseful-4/libUseful.h"
+#endif
 
 #define open(name) (openlog((name), (LOG_PID), (LOG_USER)))
 #define emerg(fmt, ...) (syslog(LOG_EMERG,fmt, __VA_ARGS__))
