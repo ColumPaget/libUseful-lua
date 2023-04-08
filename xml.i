@@ -6,13 +6,13 @@ Copyright (c) 2019 Colum Paget <colums.projects@googlemail.com>
 /*
 This module implemements xml relevant functions. Its main component is the XML member that returns 
 an 'xml' object, which has only one member function 'next()' which returns the next xml tag in a list of 
-xml tags. The xml_tag objects contain 'name' and 'data' string members. The 'data' member contains tag 
+xml tags. The xml_tag objects contain 'type' and 'data' string members. The 'data' member contains tag 
 attributes. for a tag that encloses some text, like so: "<item content-type=text>text</item>" the 'next()' function will
 return 3 items one after the other:
 
-1st item: name="item" data="content-type=text"
-2nd item: name="" data="text"
-3rd item: name="/item" data=""
+1st item: type="item" data="content-type=text"
+2nd item: type="" data="text"
+3rd item: type="/item" data=""
 
 here is some example code:
 
@@ -21,7 +21,7 @@ items=xml.XML(string)
 item=items:next()
 while item ~= nil
 do
-print(item.name .. " " .. item.data)
+print(item.type .. " " .. item.data)
 item=items:next()
 end
 */
