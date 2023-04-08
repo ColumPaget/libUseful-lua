@@ -4,8 +4,29 @@ Copyright (c) 2019 Colum Paget <colums.projects@googlemail.com>
 */
 
 /*
-This module implemements various string-based utility functions, including different forms of quoting and unquoting 
+This module implemements xml relevant functions. Its main component is the XML member that returns 
+an 'xml' object, which has only one member function 'next()' which returns the next xml tag in a list of 
+xml tags. The xml_tag objects contain 'name' and 'data' string members. The 'data' member contains tag 
+attributes. for a tag that encloses some text, like so: "<item content-type=text>text</item>" the 'next()' function will
+return 3 items one after the other:
+
+1st item: name="item" data="content-type=text"
+2nd item: name="" data="text"
+3rd item: name="/item" data=""
+
+here is some example code:
+
+string="<xml><item1>value1</item1><item2>value2</item2></xml>"
+items=xml.XML(string)
+item=items:next()
+while item ~= nil
+do
+print(item.name .. " " .. item.data)
+item=items:next()
+end
 */
+
+
 
 
 %module xml
@@ -17,7 +38,10 @@ This module implemements various string-based utility functions, including diffe
 #include "libUseful-4/libUseful.h"
 #endif
 
+/*apply xml/html quoting to a string */
 #define xmlQuote(Str) (HTMLQuote(NULL, Str))
+
+/*unapply xml/html quoting to a string */
 #define xmlUnQuote(Str) (HTMLUnQuote(NULL, Str))
 
 
