@@ -107,6 +107,20 @@ return(Item);
 
 
 /*
+Open subitems of an item
+*/
+PARSER *subitems()
+{
+PARSER *Item;
+
+Item=ParserSubItems($self);
+if (Item) Item->Side=Item;
+return(Item);
+}
+
+
+
+/*
 Get the first sub element in a parser object. 
 This returns a PARSER object, but you don't need to use that as an internal pointer now points 
 to the first child within the original PARSER object, and you can use 'name' and 'value' on that
@@ -159,6 +173,7 @@ return the type of the current element
 const char *type()
 {
   if (ParserItemIsValue($self)) return("value");
+  if ($self->ItemType==ITEM_ARRAY) return("array");
   return("object");
 }
 
