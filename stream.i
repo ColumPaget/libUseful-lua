@@ -238,6 +238,10 @@ bool chgrp(const char *NewGroup) {return(FileChGroup($self->Path, NewGroup));}
 /* read all data from the current stream and copy it to file 'Dest' */
 int copy(const char *Dest) { return(STREAMCopy($self, Dest)); }
 
+/* read all data from the current stream and copy it to stream 'Dest' */
+int transfer(STREAM *Dest) { return(STREAMSendFile($self, Dest, 0, SENDFILE_LOOP)); }
+
+
 /* return path/url associated with the current stream */
 const char *path() {return($self->Path);}
 
