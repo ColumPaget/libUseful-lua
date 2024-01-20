@@ -51,6 +51,15 @@ HashFile(&RetStr, Type, Path, HashEncodingFromStr(Encoding));
 
 return(RetStr);
 }
+
+
+#ifdef HAVE_LIBUSEFUL_TOTP
+char *totp(const char *HashType, const char *Secret, const char *SecretEncoding, int Digits, int Interval)
+{
+return(TOTP(NULL, HashType, Secret, HashEncodingFromStr(SecretEncoding) , Digits, Interval));
+}
+#endif 
+
 %}
 
 
@@ -112,3 +121,8 @@ char *hashstr(const char *Str, const char *Type, const char *Encoding="hex");
 
 %newobject hashfile;
 char *hashfile(const char *Path, const char *Type, const char *Encoding="hex");
+
+#ifdef HAVE_LIBUSEFUL_TOTP
+%newobject totp;
+char *totp(const char *HashType, const char *Secret, const char *SecretEncoding, int Digits, int Interval);
+#endif

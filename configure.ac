@@ -48,6 +48,14 @@ then
 echo "ERROR: libUseful not found"
 fi
 
+AC_CHECK_LIB([Useful],[TOTP])
+
+if test "$ac_cv_lib_Useful_TOTP" = "yes"
+then
+AC_DEFINE([HAVE_LIBUSEFUL_TOTP])
+fi
+
+
 AC_CHECK_HEADERS([libUseful-5/libUseful.h libUseful-4/libUseful.h])
 
 AC_CHECK_LIB(Useful,STREAMShutdown,,)
