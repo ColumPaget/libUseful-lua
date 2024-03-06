@@ -234,6 +234,23 @@ Destroy($self->Separators);
 free($self);
 }
 
+
+%newobject first;
+char *first(const char *Separators="")
+{
+char *Token=NULL;
+
+if (! StrValid(Separators)) Separators=$self->Separators;
+$self->Next=GetToken($self->Data,Separators,&Token,$self->Flags);
+if ($self->Next==NULL) 
+{
+  /*if you don't do this, you get a memory leak */
+  Destroy(Token);
+  return(NULL);
+}
+return(Token);
+}
+
 /* get next token. If 'Separators' is not provided, then fall back to the separators specified at */
 /* tokenizer creation */
 %newobject next;
