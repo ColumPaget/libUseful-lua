@@ -1,9 +1,9 @@
-VERSION=3.2
+VERSION=4.0
 CC = @CC@
 CFLAGS=@CFLAGS@
 LIBS=@LIBS@
 LUA_MODULES_DIR=@LUA_MODULES_DIR@
-MODS=stream.so terminal.so filesys.so process.so net.so entropy.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so xml.so libuseful_errors.so
+MODS=stream.so terminal.so filesys.so process.so net.so entropy.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so xml.so libuseful_errors.so units_of_measure.so
 DEFS=@DEFS@
 FLAGS=$(CFLAGS) $(DEFS) -DVERSION=\"$(VERSION)\"
 
@@ -164,6 +164,15 @@ libuseful_errors_wrap.o: libuseful_errors_wrap.c
 
 libuseful_errors_wrap.c: libuseful_errors.i
 	swig $(DEFS) -lua -o libuseful_errors_wrap.c libuseful_errors.i
+
+units_of_measure.so: units_of_measure_wrap.o
+	$(CC) $(FLAGS) -shared -o units_of_measure.so units_of_measure_wrap.o $(LIBS)
+
+units_of_measure_wrap.o: units_of_measure_wrap.c
+	$(CC) $(FLAGS) -c units_of_measure_wrap.c -o  units_of_measure_wrap.o
+
+units_of_measure_wrap.c: units_of_measure.i
+	swig $(DEFS) -lua -o units_of_measure_wrap.c units_of_measure.i
 
 
 

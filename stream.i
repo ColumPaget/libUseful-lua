@@ -184,6 +184,22 @@ char peekch() {return(STREAMPeekChar($self));}
 %newobject readto;
 char *readto(char Term) {return(STREAMReadToTerminator(NULL, $self, Term));} 
 
+/* read from a stream util a 'terminator' character, Terminator can be any character in string 'Term' */
+%newobject multi_readto;
+char *multi_readto(char *Term) {return(STREAMReadToMultiTerminator(NULL, $self, Term));} 
+
+/* return true if at end of stream, or STREAM_ERROR */
+int done()
+{
+int result;
+
+result=STREAMPeekChar($self);
+if (result==STREAM_CLOSED) return(TRUE);
+if (result==STREAM_DATA_ERROR) return(TRUE);
+
+return(FALSE);
+}
+
 /* read the stream until EOF, return it as one big string */
 %newobject readdoc;
 char *readdoc() 

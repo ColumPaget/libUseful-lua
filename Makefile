@@ -1,9 +1,9 @@
-VERSION=3.2
+VERSION=4.0
 CC = gcc
 CFLAGS=-g -O2 -fPIC -I/opt/lua-5.3.4/include -L/opt/lua-5.3.4/lib
 LIBS=-lUseful -lUseful -lUseful 
 LUA_MODULES_DIR=/opt/lua-5.3.4/lib/lua/5.3/
-MODS=stream.so terminal.so filesys.so process.so net.so entropy.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so xml.so libuseful_errors.so
+MODS=stream.so terminal.so filesys.so process.so net.so entropy.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so xml.so libuseful_errors.so units_of_measure.so
 DEFS=-DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DHAVE_LIBUSEFUL=1 -DHAVE_LIBUSEFUL=1 -DHAVE_LIBUSEFUL_TOTP=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_LIBUSEFUL_5_LIBUSEFUL_H=1 -DHAVE_LIBUSEFUL=1 -DHAVE_STREAM_SHUTDOWN=1
 FLAGS=$(CFLAGS) $(DEFS) -DVERSION=\"$(VERSION)\"
 
@@ -164,6 +164,15 @@ libuseful_errors_wrap.o: libuseful_errors_wrap.c
 
 libuseful_errors_wrap.c: libuseful_errors.i
 	swig $(DEFS) -lua -o libuseful_errors_wrap.c libuseful_errors.i
+
+units_of_measure.so: units_of_measure_wrap.o
+	$(CC) $(FLAGS) -shared -o units_of_measure.so units_of_measure_wrap.o $(LIBS)
+
+units_of_measure_wrap.o: units_of_measure_wrap.c
+	$(CC) $(FLAGS) -c units_of_measure_wrap.c -o  units_of_measure_wrap.o
+
+units_of_measure_wrap.c: units_of_measure.i
+	swig $(DEFS) -lua -o units_of_measure_wrap.c units_of_measure.i
 
 
 
