@@ -35,7 +35,7 @@ int pos;
 typedef struct
 {
 const char *type;
-const char *path;
+char *path;
 const char *name;
 size_t size;
 time_t mtime;
@@ -129,6 +129,17 @@ if (stat(Path, &FStat) != 0) return(0);
 return((double) FStat.st_size);
 }
 
+int LUL_IsDir(const char *Path)
+{
+struct stat FStat;
+
+if (stat(Path, &FStat) != 0) return(FALSE);
+return(S_ISDIR(FStat.st_mode));
+}
+
+
+
+
 char *LUL_FileName(const char *Path)
 {
 const char *ptr;
@@ -167,6 +178,32 @@ if (mkdir(Path, FileSystemParsePermissions(DirMask))==0) return(TRUE);
 return(FALSE);
 }
 
+FINFO *LUL_PathInfo(const char *Path)
+{
+struct stat Stat;
+FINFO *Item;
+
+if (stat(Path,&Stat)==-1) return(NULL);
+Item=(FINFO *) calloc(1,sizeof(FINFO));
+Item->path=CopyStr(Item->path, Path);
+Item->name=GetBasename(Item->path);
+Item->size=Stat.st_size;
+Item->mtime=Stat.st_mtime;
+
+//check ISREG first because they will be most common item
+if (S_ISREG(Stat.st_mode)) Item->type="file";
+else if (S_ISDIR(Stat.st_mode)) Item->type="directory";
+else if (S_ISLNK(Stat.st_mode)) Item->type="sock";
+else if (S_ISSOCK(Stat.st_mode)) Item->type="sock";
+else if (S_ISFIFO(Stat.st_mode)) Item->type="fifo";
+else if (S_ISCHR(Stat.st_mode)) Item->type="cdev";
+else if (S_ISBLK(Stat.st_mode)) Item->type="bdev";
+else Item->type="???";
+
+return(Item);
+}
+
+
 %}
 
 
@@ -190,7 +227,7 @@ int pos;
 typedef struct
 {
 const char *type;
-const char *path;
+char *path;
 const char *name;
 size_t size;
 time_t mtime;
@@ -234,6 +271,9 @@ char *LUL_FileName(const char *Path);
 %newobject dirname;
 char *LUL_FileDir(const char *Path);
 
+/* filesys.path_info(Path)   return FINFO object for a path*/
+%rename(path_info) LUL_PathInfo;
+FINFO *LUL_PathInfo(const char *Path);
 
 /* filesys.mtime(Path)   get modification time of a file */
 %rename(mtime) LUL_FileMTime;
@@ -242,6 +282,11 @@ int LUL_FileMTime(const char *Path);
 /* filesys.size(Path)   get size of a file */
 %rename(size) LUL_FileSize;
 int LUL_FileSize(const char *Path);
+
+/* filesys.isdir(Path)  is this path a directory? */
+%rename(isdir) LUL_IsDir;
+int LUL_IsDir(const char *Path);
+
 
 
 /*  filesys.mkdir(Path)   make a directory. DirMask is the 'mode' of the created directory, and is optional */
@@ -282,6 +327,7 @@ bool FileCopy(const char *oldpath, const char *newpath);
 %rename(copydir) FileSystemCopyDir;
 bool FileSystemCopyDir(const char *oldpath, const char *newpath);
 
+/* update mtime of a file, create it if it doesn't exist */
 %rename(touch) FileTouch;
 bool FileTouch(const char *path);
 
@@ -295,6 +341,7 @@ bool symlink(const char *oldpath, const char *newpath) { if (symlink(oldpath, ne
 /*  filesys.link(path, linkname)     create a hard link at 'linkname' pointing to file/directory at 'path' */
 bool link(const char *oldpath, const char *newpath) { if (link(oldpath, newpath)==0) return(TRUE); return(FALSE);}
 
+/* filesys.unlink(path)  unlink/delete a file */
 bool unlink(const char *path) { if (unlink(path)==0) return(TRUE); return(FALSE);}
 
 bool rename(const char *OldPath, const char *NewPath) { if (rename(OldPath, NewPath)==0) return(TRUE); return(FALSE);}
@@ -352,6 +399,20 @@ end
 
 */
 
+
+%extend FINFO {
+/* create a glob object from wildcard path */
+FINFO(const char *Path)
+{
+return(LUL_PathInfo(Path));
+}
+
+~FINFO()
+{
+free($self->path);
+free($self);
+}
+}
 
 
 
@@ -436,6 +497,9 @@ struct stat Stat;
 FINFO *Item;
 
 if (stat($self->Glob.gl_pathv[$self->pos],&Stat)==-1) return(NULL);
+return(LUL_PathInfo($self->Glob.gl_pathv[$self->pos]));
+
+/*
 Item=(FINFO *) calloc(1,sizeof(FINFO));
 Item->path=$self->Glob.gl_pathv[$self->pos];
 Item->name=GetBasename(Item->path);
@@ -453,6 +517,7 @@ else if (S_ISBLK(Stat.st_mode)) Item->type="bdev";
 else Item->type="???";
 
 return(Item);
+*/
 }
 
 }
