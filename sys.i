@@ -9,11 +9,7 @@ This module provides functions that return various system information.
 
 %module sys
 %{
-#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
 #include "libUseful-5/libUseful.h"
-#else
-#include "libUseful-4/libUseful.h"
-#endif
 
 //mapped to sys_(name) to prevent clashes e.g. with 'hostname'
 #define sys_uptime() (OSSysInfoLong(OSINFO_UPTIME))

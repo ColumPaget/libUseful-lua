@@ -16,11 +16,7 @@ this module implements functions related to a process.
 #include <sys/wait.h>
 
 
-#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
 #include "libUseful-5/libUseful.h"
-#else
-#include "libUseful-4/libUseful.h"
-#endif
 
 typedef struct
 {
@@ -350,6 +346,7 @@ bool WritePidFile(char *ProgName);
 %rename(createLockFile) CreateLockFile;
 bool CreateLockFile(char *FilePath,int Timeout=0);
 
+
 /* 
 
 process.lu_get(ValName);
@@ -616,7 +613,7 @@ int status;
 
 if ($self->S) status=STREAMSpawnWaitExit($self->S);
 else waitpid($self->pid, &status, 0);
+return(status);
 }
 
-return(status);
 }

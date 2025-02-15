@@ -10,11 +10,7 @@ This module provide a 'RAWDATA' object that can be used to handle binary data.
 
 %module rawdata
 %{
-#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
 #include "libUseful-5/libUseful.h"
-#else
-#include "libUseful-4/libUseful.h"
-#endif
 %}
 
 
@@ -88,6 +84,12 @@ int seti32(int32_t value, size_t pos=-1) {return(RAWDATASetInt32($self, pos, val
 /* copy a string from rawdata. This will keep going until it encounters a NUL or runs out of data */
 %newobject copystr;
 char *copystr() {return(RAWDATACopyStr(NULL, $self));}
+
+/* move bytes within a RAWDATA */
+void move(size_t from, size_t to, size_t len) {return(RAWDATAMove($self, from, to, len));}
+
+/* truncate data with a RAWDATA to 'len' bytes */
+void trunc(size_t len) {return(RAWDATATrunc($self, len));}
 
 /* copy a string of fixed size from rawdata */
 %newobject copystrlen;

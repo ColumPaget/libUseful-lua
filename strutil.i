@@ -11,11 +11,7 @@ This module implemements various string-based utility functions, including diffe
 %module strutil
 %{
 
-#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
 #include "libUseful-5/libUseful.h"
-#else
-#include "libUseful-4/libUseful.h"
-#endif
 
 #define safestrlen(Str) (StrLen(Str))
 #define httpQuote(Str) (HTTPQuote(NULL, Str))

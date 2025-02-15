@@ -63,6 +63,7 @@ w     write only
 a     append 
 +     make read-only, append or write-only be read-write
 E     raise an error if this file fails to open
+f     'full flush': force writing using 'fsync' for files, and turning Nagle's algorithm on/off for tcp sockets
 F     follow symlinks. Without this flag an error is raised when a symlink is opened.
 l     lock/unlock file on each read
 L     lock/unlock file on each write
@@ -93,11 +94,7 @@ multiple stream objects for activity
 %module stream
 %{
 
-#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
 #include "libUseful-5/libUseful.h"
-#else
-#include "libUseful-4/libUseful.h"
-#endif
 
 #include <unistd.h>
 
@@ -162,6 +159,18 @@ return(STREAMCreate());
 {
 STREAMClose($self);
 }
+
+
+/*
+flushtype sets the flush-type of a stream to one of the below constants, and can also set 
+a 'start' position where flushes start happening, and a blocksize to use with FLUSH_BLOCK
+*/
+%constant float  FLUSH_FULL=FLUSH_FULL; /* Flush when buffers are full  */
+%constant float  FLUSH_LINE=FLUSH_LINE; /* Flush when newline is written to stream  */
+%constant float  FLUSH_BLOCK=FLUSH_BLOCK; /* Flush in blocks of <blocksize>  */
+%constant float  FLUSH_ALWAYS=FLUSH_ALWAYS; /* Flush on every write  */
+void flushtype(int type, int start, int blocksize) {STREAMSetFlushType($self, type, start, blocksize);}
+
 
 /* read a line from a stream */
 %newobject readln;

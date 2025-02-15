@@ -64,12 +64,7 @@ menu-in-one-line, and terminal menus which are multi-line menus.
 
 %module terminal
 %{
-
-#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
 #include "libUseful-5/libUseful.h"
-#else
-#include "libUseful-4/libUseful.h"
-#endif
 
 #define term_strlen(s) (TerminalStrLen(s))
 #define term_strtrunc(s, len) (TerminalStrTrunc(CopyStr(NULL, (s)), (len)))
@@ -381,7 +376,10 @@ typedef struct
 %extend TERMBAR {
 TERMBAR(TERM *Term, const char *Text, const char *Config="")
 {
-return(TerminalBarCreate(Term->S, Config, Text));
+STREAM *S=NULL;
+
+if (Term) S=Term->S;
+return(TerminalBarCreate(S, Config, Text));
 }
 
 ~TERMBAR()
@@ -422,7 +420,10 @@ ListNode *Options;
 TERMMENU(TERM *Term, int x, int y, int wid, int high)
 {
 TERMMENU *Item;
-Item=TerminalMenuCreate(Term->S, x, y, wid, high);
+STREAM *S=NULL;
+
+if (Term) S=Term->S;
+Item=TerminalMenuCreate(S, x, y, wid, high);
 return(Item);
 }
 
@@ -500,7 +501,7 @@ if the keypress is 'enter' then return the selected item, else return NULL
 */
 
 %newobject onkey;
-char* onkey(char *key) 
+char* onkey(const char *key) 
 {
 ListNode *Node;
 Node=TerminalMenuOnKey($self, TerminalTranslateKeyStr(key));
@@ -596,7 +597,7 @@ int length() {return($self->high);}
 
     enter choice: <yes> no
 
-    The simples way to use these are with 'terminal.choice'.
+    The simplest way to use these are with 'terminal.choice'.
 
     The 'Config' argument of the constructor function, and of 'terminal.choice', contains the following key/value configs
 
@@ -634,7 +635,10 @@ ListNode *Options;
 TERMCHOICE(TERM *Term, const char *Config)
 {
 TERMCHOICE *Item;
-Item=TerminalChoiceCreate(Term->S, Config);
+STREAM *S=NULL;
+
+if (Term) S=Term->S;
+Item=TerminalChoiceCreate(S, Config);
 return(Item);
 }
 
@@ -655,7 +659,7 @@ else return ""
 */
 
 %newobject onkey;
-char* onkey(char *key) 
+char* onkey(const char *key) 
 {
 return(TerminalChoiceOnKey(NULL, $self, TerminalTranslateKeyStr(key)));
 }
@@ -674,3 +678,110 @@ return(TerminalChoiceProcess(NULL, $self));
 
 
 }
+
+
+/*
+
+The following functions relate to vertical 'menus' operated with the arrow keys 'up' 'down' and 'enter'.
+
+*/
+
+typedef struct
+{
+int x;
+int y;
+int wid;
+int high;
+STREAM *Term;
+ListNode *Options;
+} TERMCALENDAR;
+
+
+%extend TERMCALENDAR {
+
+/* Create a terminal menu object */
+TERMCALENDAR(TERM *Term, int x, int y)
+{
+TERMCALENDAR *Item;
+STREAM *S=NULL;
+
+if (Term) S=Term->S;
+Item=TerminalCalendarCreate(S, x, y, "");
+return(Item);
+}
+
+/* You would never call this, it's called automatically when the object goes out of scope */
+~TERMCALENDAR()
+{
+ListClear($self->Options, Destroy);
+TerminalWidgetDestroy($self);
+}
+
+
+/* Use this to alter the default colors by passing tilde-strings for 
+'MenuAttribs' (which sets background and foreground for the menu) and
+'SelectedAttribs' (which sets background and foreground for the selected item)
+*/
+void config(const char *MenuAttribs, const char *SelectedAttribs)
+{
+/*
+$self->Attribs=CopyStr($self->Attribs, MenuAttribs);
+$self->CursorLeft=CopyStr($self->CursorLeft, SelectedAttribs);
+*/
+}
+
+void resize(int wide, int high)
+{
+$self->wid=wide;
+$self->high=high;
+}
+
+void set(int Month, int Year) { TerminalCalendarSetMonthYear($self, Month, Year); }
+
+/* Actually draw a calendar. This doesn't read keypresses or anything, just draws the calendar in its current state */
+void draw() {TerminalCalendarDraw($self);}
+
+%newobject run;
+char *run() 
+{
+return(TerminalCalendarProcess(NULL, $self));
+}
+
+
+/* 
+Pass a keypress into the calendar. Changes the selected item, if need be. Redraws the calendar.
+if the keypress is 'enter' then return the selected item, else return NULL
+*/
+
+%newobject onkey;
+char* onkey(const char *key) 
+{
+return(TerminalCalendarOnKey(NULL, $self, TerminalTranslateKeyStr(key)));
+}
+
+void set(int Month, int Year) {TerminalCalendarSetMonthYear($self, Month, Year);}
+
+
+
+/*
+  get the currently focused date
+*/
+%newobject curr;
+char* curr() 
+{
+return(TerminalCalendarReturnDate(NULL, $self));
+}
+
+
+
+int xpos() {return($self->x);}
+int ypos() {return($self->y);}
+int width() {return($self->wid);}
+int height() {return($self->high);}
+int length() {return($self->high);}
+}
+
+
+
+
+

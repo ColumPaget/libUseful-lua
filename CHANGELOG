@@ -1,0 +1,242 @@
+v4.2 (2024-02-15)
+-----------------
+  * added time.is_today, time.is_leap_year, time.days_in_moth, time.calendar_csv, time.tz_offset, time.tz_convert, time.parse_duration, time.format_duration, 
+	* added terminal.TERMCALENDAR 
+  * added stream.flushtype
+  * added rawdata.trunc
+  * added rawdata.move
+  * require libUseful-5.39+
+
+v4.1 (2024-03-18)
+-----------------
+  * added filesys.path_info and filesys.isdir
+
+v4.0 (2024-03-17)
+-----------------
+  * Add units_of_measure. Add STREAM:multi_readto
+  * Added TOKENIZER:first()
+
+v3.2 (2024-01-20)
+-----------------
+  * v3.2 add totp function
+  * added stream.transfer
+
+v3.1 (2023-04-08)
+-----------------
+  * added parser:subitems()
+  * correct name/type in xml_tag
+  * add documentation to top of xml.i
+
+v3.0 (2023-03-04)
+-----------------
+  * changes to support libUseful-5
+
+v2.41 (2023-02-20)
+------------------
+  * fix error in entropy.i
+
+v2.40 (2023-02-19)
+------------------
+  * added entropy.so
+  * support lua5.4
+
+v2.34 (2023-02-05)
+------------------
+  * disable strlen caching as it conflicts with lua garbage collection
+  * map signals by name, not number, as numbers don't seem to be consistent everywhere
+  * add terminal.xterm_set_clipboard()
+  * added proc:get_pty()
+  * add filesys.filename
+
+v2.33 (2022-11-25)
+------------------
+  * fix garbage collection issue with XML:next()
+  * added stripctrl
+
+v2.32 (2022-10-01)
+------------------
+  * store strings used by tokenizer to handle garbage collection/scope issues
+
+v2.31 (2022-09-06)
+------------------
+  * fix OAUTH crash. 
+  * Fix filesys.pathaddslash. 
+  * Change filesys.mkdirPath to accept string like mkdir (+rwx rather than number)
+
+v2.29 (2022-08-12)
+------------------
+  * added filesys.chmod
+
+v2.28 (2022-08-16)
+------------------
+  * changes to work with libUseful-4.78
+  * added libuseful_errors
+  * add TERM:mouse()
+  * added server.port()
+
+v2.26 (2021-05-28)
+------------------
+  * added  term.strtrunc
+  * added :resize() to menus
+  * add xml.i to make it easier to work with html/xml
+  * add config to terminal.TERM
+  * added get_stream to server object
+  * fix memory leak in dataparser
+
+v2.23 (2020-08-19)
+------------------
+  * document setProxy
+  * Use STREAMShutdown if available. Handle preprocessor defines in swig
+
+v2.22 (2020-08-05)
+------------------
+  * Added process.collect() and process.stop_pgroup()
+  * Added xterm functions to terminal.i
+  * added stdin: stdout: and stdio: to list of STREAM types
+
+v2.20 (2020-07-05)
+------------------
+  * childExited now returns a bool. Added childStatus and waitStatus functions
+
+v2.19 (2020-06-16)
+------------------
+  * fix for subtle memory leak in the TOKENIZER class
+
+v2.18 (2020-06-05)
+------------------
+  * use sigaction rather than signal for signal-handler registration. Define names for POSIX signals
+
+v2.17 (2020-06-04)
+------------------
+  * added TERMMENU:setpos
+
+v2.16 (2020-06-01)
+------------------
+  * added 'terminal.choice'
+
+v2.15 (2020-05-27)
+------------------
+  * added 'filesys.copydir' recursive copy function needed by 'distroflash.lua'
+
+v2.14 (2020-03-19)
+------------------
+  * bugfix: usleep was remapped to msleep
+  * added filesys.dirname() and fixed filesys.extn() to return a new object rather than a pointer into the path
+
+v2.13 (2020-02-19)
+------------------
+  * added process.sfork(), .get_stream() for TERMINAL and PROCESS objects, .nonblock() .fillto(), .out_queued() and .out_space() for streams
+  * added strutil.decode
+
+v2.12 (2019-12-09)
+------------------
+  * Detect lua on systems where the binary is called 'lua5.3' rather than 'lua'. Added width(), length() and height() to TERM and TERMMENU objects in terminal.i
+  * work with distros that install lua as lua5.3 instead of just lua
+  * added width(), length(), and height() getters for both TERM and TERMMENU objects
+
+v2.11 (2019-11-24)
+------------------
+  * added stream:timeout(). Version bump
+
+v2.9 (2019-11-22)
+-----------------
+  * functions that work or don't now return bool instead of a number. This requires libUseful-4.13
+  * added ptysize()
+
+v2.8 (2019-11-17)
+-----------------
+  * added sys.interfaces and sys.ip4address etc
+  * better lua.h discovery
+  * support for handling signals via process.sigwatch() and process.sigcheck()
+
+v2.7 (2019-11-03)
+-----------------
+  * added time.sleep() time.msleep() time.usleep() and strutil.trim()
+
+v2.6 (2019-10-12)
+-----------------
+  * add inline documentation for new PROCESS object
+  * added filesys.touch
+  * added new PROCESS object for handling/communicating with child processes
+  * bugfix for calling filesys.size() on a non-existent file
+
+v2.5 (2019-09-28)
+-----------------
+  * default argument to stream:truncate
+  * added stream:truncate()
+  * added STREAMTruncate
+  * added stream:waitlock(), stream:lock() is now non-blocking
+  * correction to time.to_secs(), as strfmttime can return -1 on error, so time.to_secs() must return a long, not an unsigned long
+  * bugfix for situation where DATAPARSER cannot parse a document and returns NULL
+  * added TERMMENU:update() to allow changing titles of items in a menu
+  * added filesys.extn
+
+v2.4 (2019-08-06)
+-----------------
+  * Added LICENSE file and SPDX headers
+  * return a blank string from TERM:getch() if stream times out without a char being read
+  * fix PARSER:next() so that if it's called after opening the parser it returns the first item not the second
+  * added filesys.mtime(path) and filesys.size(path)
+
+v2.3 (2019-07-27)
+-----------------
+  * added process.spawn
+  * lua doesn't support octal, so mkdir now takes a second 'const char *' argument that can be an octal string, or 'rwx' permissions format
+  * Handle change in libUseful for new SysInfo.h header
+  * find lua.h
+  * added process.pid(), process.ppid(), process.uid(), process.gid(), process.user() and process.group()
+
+v2.2 (2019-05-21)
+-----------------
+  * added filesys.used() filesys.free() and filesys.size()
+  * fix for utterly missing destructor for STREAM class!
+
+v2.1 (2019-04-13)
+-----------------
+  * Add Menu:curr() to terminal menus, allowing querying current item focused in menu
+  * added Terminal:timeout(int)
+  * Added 'reformatURL' function
+
+v2.0 (2019-02-12)
+-----------------
+  * fix for typo in configure.ac
+  * added filesys.unlink and filesys.rmdir
+  * Added 'first' function to GLOB object. Added 'rename' to filesys module. Changed mkdir, link and symlink to return TRUE (1) if success 0 if fail, not silly 'C' 0 and -1. Modified terminal prompt function to allow passing in a default value for text entry
+  * detect if compiler supports/requires fPIC
+  * upgrade to libUseful-4. Added TerminalMenus.
+
+v1.8 (2018-06-16)
+-----------------
+  * changes to compile on macosx
+
+v1.7 (2018-01-20)
+-----------------
+  * added net.parseURL function that breaks down a URL into parts
+
+v1.6 (2018-01-06)
+-----------------
+  * Added terminal:reset() function
+
+v1.5 (2018-01-05)
+-----------------
+  * added stream:commit() function (used for HTTP PUT/POST)
+
+v1.4 (2018-01-01)
+-----------------
+  * libUseful-lua:Version lookup added, turn on/off utf8 support, minor tidyups and fixes
+
+v1.3 (2017-12-22)
+-----------------
+  * add time.i to commit
+
+v1.2 (2017-12-17)
+-----------------
+  * dataparser improvements
+
+v1.1 (2017-12-11)
+-----------------
+  * Functions added for formatting times and for peeking a single byte from a stream
+
+v1.0 (2017-11-20)
+-----------------
+  * minor fixes/mods for public release

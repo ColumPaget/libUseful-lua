@@ -9,23 +9,20 @@ This module provides functions that return various system information.
 
 %module time
 %{
-
-#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
 #include "libUseful-5/libUseful.h"
-#else
-#include "libUseful-4/libUseful.h"
-#endif
 
 #define time_time() (GetTime(0))
 #define time_centitime() (GetTime(TIME_CENTISECS))
 #define time_millitime() (GetTime(TIME_MILLISECS))
-#define time_tosecs(fmt, str, zone) (DateStrToSecs(fmt, str, zone))
-#define time_formatsecs(fmt, secs, zone) (GetDateStrFromSecs(fmt, secs, zone))
-#define time_format(fmt, zone) (GetDateStrFromSecs(fmt, GetTime(0), zone))
+#define time_tosecs(fmt, str, zone) (DateStrToSecs( (fmt), (str), (zone) ))
+#define time_formatsecs(fmt, secs, zone) (GetDateStrFromSecs( (fmt), (secs), (zone) ))
+#define time_format(fmt, zone) (GetDateStrFromSecs( (fmt), GetTime(0), (zone) ))
 #define time_tzoffset(zone) (TimezoneOffset(zone))
 #define time_sleep(secs) (sleep(secs))
 #define time_msleep(msecs) (usleep(msecs * 1000))
 #define time_usleep(usecs) (usleep(usecs))
+#define time_calendar_csv(mon, year) (CalendarFormatCSV(NULL, (mon), (year)))
+#define time_tzconvert(time, from, to) (TimeZoneConvert(NULL, (time), (from), (to)))
 %}
 
 
@@ -86,4 +83,53 @@ void time_msleep(long msecs);
 %rename(usleep) time_usleep;
 void time_usleep(long usecs);
 
+/*
+* Convert a string describing a duration to seconds. 
+* String in the form "1d 5h 30m" where m=minutes h=hours d=days w=weeks y=year Y=year (year always 365 days)
+*/
+%rename(parse_duration) ParseDuration;
+int ParseDuration(const char *Str);
+
+/*
+* format a string using the substitutions %w %d %h %m %s for weeks, days, hours, minutes and seconds
+* if any of the substututions are missing, then their value is carried over to the next highest substitution
+* so if there's no '%d', then the 'days' part will be counted in '%h' (hours) 
+* or if that is missing in '%m' (mins) or '%s' (seconds) 
+*/
+%rename(format_duration) FormatDuration;
+const char *FormatDuration(const char *Fmt, time_t Duration);
+
+/* 
+* convert Time from timezone 'SrcZone' to 'DstZone'
+* time must be in format "%Y/%m/%d %H:%M:%S"
+*/
+%rename(tz_convert) time_tzconvert;
+%newobject tz_convert;
+char *time_tzconvert(const char *Time, const char *SrcZone, const char *DstZone);
+
+/* return the offset in seconds of "TimeZone" */
+%rename(tz_offset) TimezoneOffset;
+long TimezoneOffset(const char *TimeZone);
+
+/*given a year, return TRUE if it's a leap year, FALSE otherwise*/
+%rename(is_today) IsToday;
+int IsToday(unsigned int day, unsigned int month, unsigned int year);
+
+
+/*given a year, return TRUE if it's a leap year, FALSE otherwise*/
+%rename(is_leap_year) IsLeapYear;
+int IsLeapYear(unsigned int year);
+
+/*return number of days in month (month range 1-12, months < 1 are in previous years and >12 are in subsequent years) */
+%rename(days_in_month) GetDaysInMonth;
+int GetDaysInMonth(int Month, int Year);
+
+/*
+* produce a csv of days in month. each line is a week. Any dates starting
+* with '-' are in the previous month to the one requested, and any 
+* started with '+' are in the next month
+*/
+%rename(calendar_csv) time_calendar_csv;
+%newobject calendar_csv;
+char *time_calendar_csv(unsigned int Month, unsigned int Year);
 

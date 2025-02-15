@@ -14,11 +14,7 @@ and visa-versa,
 
 %module units_of_measure
 %{
-#ifdef HAVE_LIBUSEFUL_5_LIBUSEFUL_H
 #include "libUseful-5/libUseful.h"
-#else
-#include "libUseful-4/libUseful.h"
-#endif
 
 
 /* 

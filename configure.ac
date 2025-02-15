@@ -55,6 +55,15 @@ then
 AC_DEFINE([HAVE_LIBUSEFUL_TOTP])
 fi
 
+AC_CHECK_LIB([Useful],[TerminalCalendarProcess])
+
+if test "$ac_cv_lib_Useful_TerminalCalendarProcess" != "yes"
+then
+echo "ERROR: libUseful too old. This version to libUseful-lua requires at least libUseful-5.39"
+exit
+fi
+
+
 
 AC_CHECK_HEADERS([libUseful-5/libUseful.h libUseful-4/libUseful.h])
 
