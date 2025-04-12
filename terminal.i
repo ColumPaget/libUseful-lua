@@ -773,7 +773,35 @@ return(TerminalCalendarReturnDate(NULL, $self));
 }
 
 
+/* These functions that set display attributes against a date in the calendar are
+** fairly recent additions, so check if they exist in the libUseful we are being 
+** linked against
+*/
+#ifdef HAVE_TC_SETDATESTRSTATE
+/*
+Set both a state name, and a set of display attributes against that state name
+*/
+void mark_date(int Day, int Month, int Year, const char *State, const char *Attribs)
+{
+TerminalCalendarSetDateState($self, Day, Month, Year, State, Attribs);
+}
 
+
+
+/*
+Set both a state name, and a set of display attributes against that state name
+'DateStr' in format YYYY-MM-DD
+*/
+void mark_date_str(const char *DateStr, const char *State, const char *Attribs)
+{
+TerminalCalendarSetDateStrState($self, DateStr, State, Attribs);
+}
+#endif
+
+
+/*
+return x,y,width and length/height of calendar widget
+*/
 int xpos() {return($self->x);}
 int ypos() {return($self->y);}
 int width() {return($self->wid);}

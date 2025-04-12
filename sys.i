@@ -23,10 +23,12 @@ This module provides functions that return various system information.
 #define sys_release() (OSSysInfoString(OSINFO_RELEASE))
 #define sys_arch() (OSSysInfoString(OSINFO_ARCH))
 #define sys_tmpdir() (OSSysInfoString(OSINFO_TMPDIR))
+#define sys_homedir() (GetCurrUserHomeDir())
 #define sys_time() (GetTime(0))
 #define sys_centitime() (GetTime(TIME_CENTISECS))
 #define sys_millitime() (GetTime(TIME_MILLISECS))
 #define sys_interfaces() (OSSysInfoString(OSINFO_INTERFACES))
+
 
 char *sys_ifinfo(const char *Interface)
 {
@@ -148,6 +150,10 @@ const char * sys_type();
 /* sys.tmpdir   - returns system temporary directory */
 %rename(tmpdir) sys_tmpdir;
 const char * sys_tmpdir();
+
+%rename(homedir) sys_homedir;
+const char * sys_homedir();
+
 
 /* sys.intefaces   - returns system network interfaces as a space-seperated list of names */
 %rename(interfaces) sys_interfaces;

@@ -1,3 +1,7 @@
+v4.3 (2025-04-12)
+  * added sys.homedir to return user homedir
+  * added TerminalCalendar.mark to mark a day in the calendar
+
 v4.2 (2024-02-15)
 -----------------
   * added time.is_today, time.is_leap_year, time.days_in_moth, time.calendar_csv, time.tz_offset, time.tz_convert, time.parse_duration, time.format_duration, 

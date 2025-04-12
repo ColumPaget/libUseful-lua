@@ -42,6 +42,8 @@ AC_ARG_WITH([lua-libs], [  --with-lua-libs       path to directory containing li
 AC_ARG_WITH([lua-modules], [  --with-lua-modules       path to directory in which to install modules files],LUA_MODULES_DIR=$withval)
 
 AC_CHECK_LIB(Useful,GetToken,,)
+AC_CHECK_LIB(Useful,TerminalCalendarSetDateStrState,AC_DEFINE( [HAVE_TC_SETDATESTRSTATE] ),)
+
 cf_have_libUseful=$ac_cv_lib_Useful_GetToken
 if test "$cf_have_libUseful" != "yes"
 then
