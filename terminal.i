@@ -362,6 +362,9 @@ void xterm_icon_name(const char *Title) {return(XtermSetIconName($self->S, Title
 
 /* Send escape sequence to set the system clipboard from an xterm-compatible terminal*/
 void xterm_set_clipboard(const char *Data) {XtermSetClipboard($self->S, Data);}
+
+/* Send escape sequence to set size of an xterm-compatible terminal*/
+void xterm_set_size(int wide, int high) {XtermSetTerminalSize($self->S, wide, high);}
 }
 
 
@@ -632,7 +635,7 @@ ListNode *Options;
 %extend TERMCHOICE {
 
 /* Create a terminal menu object */
-TERMCHOICE(TERM *Term, const char *Config)
+TERMCHOICE(TERM *Term, const char *Config="")
 {
 TERMCHOICE *Item;
 STREAM *S=NULL;
@@ -700,13 +703,13 @@ ListNode *Options;
 %extend TERMCALENDAR {
 
 /* Create a terminal menu object */
-TERMCALENDAR(TERM *Term, int x, int y)
+TERMCALENDAR(TERM *Term, int x, int y, const char *Config="")
 {
 TERMCALENDAR *Item;
 STREAM *S=NULL;
 
 if (Term) S=Term->S;
-Item=TerminalCalendarCreate(S, x, y, "");
+Item=TerminalCalendarCreate(S, x, y, Config);
 return(Item);
 }
 

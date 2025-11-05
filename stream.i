@@ -289,7 +289,7 @@ bool isatty() {return(isatty($self->in_fd));}
 const char *getvalue(const char *ValName) {return(STREAMGetValue($self,ValName));}
 
 /* set a value on the current stream */
-void setvalue(const char *ValName, const char *Value) {return(STREAMSetValue($self,ValName, Value));}
+void setvalue(const char *ValName, const char *Value) {STREAMSetValue($self,ValName, Value);}
 
 /* wait for the string 'String' to occur in a stream. Optionally send 'Reply' */
 int expect(const char *String, const char *Reply="") {return(STREAMExpectAndReply($self, String, Reply)); }

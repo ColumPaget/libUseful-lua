@@ -66,6 +66,15 @@ return( ((double) (StatFS.f_blocks - StatFS.f_bfree)) * ((double) StatFS.f_frsiz
 
 }
 
+
+#ifdef FileRead
+char *LUL_FileRead(const char *Path) 
+{
+return(FileRead(NULL, Path));
+}
+#endif
+
+
 #ifndef FileChMod
 bool FileChMod(const char *Path, const char *Mode)
 {
@@ -77,7 +86,8 @@ return(FALSE);
 }
 #endif
 
-#ifndef LUL_MakeDirPath
+
+
 bool LUL_MakeDirPath(const char *Path, const char *Mode)
 {
 int perms;
@@ -85,7 +95,6 @@ int perms;
 perms=FileSystemParsePermissions(Mode);
 return(MakeDirPath(Path, perms)); 
 }
-#endif
 
 
 
@@ -322,6 +331,11 @@ bool FileCopy(const char *oldpath, const char *newpath);
 %rename(copydir) FileSystemCopyDir;
 bool FileSystemCopyDir(const char *oldpath, const char *newpath);
 
+/*  filesys.rmtree(dir)     recursively remove and entire directory tree! */
+%rename(rmtree) FileSystemRmDir;
+bool FileSystemRmDir(const char *path);
+
+
 /* update mtime of a file, create it if it doesn't exist */
 %rename(touch) FileTouch;
 bool FileTouch(const char *path);
@@ -339,11 +353,29 @@ bool link(const char *oldpath, const char *newpath) { if (link(oldpath, newpath)
 /* filesys.unlink(path)  unlink/delete a file */
 bool unlink(const char *path) { if (unlink(path)==0) return(TRUE); return(FALSE);}
 
+/* rename/move a path */
 bool rename(const char *OldPath, const char *NewPath) { if (rename(OldPath, NewPath)==0) return(TRUE); return(FALSE);}
 
+/* read entire file as a string */
 
+#ifdef FileRead
+%rename(file_read) LUL_FileRead;
+%newobject file_read;
+char *LUL_FileRead(const char *Path);
+#endif
+
+/* write string to a file */
+%rename(file_write) FileWrite;
+int FileWrite(const char *Path, const char *Data);
+
+
+/*mounted file system total size */
 double fs_size(const char *Path); 
+
+/*mounted file system used */
 double fs_used(const char *Path); 
+
+/*mounted file system free */
 double fs_free(const char *Path); 
 
 /*  filesys.mount(device, mountpoint, type, args)  mount a filesystem. 'args' is optional. 

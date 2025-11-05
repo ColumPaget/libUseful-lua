@@ -1,3 +1,12 @@
+v4.4 (2025-11-05)
+  * added filesys.file_read and filesys.file_write functions
+  * added filesys.rmtree function
+  * added terminal.xterm_set_size function
+  * terminal.TERMCALENDAR function can now accept a config string
+  * terminal.TERMCHOICE function 2nd argument (config) now optional
+  * fix return-value of sys.ip4mtu and stream.setvalue
+  
+
 v4.3 (2025-04-12)
   * added sys.homedir to return user homedir
   * added TerminalCalendar.mark to mark a day in the calendar
@@ -5,7 +14,7 @@ v4.3 (2025-04-12)
 v4.2 (2024-02-15)
 -----------------
   * added time.is_today, time.is_leap_year, time.days_in_moth, time.calendar_csv, time.tz_offset, time.tz_convert, time.parse_duration, time.format_duration, 
-	* added terminal.TERMCALENDAR 
+  * added terminal.TERMCALENDAR 
   * added stream.flushtype
   * added rawdata.trunc
   * added rawdata.move

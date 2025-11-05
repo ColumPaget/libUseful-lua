@@ -172,7 +172,7 @@ char *sys_if_ip4netmask(const char *Interface);
 char *sys_if_ip4broadcast(const char *Interface);
 
 %rename(ip4mtu) sys_if_ip4mtu;
-char *sys_if_ip4mtu(const char *Interface);
+int sys_if_ip4mtu(const char *Interface);
 
 
 /* return time as seconds since 1 jan 1970 */
