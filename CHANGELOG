@@ -1,3 +1,7 @@
+v4.5 (2026-08-26)
+  * added smtp module
+  * fix 'FormatDuration' to use 'unsigned long' rather than 'time_t'
+
 v4.4 (2025-11-05)
   * added filesys.file_read and filesys.file_write functions
   * added filesys.rmtree function

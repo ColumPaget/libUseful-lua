@@ -1,9 +1,9 @@
-VERSION=4.4
+VERSION=4.5
 CC = @CC@
 CFLAGS=@CFLAGS@
 LIBS=@LIBS@
 LUA_MODULES_DIR=@LUA_MODULES_DIR@
-MODS=stream.so terminal.so filesys.so process.so net.so entropy.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so xml.so libuseful_errors.so units_of_measure.so
+MODS=stream.so terminal.so filesys.so process.so net.so entropy.so syslog.so hash.so sys.so time.so strutil.so dataparser.so oauth.so rawdata.so securemem.so xml.so libuseful_errors.so units_of_measure.so smtp.so
 DEFS=@DEFS@
 FLAGS=$(CFLAGS) $(DEFS) -DVERSION=\"$(VERSION)\"
 
@@ -173,6 +173,15 @@ units_of_measure_wrap.o: units_of_measure_wrap.c
 
 units_of_measure_wrap.c: units_of_measure.i
 	swig $(DEFS) -lua -o units_of_measure_wrap.c units_of_measure.i
+
+smtp.so: smtp_wrap.o
+	$(CC) $(FLAGS) -shared -o smtp.so smtp_wrap.o $(LIBS)
+	
+smtp_wrap.o: smtp_wrap.c
+	$(CC) $(FLAGS) -c smtp_wrap.c -o  smtp_wrap.o
+
+smtp_wrap.c: smtp.i
+	swig $(DEFS) -lua -o smtp_wrap.c smtp.i
 
 
 

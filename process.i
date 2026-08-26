@@ -50,7 +50,7 @@ Signals[sig]=1;
 signal(sig, LUL_HandleSignal);
 }
 
-void WatchSignal(int sig)
+void LUL_WatchSignal(int sig)
 {
 struct sigaction sa;
 
@@ -61,7 +61,7 @@ sigaction(sig, &sa, NULL);
 }
 
 
-bool CheckSignal(int sig)
+bool LUL_CheckSignal(int sig)
 {
 int result;
 
@@ -85,19 +85,19 @@ return(STREAMSpawnFunction(NULL, NULL, Config));
 
 #define Wait(pid) (waitpid(pid, NULL, 0))
 
-bool ChildExited(long pid)
+bool LUL_ChildExited(long pid)
 {
 if (pid==-1) return(FALSE); 
 if (waitpid((pid_t) pid, NULL, WNOHANG)==pid) return(TRUE);
 return(FALSE);
 }
 
-long ChildCollect(long pid)
+long LUL_ChildCollect(long pid)
 {
 return(waitpid((pid_t) pid, NULL, WNOHANG));
 }
 
-char *ChildStatus(long pid, int flags)
+char *LUL_ChildStatus(long pid, int flags)
 {
 char *RetStr=NULL;
 int Status;
@@ -116,8 +116,8 @@ else
 return(RetStr);
 }
 
-#define ChildStatusNoWait(pid) (ChildStatus((pid), (WNOHANG)))
-#define ChildStatusWait(pid) (ChildStatus((pid), (0)))
+#define LUL_ChildStatusNoWait(pid) (LUL_ChildStatus((pid), (WNOHANG)))
+#define LUL_ChildStatusWait(pid) (LUL_ChildStatus((pid), (0)))
 
 %}
 
@@ -283,13 +283,13 @@ long Spawn(const char *Command, const char *Config="");
 
 
 /*  process.childExited(pid)    - Check if a SPECIFIC child exited. */
-%rename(childExited) ChildExited;
-bool ChildExited(long pid);
+%rename(childExited) LUL_ChildExited;
+bool LUL_ChildExited(long pid);
 
 /* process.collect(pid) - Check if a child exited, return pid of any that did. */
 /* We can pass pid to get a specific child, or default is 'any child' (-1) */
-%rename(collect) ChildCollect;
-long ChildCollect(long pid=-1);
+%rename(collect) LUL_ChildCollect;
+long LUL_ChildCollect(long pid=-1);
 
 
 /* 
@@ -304,14 +304,14 @@ the child process. This string can be:
 */
 
 /* get exit status of a child process, but don't wait if it hasn't exited */
-%rename(childStatus) ChildStatusNoWait;
+%rename(childStatus) LUL_ChildStatusNoWait;
 %newobject childStatus;
-char *ChildStatusNoWait(long pid);
+char *LUL_ChildStatusNoWait(long pid);
 
 /* wait for child to exit and return it's status */
-%rename(waitStatus) ChildStatusWait;
+%rename(waitStatus) LUL_ChildStatusWait;
 %newobject waitStatus;
-char *ChildStatusWait(long pid);
+char *LUL_ChildStatusWait(long pid);
 
 
 /* Wait for a child to exit. returns pid of any that did */
@@ -361,17 +361,42 @@ LibUseful-lua:Version version number of libUseful-lua
 
 You can also set some global values that effect behavior of libUseful functions
 
+
+LibUseful:Debug       set to 'Y' for as much debugging as libuseful has
+Error:Silent          set to 'Y' to prevent errors/debugging from being printed to stderr
+Error:Syslog          set to 'Y' to send all errors/debugging to syslog
+SwitchUserAllowFail   set to 'Y' to allow program to continue even if we ask to switch user and it fails
+SwitchGroupAllowFail  set to 'Y' to allow program to continue even if we ask to switch group and it fails
+STREAM:Timeout        timeout value in centisecs for STREAMRead, STREAMConnect etc etc
+Net:Timeout           timeout value in centisecs for STREAMConnect and STREAMServerAccept
+TCP:Keepalives        set to 'Y' or 'N' to turn on/off global use of keepalives on all TCP sockets
+SSL:Level            
+SSL:PermittedCiphers
+SSL:PermittedCiphers
+
+SMTP:Server           url (including username and password) of smtp server
+SMTP:HELO             smtp 'HELO' or 'EHLO' message to send (without the HELO/EHLO at the start)
+
 HTTP:Debug            set to 'Y' to get debugging output from HTTP connections
 HTTP:NoCookies        disable HTTP cookies
 HTTP:NoCompress       disable HTTP compression
 HTTP:NoRedirect       do not automatically handle HTTP redirects
 HTTP:NoCache          tell HTTP servers not to serve a cached copy of a document
 HTTP:UserAgent        set HTTP User-Agent string for this process
+HTTP:Proxy            Global HTTP proxy to use for all connections in this program
 
-SSL:Level             set minimum SSL/TLS level. can be one of ''
-SSL:PermittedCiphers  set list of permitted SSL/TLS ciphers
+SSL:Level             set minimum SSL/TLS level. can be one of 'ssl, tls, tls1.1, tls1.2'
+SSL:PermittedCiphers  set list of permitted SSL/TLS ciphers (cipher names spearated by : )
 SSL:DHParams-File     if using Diffie-Helman Perfect-Forward-Secrecy then set path to the 'params' file
+SSL:CertFile          set default certificate file to be offered by server-side ssl/tls connections
+SSL:KeyFile           set default key file to be offered by server-side ssl/tls connections
+SSL:VerifyCertDir     set directory full of C.A. certificates to be used in certificate verification
+SSL:VerifyCertFile    set path to file containing a concatanated list of C.A. certificates to be used in certificate verification
 
+SSL:CertData          set default certificate to be offered by server-side ssl/tls connections. This certificate is held in memory.
+SSL:KeyData           set default key to be offered by server-side ssl/tls connections. This key is held in memory
+
+Unicode:NamesFile     path to file that maps names->unicode code points
 */
 
 
@@ -387,16 +412,16 @@ void LibUsefulSetValue(const char *Name, const char *Value);
  recieved signals which we can query with 'sigcheck'
 */
 
-%rename(sigwatch) WatchSignal;
-void WatchSignal(int sig=0);
+%rename(sigwatch) LUL_WatchSignal;
+void LUL_WatchSignal(int sig=0);
 
 
 /*
  process.sigcheck(sig) 
  check if we received a signal
 */
-%rename(sigcheck) CheckSignal;
-bool CheckSignal(int sig=0);
+%rename(sigcheck) LUL_CheckSignal;
+bool LUL_CheckSignal(int sig=0);
 
 
 

@@ -121,7 +121,7 @@ double LUL_FileMTime(const char *Path)
 {
 struct stat FStat;
 
-stat(Path, &FStat);
+if (stat(Path, &FStat) != 0) return(-1);
 return((double) FStat.st_mtime);
 }
 
@@ -129,7 +129,7 @@ double LUL_FileSize(const char *Path)
 {
 struct stat FStat;
 
-if (stat(Path, &FStat) != 0) return(0);
+if (stat(Path, &FStat) != 0) return(-1);
 return((double) FStat.st_size);
 }
 

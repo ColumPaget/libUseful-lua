@@ -97,7 +97,7 @@ int ParseDuration(const char *Str);
 * or if that is missing in '%m' (mins) or '%s' (seconds) 
 */
 %rename(format_duration) FormatDuration;
-const char *FormatDuration(const char *Fmt, time_t Duration);
+const char *FormatDuration(const char *Fmt, unsigned long Duration);
 
 /* 
 * convert Time from timezone 'SrcZone' to 'DstZone'
